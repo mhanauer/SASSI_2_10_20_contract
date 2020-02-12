@@ -151,6 +151,10 @@ cronbach.alpha(oat_complete, CI = TRUE)
 # Subtle Attributes s6,s13, s19,S33,s44,s46,s50,s64, s66,s78 (1)  AND   S11,s15,s20,s53,s61,s67 (2).
 sat = data.frame(S6 = clinical_sample$S6, S13 = clinical_sample$S13, S19 = , S33 = clinical_sample$S33, S44 = clinical_sample$S44, S46 = clinical_sample$S46, S50 = clinical_sample$S50, S64 = clinical_sample$S64, S66 = clinical_sample$S66, S78 = clinical_sample$S78, S11 = clinical_sample$S11, S15 = clinical_sample$S15, S20 = clinical_sample$S20, S53 = clinical_sample$S53, S61 = clinical_sample$S61, S67 = clinical_sample$S67)
 head(sat)
+
+#S11,s15,s20,s53,s61,s67 (2).
+sat[,10:15] = apply(sat[,10:15], 2, function(x){ifelse(x == 2,1,2)})
+
 sat_omega = ci.reliability(sat)
 summary(omega(sat))
 sat_omega_complete = na.omit(sat)
@@ -170,7 +174,12 @@ library(psy)
 cronbach(def)
 ######################
 ## Correctional
+FRISK = data.frame(clinical_sample[,c(16, 35, 40, 69, 80, 67)])
+head(FRISK)
+FRISK$S53 = ifelse(FRISK$S53 == 2,1,2)
 
+FRISK_omega = ci.reliability(FRISK)
+FRISK_omega
 
 
 ```
@@ -186,4 +195,3 @@ confusionMatrix(development_sample$SASSDR_recode, development_sample$NODIAG, pos
 
 
 ```
-
