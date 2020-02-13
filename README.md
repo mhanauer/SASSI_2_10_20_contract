@@ -28,14 +28,166 @@ dim(development_sample)
 dim(normative_sample)
 dim(stability_sample)
 
-describe(clinical_sample)
+#describe(clinical_sample)
 ## Do this to get counts if you are having trouble
 apply(clinical_sample[,c(3:4,5)], 2, function(x){describe.factor(x)})
 
 
-describe(development_sample)
-describe(cross_validation_sample)
-describe(normative_sample)
+#describe(development_sample)
+#describe(cross_validation_sample)
+#describe(normative_sample)
+
+#### ### Recode the variables
+#frisk = s2,s21,s26,s55,s66 (1)  AND  s53 (2).
+clinical_sample$S53 = ifelse(clinical_sample$S53 == 2,1,2)
+cross_validation_sample$S53 = ifelse(cross_validation_sample$S53 == 2,1,2)
+development_sample$S53 = ifelse(development_sample$S53 == 2,1,2)
+normative_sample$S53 = ifelse(normative_sample$S53 == 2,1,2)
+stability_sample$S53 = ifelse(stability_sample$S53 == 2,1,2)
+#oat = s8,S25,s41,s45,s69,s79,s86 (1)  AND  s10,s14,s27,s30 (2).
+clinical_sample$S10 = ifelse(clinical_sample$S10 == 2,1,2)
+cross_validation_sample$S10 = ifelse(cross_validation_sample$S10 == 2,1,2)
+development_sample$S10 = ifelse(development_sample$S10 == 2,1,2)
+normative_sample$S10 = ifelse(normative_sample$S10 == 2,1,2)
+stability_sample$S10 = ifelse(stability_sample$S10 == 2,1,2)
+
+clinical_sample$S14 = ifelse(clinical_sample$S14 == 2,1,2)
+cross_validation_sample$S14 = ifelse(cross_validation_sample$S14 == 2,1,2)
+development_sample$S14 = ifelse(development_sample$S14 == 2,1,2)
+normative_sample$S14 = ifelse(normative_sample$S14 == 2,1,2)
+stability_sample$S14 = ifelse(stability_sample$S14 == 2,1,2)
+
+clinical_sample$S27 = ifelse(clinical_sample$S27 == 2,1,2)
+cross_validation_sample$S27 = ifelse(cross_validation_sample$S27 == 2,1,2)
+development_sample$S27 = ifelse(development_sample$S27 == 2,1,2)
+normative_sample$S27 = ifelse(normative_sample$S27 == 2,1,2)
+stability_sample$S27 = ifelse(stability_sample$S27 == 2,1,2)
+
+clinical_sample$S30 = ifelse(clinical_sample$S30 == 2,1,2)
+cross_validation_sample$S30 = ifelse(cross_validation_sample$S30 == 2,1,2)
+development_sample$S30 = ifelse(development_sample$S30 == 2,1,2)
+normative_sample$S30 = ifelse(normative_sample$S30 == 2,1,2)
+stability_sample$S30 = ifelse(stability_sample$S30 == 2,1,2)
+
+### Reverse back for VAL
+
+
+#### sat = s6,s13, s19,S33,s44,s46,s50,s64, s66,s78 (1)  AND   S11,s15,s20,s53,s61,s67 (2).
+clinical_sample$S11 = ifelse(clinical_sample$S11 == 2,1,2)
+cross_validation_sample$S11 = ifelse(cross_validation_sample$S11 == 2,1,2)
+development_sample$S11 = ifelse(development_sample$S11 == 2,1,2)
+normative_sample$S11 = ifelse(normative_sample$S11 == 2,1,2)
+stability_sample$S11 = ifelse(stability_sample$S11 == 2,1,2)
+
+clinical_sample$S15 = ifelse(clinical_sample$S15 == 2,1,2)
+cross_validation_sample$S15 = ifelse(cross_validation_sample$S15 == 2,1,2)
+development_sample$S15 = ifelse(development_sample$S15 == 2,1,2)
+normative_sample$S15 = ifelse(normative_sample$S15 == 2,1,2)
+stability_sample$S15 = ifelse(stability_sample$S15 == 2,1,2)
+
+
+#DEF  = S5,S14,S22,S24,S30  (1)   AND   S2,S4,S9,S17,S23,S68,S69 (2).
+clinical_sample$S2_DEF = ifelse(clinical_sample$S2 == 2,1,2)
+cross_validation_sample$S2_DEF = ifelse(cross_validation_sample$S2 == 2,1,2)
+development_sample$S2_DEF = ifelse(development_sample$S2 == 2,1,2)
+normative_sample$S2_DEF = ifelse(normative_sample$S2 == 2,1,2)
+stability_sample$S2_DEF = ifelse(stability_sample$S2 == 2,1,2)
+
+clinical_sample$S4 = ifelse(clinical_sample$S4 == 2,1,2)
+cross_validation_sample$S4 = ifelse(cross_validation_sample$S4 == 2,1,2)
+development_sample$S4 = ifelse(development_sample$S4 == 2,1,2)
+normative_sample$S4 = ifelse(normative_sample$S4 == 2,1,2)
+stability_sample$S4 = ifelse(stability_sample$S4 == 2,1,2)
+
+clinical_sample$S9 = ifelse(clinical_sample$S9 == 2,1,2)
+cross_validation_sample$S9 = ifelse(cross_validation_sample$S9 == 2,1,2)
+development_sample$S9 = ifelse(development_sample$S9 == 2,1,2)
+normative_sample$S9 = ifelse(normative_sample$S9 == 2,1,2)
+stability_sample$S9 = ifelse(stability_sample$S9 == 2,1,2)
+
+clinical_sample$S17 = ifelse(clinical_sample$S17 == 2,1,2)
+cross_validation_sample$S17 = ifelse(cross_validation_sample$S17 == 2,1,2)
+development_sample$S17 = ifelse(development_sample$S17 == 2,1,2)
+normative_sample$S17 = ifelse(normative_sample$S17 == 2,1,2)
+stability_sample$S17 = ifelse(stability_sample$S17 == 2,1,2)
+
+clinical_sample$S23 = ifelse(clinical_sample$S23 == 2,1,2)
+cross_validation_sample$S23 = ifelse(cross_validation_sample$S23 == 2,1,2)
+development_sample$S23 = ifelse(development_sample$S23 == 2,1,2)
+normative_sample$S23 = ifelse(normative_sample$S23 == 2,1,2)
+stability_sample$S23 = ifelse(stability_sample$S23 == 2,1,2)
+
+clinical_sample$S68 = ifelse(clinical_sample$S68 == 2,1,2)
+cross_validation_sample$S68 = ifelse(cross_validation_sample$S68 == 2,1,2)
+development_sample$S68 = ifelse(development_sample$S68 == 2,1,2)
+normative_sample$S68 = ifelse(normative_sample$S68 == 2,1,2)
+stability_sample$S68 = ifelse(stability_sample$S68 == 2,1,2)
+### Change for DEF
+clinical_sample$S69_DEF = ifelse(clinical_sample$S69 == 2,1,2)
+cross_validation_sample$S69_DEF = ifelse(cross_validation_sample$S69 == 2,1,2)
+development_sample$S69_DEF = ifelse(development_sample$S69 == 2,1,2)
+normative_sample$S69_DEF = ifelse(normative_sample$S69 == 2,1,2)
+stability_sample$S69_DEF = ifelse(stability_sample$S69 == 2,1,2)
+
+# sam s11 
+clinical_sample$S11 = ifelse(clinical_sample$S11 == 2,1,2)
+cross_validation_sample$S11 = ifelse(cross_validation_sample$S11 == 2,1,2)
+development_sample$S11 = ifelse(development_sample$S11 == 2,1,2)
+normative_sample$S11 = ifelse(normative_sample$S11 == 2,1,2)
+stability_sample$S11 = ifelse(stability_sample$S11 == 2,1,2)
+
+# COR= s16,s19,s25,s26,s31,s32,s33,s49,s50,s56,s58,s65,s81,s83 (1)  AND  s3,s15,s27 (2).
+clinical_sample$S3 = ifelse(clinical_sample$S3 == 2,1,2)
+cross_validation_sample$S3 = ifelse(cross_validation_sample$S3 == 2,1,2)
+development_sample$S3 = ifelse(development_sample$S3 == 2,1,2)
+normative_sample$S3 = ifelse(normative_sample$S3 == 2,1,2)
+stability_sample$S3 = ifelse(stability_sample$S3 == 2,1,2)
+
+#VAL    = S15,S27,S30,S36,S47    (1)  AND    S1,S23,S25,S32,S51,S54 (2).
+
+### Reverse code for VAL
+clinical_sample$S15_VAL = ifelse(clinical_sample$S15_VAL == 1,2,1)
+cross_validation_sample$S15_VAL = ifelse(cross_validation_sample$S15_VAL == 1,2,1)
+development_sample$S15_VAL = ifelse(development_sample$S15_VAL == 1,2,1)
+normative_sample$S15_VAL = ifelse(normative_sample$S15_VAL == 1,2,1)
+stability_sample$S15_VAL = ifelse(stability_sample$S15_VAL == 1,2,1)
+
+clinical_sample$S27_VAL = ifelse(clinical_sample$S27 == 1,2,1)
+cross_validation_sample$S27_VAL = ifelse(cross_validation_sample$S27 == 1,2,1)
+development_sample$S27_VAL = ifelse(development_sample$S27 == 1,2,1)
+normative_sample$S27_VAL = ifelse(normative_sample$S27 == 1,2,1)
+stability_sample$S27_VAL = ifelse(stability_sample$S27 == 1,2,1)
+
+clinical_sample$S30_VAL = ifelse(clinical_sample$S30 == 1,2,1)
+cross_validation_sample$S30_VAL = ifelse(cross_validation_sample$S30 == 1,2,1)
+development_sample$S30_VAL = ifelse(development_sample$S30 == 1,2,1)
+normative_sample$S30_VAL = ifelse(normative_sample$S30 == 1,2,1)
+stability_sample$S30_VAL = ifelse(stability_sample$S30 == 1,2,1)
+
+clinical_sample$S25_VAL = ifelse(clinical_sample$S25 == 1,2,1)
+cross_validation_sample$S25_VAL = ifelse(cross_validation_sample$S25 == 1,2,1)
+development_sample$S25_VAL = ifelse(development_sample$S25 == 1,2,1)
+normative_sample$S25_VAL = ifelse(normative_sample$S25 == 1,2,1)
+stability_sample$S25_VAL = ifelse(stability_sample$S25 == 1,2,1)
+
+clinical_sample$S32_VAL = ifelse(clinical_sample$S32 == 1,2,1)
+cross_validation_sample$S32_VAL = ifelse(cross_validation_sample$S32 == 1,2,1)
+development_sample$S32_VAL = ifelse(development_sample$S32 == 1,2,1)
+normative_sample$S32_VAL = ifelse(normative_sample$S32 == 1,2,1)
+stability_sample$S32_VAL = ifelse(stability_sample$S32 == 1,2,1)
+
+clinical_sample$S51_VAL = ifelse(clinical_sample$S51 == 1,2,1)
+cross_validation_sample$S51_VAL = ifelse(cross_validation_sample$S51 == 1,2,1)
+development_sample$S51_VAL = ifelse(development_sample$S51 == 1,2,1)
+normative_sample$S51_VAL = ifelse(normative_sample$S51 == 1,2,1)
+stability_sample$S51_VAL = ifelse(stability_sample$S51 == 1,2,1)
+
+clinical_sample$S54_VAL = ifelse(clinical_sample$S54 == 1,2,1)
+cross_validation_sample$S54_VAL = ifelse(cross_validation_sample$S54 == 1,2,1)
+development_sample$S54_VAL = ifelse(development_sample$S54 == 1,2,1)
+normative_sample$S54_VAL = ifelse(normative_sample$S54 == 1,2,1)
+stability_sample$S54_VAL = ifelse(stability_sample$S54 == 1,2,1)
+
 ```
 Fisher test's for differences in development and cross validation sample
 ```{r}
@@ -90,6 +242,7 @@ fisher.test(cross_development_demos$MANDATED, ID)
 compmeans(cross_development_demos$MANDATED, ID)
 fisher.test(cross_development_demos$REFERRAL, ID)
 compmeans(cross_development_demos$REFERRAL, ID)
+
 
 ```
 Ok set up for stability samples
@@ -174,12 +327,6 @@ library(psy)
 cronbach(def)
 ######################
 ## Correctional
-FRISK = data.frame(clinical_sample[,c(16, 35, 40, 69, 80, 67)])
-head(FRISK)
-FRISK$S53 = ifelse(FRISK$S53 == 2,1,2)
-
-FRISK_omega = ci.reliability(FRISK)
-FRISK_omega
 
 
 ```
@@ -195,3 +342,4 @@ confusionMatrix(development_sample$SASSDR_recode, development_sample$NODIAG, pos
 
 
 ```
+
