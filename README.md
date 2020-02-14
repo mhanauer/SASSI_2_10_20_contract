@@ -661,25 +661,100 @@ Table 9 data analysis
 ```{r}
 table_9_fva = ifelse(clinical_sample$FVA >= 7, 1, ifelse(clinical_sample$FVOD >= 12, 1,ifelse(clinical_sample$sym >= 6, 1,0)))
 table_9_fva = as.factor(table_9_fva)
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
 
-test_diaog = as.factor(ifelse(clinical_sample$NODIAG == 1,0,1))
+table_9_fva_results =  confusionMatrix(table_9_fva, clinical_sample$NODIAG, positive = "1")
+table_9_fva_results
 
-table_9_fva_accurate =  confusionMatrix(table_9_fva, test_diaog, positive = "1")
-table_9_fva_accurate
+table_9_fva_n_correct=  sum(table_9_fva_results$table[1,1], table_9_fva_results$table[2,2])
+table_9_fva_n_correct
 
-n_correct_SASSDR_clinical=  sum(SASSDR_clinical$table[1,1], SASSDR_clinical$table[2,2])
-n_correct_SASSDR_clinical
+table_9_fva_totals = data.frame(test_p = sum(table_9_fva_results$table[,1]), test_n = sum(table_9_fva_results$table[,2]), criteria_p = sum(table_9_fva_results$table[1,]), criteria_n = sum(table_9_fva_results$table[2,]))
+table_9_fva_totals
 
-clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[,1]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[1,]), criteria_n = sum(SASSDR_clinical$table[2,]))
-clinical_sample_totals
-
-cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .95)
-cramer_v_SASSDR_clinical
-
-
+table_9_fva_cramer_v= CramerV(table_9_fva_results$table, conf.level = .95)
+table_9_fva_cramer_v
+```
+Table 9 Results
+```{r}
+table_9_fva_results
+table_9_fva_n_correct
+table_9_fva_totals
+table_9_fva_cramer_v
+```
+Table 10 data analysis
+```{r}
 rule1 = as.factor(ifelse(clinical_sample$FVA >= 7, 1,ifelse(clinical_sample$FVOD >= 12,1,0)))
-rule1
-confusionMatrix(rule1, test_diaog, positive = "1")
+
+rule1_results =  confusionMatrix(rule1, clinical_sample$NODIAG, positive = "1")
+rule1_results
+
+rule1_n_correct=  sum(rule1_results$table[1,1], rule1_results$table[2,2])
+rule1_n_correct
+
+rule1_totals = data.frame(test_p = sum(rule1_results$table[,1]), test_n = sum(rule1_results$table[,2]), criteria_p = sum(rule1_results$table[1,]), criteria_n = sum(rule1_results$table[2,]))
+rule1_totals
+
+rule1_cramer_v= CramerV(rule1_results$table, conf.level = .95)
+rule1_cramer_v
+
+rule2 = as.factor(ifelse(clinical_sample$frisk >=5,1,0))
+
+rule2_results =  confusionMatrix(rule2, clinical_sample$NODIAG, positive = "1")
+rule2_results
+
+rule2_n_correct=  sum(rule2_results$table[1,1], rule2_results$table[2,2])
+rule2_n_correct
+
+rule2_totals = data.frame(test_p = sum(rule2_results$table[,1]), test_n = sum(rule2_results$table[,2]), criteria_p = sum(rule2_results$table[1,]), criteria_n = sum(rule2_results$table[2,]))
+rule2_totals
+
+rule2_cramer_v= CramerV(rule2_results$table, conf.level = .95)
+rule2_cramer_v
+
+
+rule3 = as.factor(ifelse(clinical_sample$sym >=6,1,0))
+
+rule3_results =  confusionMatrix(rule3, clinical_sample$NODIAG, positive = "1")
+rule3_results
+
+rule3_n_correct=  sum(rule3_results$table[1,1], rule3_results$table[2,2])
+rule3_n_correct
+
+rule3_totals = data.frame(test_p = sum(rule3_results$table[,1]), test_n = sum(rule3_results$table[,2]), criteria_p = sum(rule3_results$table[1,]), criteria_n = sum(rule3_results$table[2,]))
+rule3_totals
+
+rule3_cramer_v= CramerV(rule3_results$table, conf.level = .95)
+rule3_cramer_v
+
+
+rule4 = as.factor(ifelse(clinical_sample$sat >=11,1,0))
+
+rule4_results =  confusionMatrix(rule4, clinical_sample$NODIAG, positive = "1")
+rule4_results
+
+rule4_n_correct=  sum(rule4_results$table[1,1], rule4_results$table[2,2])
+rule4_n_correct
+
+rule4_totals = data.frame(test_p = sum(rule4_results$table[,1]), test_n = sum(rule4_results$table[,2]), criteria_p = sum(rule4_results$table[1,]), criteria_n = sum(rule4_results$table[2,]))
+rule4_totals
+
+rule4_cramer_v= CramerV(rule4_results$table, conf.level = .95)
+rule4_cramer_v
+
+rule5 = as.factor(ifelse(clinical_sample$oat >= 8 &  clinical_sample$sat >=6 & clinical_sample$DEF >= 2 & clinical_sample$sam >= 4, 1,0))
+rule5_results =  confusionMatrix(rule5, clinical_sample$NODIAG, positive = "1")
+rule5_results
+
+rule5_n_correct=  sum(rule5_results$table[1,1], rule5_results$table[2,2])
+rule5_n_correct
+
+rule5_totals = data.frame(test_p = sum(rule5_results$table[,1]), test_n = sum(rule5_results$table[,2]), criteria_p = sum(rule5_results$table[1,]), criteria_n = sum(rule5_results$table[2,]))
+rule5_totals
+
+rule5_cramer_v= CramerV(rule5_results$table, conf.level = .95)
+rule5_cramer_v
+
 
 ```
 
