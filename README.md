@@ -55,10 +55,8 @@ stability_sample = data.frame(stability_sample, test_sample)
 clinical_sample$SASSDR = ifelse(clinical_sample$SASSDR == 2,1,2)
 cross_validation_sample$SASSDR = ifelse(cross_validation_sample$SASSDR == 2,1,2)
 development_sample$SASSDR = ifelse(development_sample$SASSDR == 2,1,2)
-
-
-normative_sample 
-stability_sample
+normative_sample$SASSDR = ifelse(normative_sample$SASSDR == 2,1,2) 
+stability_sample$SASSDR = ifelse(stability_sample$SASSDR == 2,1,2)
 
 
 #### ### Recode the variables
@@ -240,8 +238,6 @@ development_sample$S1 = ifelse(development_sample$S1 == 2,1,2)
 normative_sample$S1 = ifelse(normative_sample$S1 == 2,1,2)
 stability_sample$S1 = ifelse(stability_sample$S1 == 2,1,2)
 
-
-
 ```
 Fisher test's for differences in development and cross validation sample
 ```{r}
@@ -308,6 +304,7 @@ library(psych)
 head(clinical_sample)
 head(clinical_sample[,15:101])
 sassi_omega =  ci.reliability(clinical_sample[,15:101])
+
 head(clinical_sample[,102:115])
 
 #FVA  = SUM (A1 TO A14).
@@ -380,7 +377,8 @@ stable_norm = merge(stability_sample, normative_sample, by = "ID", all.x = TRUE)
 dim(stable_norm)
 stable_norm
 
-
+SASDR_stable = cor.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
+SASDR_stable
 
 FVA_stable =  cor.test(stable_norm$FVA.x, stable_norm$FVA.y)
 FVA_stable
@@ -435,6 +433,7 @@ sam_omega
 correct_omega
 val_omega
 ### Stabilities
+SASDR_stable
 FVA_stable
 FVOD_stable
 FRISK_stable
@@ -449,17 +448,208 @@ val_stable
 ```
 
 
-Just try screening outcomes
+Tables 3 through 5
 ```{r}
 head(development_sample)
 library(caret)
+library(DescTools)
 
-development_sample$SASSDR_recode = ifelse(development_sample$SASSDR== 2, 1, 0)
+
+development_sample$SASSDR_recode = ifelse(development_sample$SASSDR== 1, 1, 0)
 development_sample$SASSDR_recode = as.factor(development_sample$SASSDR_recode)
 development_sample$NODIAG = as.factor(development_sample$NODIAG)
-confusionMatrix(development_sample$SASSDR_recode, development_sample$NODIAG, positive = "1")
+SASSDR_development =  confusionMatrix(development_sample$SASSDR_recode, development_sample$NODIAG, positive = "1")
+n_correct_SASSDR_development =  sum(SASSDR_development$table[1,1], SASSDR_development$table[2,2])
+n_correct_SASSDR_development
 
-test_sassi_development = data.frame(SASSDR = development_sample$SASSDR, NODIAG = development_sample$NODIAG)
-write.csv(test_sassi_development, "test_sassi_development.csv", row.names = FALSE)
+SASSDR_development_totals = data.frame(test_p = sum(SASSDR_development$table[,1]), test_n = sum(SASSDR_development$table[,2]), criteria_p = sum(SASSDR_development$table[1,]), criteria_n = sum(SASSDR_development$table[2,]))
+
+
+cramer_v_SASSDR_development = CramerV(SASSDR_development$table, conf.level = .95)
+cramer_v_SASSDR_development
+
+
+
+cross_validation_sample$SASSDR_recode = ifelse(cross_validation_sample$SASSDR== 1, 1, 0)
+cross_validation_sample$SASSDR_recode = as.factor(cross_validation_sample$SASSDR_recode)
+cross_validation_sample$NODIAG = as.factor(cross_validation_sample$NODIAG)
+SASSDR_cross_validation =  confusionMatrix(cross_validation_sample$SASSDR_recode, cross_validation_sample$NODIAG, positive = "1")
+n_correct_SASSDR_cross_validation =  sum(SASSDR_cross_validation$table[1,1], SASSDR_cross_validation$table[2,2])
+n_correct_SASSDR_cross_validation
+
+cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[,1]), test_n = sum(SASSDR_cross_validation$table[,2]), criteria_p = sum(SASSDR_cross_validation$table[1,]), criteria_n = sum(SASSDR_cross_validation$table[2,]))
+cross_validation_sample_totals
+
+cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .95)
+cramer_v_SASSDR_cross_validation
+
+clinical_sample$SASSDR_recode = ifelse(clinical_sample$SASSDR== 1, 1, 0)
+clinical_sample$SASSDR_recode = as.factor(clinical_sample$SASSDR_recode)
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
+SASSDR_clinical=  confusionMatrix(clinical_sample$SASSDR_recode, clinical_sample$NODIAG, positive = "1")
+
+n_correct_SASSDR_clinical=  sum(SASSDR_clinical$table[1,1], SASSDR_clinical$table[2,2])
+n_correct_SASSDR_clinical
+
+clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[,1]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[1,]), criteria_n = sum(SASSDR_clinical$table[2,]))
+clinical_sample_totals
+
+cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .95)
+cramer_v_SASSDR_clinical
+
+
+```
+Tables 3 through 5 results
+```{r}
+## 3
+SASSDR_development
+n_correct_SASSDR_development
+SASSDR_development_totals
+cramer_v_SASSDR_development
+## 4
+SASSDR_cross_validation
+n_correct_SASSDR_cross_validation
+cross_validation_sample_totals
+cramer_v_SASSDR_cross_validation
+## 5
+SASSDR_clinical
+n_correct_SASSDR_clinical
+clinical_sample_totals
+cramer_v_SASSDR_clinical
+
+```
+Table 6
+
+As shown in Table 6, overall SASSI-A3 screening accuracy was XX.X% for cases where participants’ DEF scores were one standard deviation above the normative sample DEF scale mean score or lower (i.e., DEF scale scores of 7 or less).
+```{r}
+def_criteria =  round(mean(normative_sample$DEF)+sd(normative_sample$DEF))
+def_criteria
+### DEF 9
+clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
+dim(clinical_sample_def_9)
+SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR_recode, clinical_sample_def_9$NODIAG, positive = "1")
+SASSDR_clinical_def_9
+
+n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_clinical_def_9$table[2,2])
+n_correct_SASSDR_clinical_def_9
+
+SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[,1]), test_n = sum(SASSDR_clinical_def_9$table[,2]), criteria_p = sum(SASSDR_clinical_def_9$table[1,]), criteria_n = sum(SASSDR_clinical_def_9$table[2,]))
+
+
+cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .95)
+cramer_v_SASSDR_clinical_def_9
+
+
+#### DEF 10
+clinical_sample_def_10 = subset(clinical_sample, DEF <= 10)
+dim(clinical_sample_def_10)
+SASSDR_clinical_def_10=  confusionMatrix(clinical_sample_def_10$SASSDR_recode, clinical_sample_def_10$NODIAG, positive = "1")
+SASSDR_clinical_def_10
+
+n_correct_SASSDR_clinical_def_10=  sum(SASSDR_clinical_def_10$table[1,1], SASSDR_clinical_def_10$table[2,2])
+n_correct_SASSDR_clinical_def_10
+
+SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[,1]), test_n = sum(SASSDR_clinical_def_10$table[,2]), criteria_p = sum(SASSDR_clinical_def_10$table[1,]), criteria_n = sum(SASSDR_clinical_def_10$table[2,]))
+SASSDR_clinical_def_10_totals
+
+cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .95)
+cramer_v_SASSDR_clinical_def_10
+
+
+```
+Table 6 and 7 results
+```{r}
+
+### Table 6
+SASSDR_clinical_def_9
+n_correct_SASSDR_clinical_def_9
+SASSDR_clinical_def_9_totals
+cramer_v_SASSDR_clinical_def_9
+
+### Table 7
+SASSDR_clinical_def_10
+n_correct_SASSDR_clinical_def_10
+cramer_v_SASSDR_clinical_def_10
+SASSDR_clinical_def_10_totals
+
+
+```
+Table 8 data prep and analysis
+```{r}
+clinical_sample_def_0_4 = subset(clinical_sample, DEF <= 4)
+dim(clinical_sample_def_0_4)
+SASSDR_clinical_def_0_4=  confusionMatrix(clinical_sample_def_0_4$SASSDR_recode, clinical_sample_def_0_4$NODIAG, positive = "1")
+SASSDR_clinical_def_0_4
+
+n_correct_SASSDR_clinical_def_0_4=  sum(SASSDR_clinical_def_0_4$table[1,1], SASSDR_clinical_def_0_4$table[2,2])
+n_correct_SASSDR_clinical_def_0_4
+
+clinical_sample_def_5 = subset(clinical_sample, DEF <= 5)
+dim(clinical_sample_def_5)
+SASSDR_clinical_def_5=  confusionMatrix(clinical_sample_def_5$SASSDR_recode, clinical_sample_def_5$NODIAG, positive = "1")
+SASSDR_clinical_def_5
+
+n_correct_SASSDR_clinical_def_5=  sum(SASSDR_clinical_def_5$table[1,1], SASSDR_clinical_def_5$table[2,2])
+n_correct_SASSDR_clinical_def_5
+
+clinical_sample_def_6 = subset(clinical_sample, DEF <= 6)
+dim(clinical_sample_def_6)
+SASSDR_clinical_def_6=  confusionMatrix(clinical_sample_def_6$SASSDR_recode, clinical_sample_def_6$NODIAG, positive = "1")
+SASSDR_clinical_def_6
+
+n_correct_SASSDR_clinical_def_6=  sum(SASSDR_clinical_def_6$table[1,1], SASSDR_clinical_def_6$table[2,2])
+n_correct_SASSDR_clinical_def_6
+
+
+clinical_sample_def_7 = subset(clinical_sample, DEF <= 7)
+dim(clinical_sample_def_7)
+SASSDR_clinical_def_7=  confusionMatrix(clinical_sample_def_7$SASSDR_recode, clinical_sample_def_7$NODIAG, positive = "1")
+SASSDR_clinical_def_7
+
+n_correct_SASSDR_clinical_def_7=  sum(SASSDR_clinical_def_7$table[1,1], SASSDR_clinical_def_7$table[2,2])
+n_correct_SASSDR_clinical_def_7
+
+clinical_sample_def_8 = subset(clinical_sample, DEF <= 8)
+dim(clinical_sample_def_8)
+SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR_recode, clinical_sample_def_8$NODIAG, positive = "1")
+SASSDR_clinical_def_8
+
+n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_clinical_def_8$table[2,2])
+n_correct_SASSDR_clinical_def_8
+
+clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
+dim(clinical_sample_def_9)
+SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR_recode, clinical_sample_def_9$NODIAG, positive = "1")
+SASSDR_clinical_def_9
+
+n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_clinical_def_9$table[2,2])
+n_correct_SASSDR_clinical_def_9
+
+clinical_sample_def_10_11 = subset(clinical_sample, DEF == 10 | DEF == 11)
+dim(clinical_sample_def_10_11)
+
+SASSDR_clinical_def_10_11=  confusionMatrix(clinical_sample_def_10_11$SASSDR_recode, clinical_sample_def_10_11$NODIAG, positive = "1")
+SASSDR_clinical_def_10_11
+
+n_correct_SASSDR_clinical_def_10_11=  sum(SASSDR_clinical_def_10_11$table[1,1], SASSDR_clinical_def_10_11$table[2,2])
+n_correct_SASSDR_clinical_def_10_11
+
+```
+Table 8 results 
+```{r}
+SASSDR_clinical_def_0_4
+n_correct_SASSDR_clinical_def_0_4
+SASSDR_clinical_def_5
+n_correct_SASSDR_clinical_def_5
+SASSDR_clinical_def_6
+n_correct_SASSDR_clinical_def_6
+SASSDR_clinical_def_7
+n_correct_SASSDR_clinical_def_7
+SASSDR_clinical_def_8
+n_correct_SASSDR_clinical_def_8
+SASSDR_clinical_def_9
+n_correct_SASSDR_clinical_def_9
+SASSDR_clinical_def_10_11
+n_correct_SASSDR_clinical_def_10_11
 ```
 
