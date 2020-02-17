@@ -683,34 +683,54 @@ table_9_fva_totals
 table_9_fva_cramer_v
 ```
 Table 10 data analysis
+Rule 1: FVA 12 or FVOD 12 or more
+
+Rule 2: FRISK 5 or more
+
+Rule 3: SYM 5 or more
+
+Face Valid Classification: Rules 1 or 2 or 3
+
+Rule 4: SAT 9 or more
+
+Rule 5: OAT 4 and DEF 10 or more
+
+Rule 6: OAT 7 or more and SAT 6 or more and DEF 2 or more and SAM 4 or more
+
+Rule 7: FVA or FVOD 7 or more and FRISK or ATT or SAM 3 or more and OAT 5 or more
+
+Rule 7: FVA or FVOD 5 or more and OAT 4 or more and DEF 7 or more
+
+Rule 8: FVA or FVOD 5 or more and SAT 3 or more and DEF 4 or more and SAM 3 or more
+
+ 
 ```{r}
 rule1 = as.factor(ifelse(clinical_sample$FVA >= 7, 1,ifelse(clinical_sample$FVOD >= 12,1,0)))
-
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
 rule1_results =  confusionMatrix(rule1, clinical_sample$NODIAG, positive = "1")
 rule1_results
 
-rule1_n_correct=  sum(rule1_results$table[1,1], rule1_results$table[2,2])
-rule1_n_correct
+rule1_test_p = sum(rule1_results$table[2,])
+rule1_diag_p = sum(rule1_results$table[,2])
+rule1_accurate = rule1_test_p /rule1_diag_p 
+rule1_accurate
 
 rule1_totals = data.frame(test_p = sum(rule1_results$table[,1]), test_n = sum(rule1_results$table[,2]), criteria_p = sum(rule1_results$table[1,]), criteria_n = sum(rule1_results$table[2,]))
 rule1_totals
 
-rule1_cramer_v= CramerV(rule1_results$table, conf.level = .95)
-rule1_cramer_v
 
 rule2 = as.factor(ifelse(clinical_sample$frisk >=5,1,0))
 
 rule2_results =  confusionMatrix(rule2, clinical_sample$NODIAG, positive = "1")
 rule2_results
 
-rule2_n_correct=  sum(rule2_results$table[1,1], rule2_results$table[2,2])
-rule2_n_correct
+rule2_test_p = sum(rule2_results$table[2,])
+rule2_diag_p = sum(rule2_results$table[,2])
+rule2_accurate = rule2_test_p /rule2_diag_p 
+rule2_accurate
 
 rule2_totals = data.frame(test_p = sum(rule2_results$table[,1]), test_n = sum(rule2_results$table[,2]), criteria_p = sum(rule2_results$table[1,]), criteria_n = sum(rule2_results$table[2,]))
 rule2_totals
-
-rule2_cramer_v= CramerV(rule2_results$table, conf.level = .95)
-rule2_cramer_v
 
 
 rule3 = as.factor(ifelse(clinical_sample$sym >=6,1,0))
@@ -718,14 +738,13 @@ rule3 = as.factor(ifelse(clinical_sample$sym >=6,1,0))
 rule3_results =  confusionMatrix(rule3, clinical_sample$NODIAG, positive = "1")
 rule3_results
 
-rule3_n_correct=  sum(rule3_results$table[1,1], rule3_results$table[2,2])
-rule3_n_correct
+rule3_test_p = sum(rule3_results$table[2,])
+rule3_diag_p = sum(rule3_results$table[,2])
+rule3_accurate = rule3_test_p /rule3_diag_p 
+rule3_accurate
 
 rule3_totals = data.frame(test_p = sum(rule3_results$table[,1]), test_n = sum(rule3_results$table[,2]), criteria_p = sum(rule3_results$table[1,]), criteria_n = sum(rule3_results$table[2,]))
 rule3_totals
-
-rule3_cramer_v= CramerV(rule3_results$table, conf.level = .95)
-rule3_cramer_v
 
 
 rule4 = as.factor(ifelse(clinical_sample$sat >=11,1,0))
@@ -733,28 +752,364 @@ rule4 = as.factor(ifelse(clinical_sample$sat >=11,1,0))
 rule4_results =  confusionMatrix(rule4, clinical_sample$NODIAG, positive = "1")
 rule4_results
 
-rule4_n_correct=  sum(rule4_results$table[1,1], rule4_results$table[2,2])
-rule4_n_correct
+rule4_test_p = sum(rule4_results$table[2,])
+rule4_diag_p = sum(rule4_results$table[,2])
+rule4_accurate = rule4_test_p /rule4_diag_p 
+rule4_accurate
 
 rule4_totals = data.frame(test_p = sum(rule4_results$table[,1]), test_n = sum(rule4_results$table[,2]), criteria_p = sum(rule4_results$table[1,]), criteria_n = sum(rule4_results$table[2,]))
 rule4_totals
 
-rule4_cramer_v= CramerV(rule4_results$table, conf.level = .95)
-rule4_cramer_v
+
 
 rule5 = as.factor(ifelse(clinical_sample$oat >= 8 &  clinical_sample$sat >=6 & clinical_sample$DEF >= 2 & clinical_sample$sam >= 4, 1,0))
 rule5_results =  confusionMatrix(rule5, clinical_sample$NODIAG, positive = "1")
 rule5_results
 
-rule5_n_correct=  sum(rule5_results$table[1,1], rule5_results$table[2,2])
-rule5_n_correct
+rule5_test_p = sum(rule5_results$table[2,])
+rule5_diag_p = sum(rule5_results$table[,2])
+rule5_accurate = rule5_test_p /rule5_diag_p 
+rule5_accurate
 
 rule5_totals = data.frame(test_p = sum(rule5_results$table[,1]), test_n = sum(rule5_results$table[,2]), criteria_p = sum(rule5_results$table[1,]), criteria_n = sum(rule5_results$table[2,]))
 rule5_totals
 
-rule5_cramer_v= CramerV(rule5_results$table, conf.level = .95)
-rule5_cramer_v
+
+
+rule6 = as.factor(ifelse(clinical_sample$FVOD >= 7 & clinical_sample$frisk >= 3 | clinical_sample$att >= 3 | clinical_sample$sam >= 3 & clinical_sample$oat >= 5,1,0))
+rule6
+rule6_results =  confusionMatrix(rule6, clinical_sample$NODIAG, positive = "1")
+rule6_results
+
+rule6_test_p = sum(rule6_results$table[2,])
+rule6_diag_p = sum(rule6_results$table[,2])
+rule6_accurate = rule6_test_p /rule6_diag_p 
+rule6_accurate
+
+rule6_totals = data.frame(test_p = sum(rule6_results$table[,1]), test_n = sum(rule6_results$table[,2]), criteria_p = sum(rule6_results$table[1,]), criteria_n = sum(rule6_results$table[2,]))
+rule6_totals
+
+
+
+rule7 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$oat >= 4 & clinical_sample$DEF >= 7,1,0))
+rule7
+rule7_results =  confusionMatrix(rule7, clinical_sample$NODIAG, positive = "1")
+rule7_results
+
+rule7_test_p = sum(rule7_results$table[2,])
+rule7_diag_p = sum(rule7_results$table[,2])
+rule7_accurate = rule7_test_p /rule7_diag_p 
+rule7_accurate
+
+rule7_totals = data.frame(test_p = sum(rule7_results$table[,1]), test_n = sum(rule7_results$table[,2]), criteria_p = sum(rule7_results$table[1,]), criteria_n = sum(rule7_results$table[2,]))
+rule7_totals
+
+
+
+rule8 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$oat >= 4 & clinical_sample$DEF >= 4 & clinical_sample$sam >=3,1,0))
+rule8
+rule8_results =  confusionMatrix(rule8, clinical_sample$NODIAG, positive = "1")
+rule8_results
+
+
+rule8_test_p = sum(rule8_results$table[2,])
+rule8_diag_p = sum(rule8_results$table[,2])
+rule8_accurate = rule8_test_p /rule8_diag_p 
+rule8_accurate
+
+rule8_totals = data.frame(test_p = sum(rule8_results$table[,1]), test_n = sum(rule8_results$table[,2]), criteria_p = sum(rule8_results$table[1,]), criteria_n = sum(rule8_results$table[2,]))
+rule8_totals
+
 
 
 ```
+Table 10 results
+```{r}
+rule1_test_p
+rule1_diag_p
+rule1_accurate
+
+rule2_test_p
+rule2_diag_p
+rule2_accurate
+
+rule3_test_p
+rule3_diag_p
+rule3_accurate
+
+rule4_test_p
+rule4_diag_p
+rule4_accurate
+
+rule5_test_p
+rule5_diag_p
+rule5_accurate
+
+rule6_test_p
+rule6_diag_p
+rule6_accurate
+
+rule7_test_p
+rule7_diag_p
+rule7_accurate
+
+rule8_test_p
+rule8_diag_p
+rule8_accurate
+
+
+```
+Try second rules
+Proposed alt Set Decision Rule
+Rule 1: FVA 7 or FVOD 12 or more
+Rule 2: FRISK 6 or more
+Rule 3: SYM 5 or more
+Face Valid Classification: Rules 1 or 2 or 3
+Rule 4: SAT 7 or more
+Rule 5: OAT 7 or more and SAT 6 or more and DEF 2 or more and SAM 4 or more
+Rule 6: FVOD 7 or more and FRISK or ATT or SAM 3 or more and OAT 5 or more
+Rule 7: FVA or FVOD 5 or more and OAT 4 or more and DEF 7 or more
+Rule 8: FVA or FVOD 5 or more and SAT 3 or more and DEF 4 or more and SAM 3 or more
+```{r}
+rule1 = as.factor(ifelse(clinical_sample$FVA >= 7, 1,ifelse(clinical_sample$FVOD >= 12,1,0)))
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
+rule1_results =  confusionMatrix(rule1, clinical_sample$NODIAG, positive = "1")
+rule1_results
+
+rule1_test_p = sum(rule1_results$table[2,])
+rule1_diag_p = sum(rule1_results$table[,2])
+rule1_accurate = rule1_test_p /rule1_diag_p 
+rule1_accurate
+
+rule1_totals = data.frame(test_p = sum(rule1_results$table[,1]), test_n = sum(rule1_results$table[,2]), criteria_p = sum(rule1_results$table[1,]), criteria_n = sum(rule1_results$table[2,]))
+rule1_totals
+
+
+rule2 = as.factor(ifelse(clinical_sample$frisk >=6,1,0))
+
+rule2_results =  confusionMatrix(rule2, clinical_sample$NODIAG, positive = "1")
+rule2_results
+
+rule2_test_p = sum(rule2_results$table[2,])
+rule2_diag_p = sum(rule2_results$table[,2])
+rule2_accurate = rule2_test_p /rule2_diag_p 
+rule2_accurate
+
+rule2_totals = data.frame(test_p = sum(rule2_results$table[,1]), test_n = sum(rule2_results$table[,2]), criteria_p = sum(rule2_results$table[1,]), criteria_n = sum(rule2_results$table[2,]))
+rule2_totals
+
+
+rule3 = as.factor(ifelse(clinical_sample$sym >=5,1,0))
+
+rule3_results =  confusionMatrix(rule3, clinical_sample$NODIAG, positive = "1")
+rule3_results
+
+rule3_test_p = sum(rule3_results$table[2,])
+rule3_diag_p = sum(rule3_results$table[,2])
+rule3_accurate = rule3_test_p /rule3_diag_p 
+rule3_accurate
+
+rule3_totals = data.frame(test_p = sum(rule3_results$table[,1]), test_n = sum(rule3_results$table[,2]), criteria_p = sum(rule3_results$table[1,]), criteria_n = sum(rule3_results$table[2,]))
+rule3_totals
+
+
+rule4 = as.factor(ifelse(clinical_sample$sat >=7,1,0))
+
+rule4_results =  confusionMatrix(rule4, clinical_sample$NODIAG, positive = "1")
+rule4_results
+
+rule4_test_p = sum(rule4_results$table[2,])
+rule4_diag_p = sum(rule4_results$table[,2])
+rule4_accurate = rule4_test_p /rule4_diag_p 
+rule4_accurate
+
+rule4_totals = data.frame(test_p = sum(rule4_results$table[,1]), test_n = sum(rule4_results$table[,2]), criteria_p = sum(rule4_results$table[1,]), criteria_n = sum(rule4_results$table[2,]))
+rule4_totals
+
+
+#Rule 5: OAT 7 or more and SAT 6 or more and DEF 2 or more and SAM 4 or more
+rule5 = as.factor(ifelse(clinical_sample$oat >= 7 &  clinical_sample$sat >=6 & clinical_sample$DEF >= 2 & clinical_sample$sam >= 4, 1,0))
+rule5_results =  confusionMatrix(rule5, clinical_sample$NODIAG, positive = "1")
+rule5_results
+
+rule5_test_p = sum(rule5_results$table[2,])
+rule5_diag_p = sum(rule5_results$table[,2])
+rule5_accurate = rule5_test_p /rule5_diag_p 
+rule5_accurate
+
+rule5_totals = data.frame(test_p = sum(rule5_results$table[,1]), test_n = sum(rule5_results$table[,2]), criteria_p = sum(rule5_results$table[1,]), criteria_n = sum(rule5_results$table[2,]))
+rule5_totals
+
+#Rule 6: FVOD 7 or more and FRISK or ATT or SAM 3 or more and OAT 5 or more
+
+rule6 = as.factor(ifelse(clinical_sample$FVOD >= 7 & clinical_sample$frisk >= 3 | clinical_sample$att >= 3 | clinical_sample$sam >= 3 & clinical_sample$oat >= 5,1,0))
+rule6
+rule6_results =  confusionMatrix(rule6, clinical_sample$NODIAG, positive = "1")
+rule6_results
+
+rule6_test_p = sum(rule6_results$table[2,])
+rule6_diag_p = sum(rule6_results$table[,2])
+rule6_accurate = rule6_test_p /rule6_diag_p 
+rule6_accurate
+
+rule6_totals = data.frame(test_p = sum(rule6_results$table[,1]), test_n = sum(rule6_results$table[,2]), criteria_p = sum(rule6_results$table[1,]), criteria_n = sum(rule6_results$table[2,]))
+rule6_totals
+
+#Rule 7: FVA or FVOD 5 or more and OAT 4 or more and DEF 7 or more
+
+
+rule7 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$oat >= 4 & clinical_sample$DEF >= 7,1,0))
+rule7
+rule7_results =  confusionMatrix(rule7, clinical_sample$NODIAG, positive = "1")
+rule7_results
+
+rule7_test_p = sum(rule7_results$table[2,])
+rule7_diag_p = sum(rule7_results$table[,2])
+rule7_accurate = rule7_test_p /rule7_diag_p 
+rule7_accurate
+
+rule7_totals = data.frame(test_p = sum(rule7_results$table[,1]), test_n = sum(rule7_results$table[,2]), criteria_p = sum(rule7_results$table[1,]), criteria_n = sum(rule7_results$table[2,]))
+rule7_totals
+
+#Rule 8: FVA or FVOD 5 or more and SAT 3 or more and DEF 4 or more and SAM 3 or more
+
+
+rule8 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$sat >= 3 & clinical_sample$DEF >= 4 & clinical_sample$sam >=3,1,0))
+rule8_results =  confusionMatrix(rule8, clinical_sample$NODIAG, positive = "1")
+rule8_results
+
+
+rule8_test_p = sum(rule8_results$table[2,])
+rule8_diag_p = sum(rule8_results$table[,2])
+rule8_accurate = rule8_test_p /rule8_diag_p 
+rule8_accurate
+
+rule8_totals = data.frame(test_p = sum(rule8_results$table[,1]), test_n = sum(rule8_results$table[,2]), criteria_p = sum(rule8_results$table[1,]), criteria_n = sum(rule8_results$table[2,]))
+rule8_totals
+```
+
+
+
+Table 11
+```{r}
+accurate_var = ifelse(clinical_sample$SASSDR == clinical_sample$NODIAG,1,0)
+accurate_var = as.factor(accurate_var)
+cramer_v_table11 = CramerV(clinical_sample$CLIENTSETTING, accurate_var,  conf.level = .95)
+cramer_v_table11
+
+describe.factor(clinical_sample$CLIENTSETTING)
+percent_table11 = tapply(accurate_var,clinical_sample$CLIENTSETTING,function(x){prop.table(table(x))})
+
+n_table11 =  tapply(accurate_var,clinical_sample$CLIENTSETTING,function(x){table(x)})
+
+```
+Table 11 results
+```{r}
+percent_table11
+n_table11
+
+```
+Table 12 through 17 data cleaning
+Criminal justice program = 1
+Social services = 2
+Medical pan clinic = 3
+Medical facility other = 4
+6 = Substance use treatment
+7 = other
+```{r}
+
+#### Criminal justice programs
+clinical_sample_crime = subset(clinical_sample, CLIENTSETTING == 1)
+clinical_sample_crime_total_n = dim(clinical_sample_crime)[1]
+SASSDR_clinical_crime=  confusionMatrix(as.factor(clinical_sample_crime$SASSDR), as.factor(clinical_sample_crime$NODIAG), positive = "1")
+SASSDR_clinical_crime
+
+n_correct_SASSDR_clinical_crime=  sum(SASSDR_clinical_crime$table[1,1], SASSDR_clinical_crime$table[2,2])
+n_correct_SASSDR_clinical_crime
+
+SASSDR_clinical_crime_totals = data.frame(test_p = sum(SASSDR_clinical_crime$table[,1]), test_n = sum(SASSDR_clinical_crime$table[,2]), criteria_p = sum(SASSDR_clinical_crime$table[1,]), criteria_n = sum(SASSDR_clinical_crime$table[2,]))
+SASSDR_clinical_crime_totals
+
+
+
+#### Social services programs
+clinical_sample_social_services = subset(clinical_sample, CLIENTSETTING == 2)
+
+clinical_sample_social_services_total_n = dim(clinical_sample_social_services)[1]
+
+SASSDR_clinical_social_services=  confusionMatrix(as.factor(clinical_sample_social_services$SASSDR), as.factor(clinical_sample_social_services$NODIAG), positive = "1")
+SASSDR_clinical_social_services
+
+n_correct_SASSDR_clinical_social_services=  sum(SASSDR_clinical_social_services$table[1,1], SASSDR_clinical_social_services$table[2,2])
+n_correct_SASSDR_clinical_social_services
+
+SASSDR_clinical_social_services_totals = data.frame(test_p = sum(SASSDR_clinical_social_services$table[,1]), test_n = sum(SASSDR_clinical_social_services$table[,2]), criteria_p = sum(SASSDR_clinical_social_services$table[1,]), criteria_n = sum(SASSDR_clinical_social_services$table[2,]))
+SASSDR_clinical_social_services_totals
+
+
+###
+#### medical pain clinics
+clinical_sample_pain_clinic = subset(clinical_sample, CLIENTSETTING == 3)
+dim(clinical_sample_pain_clinic)[1]
+### None
+
+## other pain clinic
+clinical_sample_other_pain_clinic = subset(clinical_sample, CLIENTSETTING == 4)
+dim(clinical_sample_other_pain_clinic)
+
+
+## substance use facilities
+#### substance use clinics
+clinical_sample_substance_use = subset(clinical_sample, CLIENTSETTING == 6)
+clinical_sample_substance_use_total_n =  dim(clinical_sample_substance_use)[1]
+SASSDR_clinical_substance_use=  confusionMatrix(as.factor(clinical_sample_substance_use$SASSDR), as.factor(clinical_sample_substance_use$NODIAG), positive = "1")
+
+
+n_correct_SASSDR_clinical_substance_use=  sum(SASSDR_clinical_substance_use$table[1,1], SASSDR_clinical_substance_use$table[2,2])
+n_correct_SASSDR_clinical_substance_use
+
+SASSDR_clinical_substance_use_totals = data.frame(test_p = sum(SASSDR_clinical_substance_use$table[,1]), test_n = sum(SASSDR_clinical_substance_use$table[,2]), criteria_p = sum(SASSDR_clinical_substance_use$table[1,]), criteria_n = sum(SASSDR_clinical_substance_use$table[2,]))
+SASSDR_clinical_substance_use_totals
+
+#### other
+clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7)
+clinical_sample_other_total_n =  dim(clinical_sample_other)[1]
+SASSDR_clinical_other=  confusionMatrix(as.factor(clinical_sample_other$SASSDR), as.factor(clinical_sample_other$NODIAG), positive = "1")
+SASSDR_clinical_other
+
+n_correct_SASSDR_clinical_other=  sum(SASSDR_clinical_other$table[1,1], SASSDR_clinical_other$table[2,2])
+n_correct_SASSDR_clinical_other
+
+SASSDR_clinical_other_totals = data.frame(test_p = sum(SASSDR_clinical_other$table[,1]), test_n = sum(SASSDR_clinical_other$table[,2]), criteria_p = sum(SASSDR_clinical_other$table[1,]), criteria_n = sum(SASSDR_clinical_other$table[2,]))
+SASSDR_clinical_other_totals
+
+
+```
+Tables 12 through 17 results
+```{r}
+SASSDR_clinical_crime
+clinical_sample_crime_total_n
+n_correct_SASSDR_clinical_crime
+SASSDR_clinical_crime_totals
+
+SASSDR_clinical_social_services
+clinical_sample_social_services_total_n
+n_correct_SASSDR_clinical_social_services
+SASSDR_clinical_social_services_totals
+
+SASSDR_clinical_substance_use
+clinical_sample_substance_use_total_n
+n_correct_SASSDR_clinical_substance_use
+SASSDR_clinical_substance_use_totals
+
+SASSDR_clinical_other
+clinical_sample_other_total_n
+n_correct_SASSDR_clinical_other
+SASSDR_clinical_other_totals
+```
+
+
+
+Go back and clean up table 1 answers from Scarlett
+
 
