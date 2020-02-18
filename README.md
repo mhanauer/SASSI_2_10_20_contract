@@ -13,11 +13,11 @@ library(MBESS)
 library(descr)
 library(coefficientalpha)
 setwd("S:/Indiana Research & Evaluation/Matthew Hanauer/SASSI/Data/2-10-20_contract")
-clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = 255)
-cross_validation_sample = read.csv("cross_validation_sample.csv", header = TRUE, na.strings = 255)
-development_sample = read.csv("development_sample.csv", header = TRUE, na.strings = 255)
-normative_sample = read.csv("normative_sample.csv", header= TRUE, na.strings = 255)
-stability_sample = read.csv("stability_sample.csv", header = TRUE, na.strings = 255)
+clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = c(98,255))
+cross_validation_sample = read.csv("cross_validation_sample.csv", header = TRUE, na.strings = c(98,255))
+development_sample = read.csv("development_sample.csv", header = TRUE, na.strings = c(98,255))
+normative_sample = read.csv("normative_sample.csv", header= TRUE, na.strings = c(98,255))
+stability_sample = read.csv("stability_sample.csv", header = TRUE, na.strings = c(98,255))
 ```
 Review for errors and descriptives
 ```{r}
@@ -305,12 +305,12 @@ dim(stability_sample)
 dim(clinical_sample)
 stability_sample
 ```
-Ok do omegas from clinicial samples
+Table 2 Omegas
 ```{r}
 library(psych)
 head(clinical_sample)
 head(clinical_sample[,15:101])
-#sassi_omega =  ci.reliability(clinical_sample[,15:101])
+sassi_omega =  ci.reliability(clinical_sample[,15:101])
 
 head(clinical_sample[,102:115])
 
@@ -472,7 +472,7 @@ n_correct_SASSDR_development
 SASSDR_development_totals = data.frame(test_p = sum(SASSDR_development$table[,1]), test_n = sum(SASSDR_development$table[,2]), criteria_p = sum(SASSDR_development$table[1,]), criteria_n = sum(SASSDR_development$table[2,]))
 
 
-cramer_v_SASSDR_development = CramerV(SASSDR_development$table, conf.level = .95)
+cramer_v_SASSDR_development = CramerV(SASSDR_development$table, conf.level = .99)
 cramer_v_SASSDR_development
 
 
@@ -486,7 +486,7 @@ n_correct_SASSDR_cross_validation
 cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[,1]), test_n = sum(SASSDR_cross_validation$table[,2]), criteria_p = sum(SASSDR_cross_validation$table[1,]), criteria_n = sum(SASSDR_cross_validation$table[2,]))
 cross_validation_sample_totals
 
-cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .95)
+cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .99)
 cramer_v_SASSDR_cross_validation
 
 clinical_sample$SASSDR = as.factor(clinical_sample$SASSDR)
@@ -499,7 +499,7 @@ n_correct_SASSDR_clinical
 clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[,1]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[1,]), criteria_n = sum(SASSDR_clinical$table[2,]))
 clinical_sample_totals
 
-cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .95)
+cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .99)
 cramer_v_SASSDR_clinical
 
 
@@ -522,6 +522,10 @@ n_correct_SASSDR_clinical
 clinical_sample_totals
 cramer_v_SASSDR_clinical
 
+SASSDR_development$table
+
+
+
 ```
 Table 6
 
@@ -541,7 +545,7 @@ n_correct_SASSDR_clinical_def_9
 SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[,1]), test_n = sum(SASSDR_clinical_def_9$table[,2]), criteria_p = sum(SASSDR_clinical_def_9$table[1,]), criteria_n = sum(SASSDR_clinical_def_9$table[2,]))
 
 
-cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .95)
+cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_9
 
 
@@ -557,7 +561,7 @@ n_correct_SASSDR_clinical_def_10
 SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[,1]), test_n = sum(SASSDR_clinical_def_10$table[,2]), criteria_p = sum(SASSDR_clinical_def_10$table[1,]), criteria_n = sum(SASSDR_clinical_def_10$table[2,]))
 SASSDR_clinical_def_10_totals
 
-cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .95)
+cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_10
 
 
@@ -672,7 +676,7 @@ table_9_fva_n_correct
 table_9_fva_totals = data.frame(test_p = sum(table_9_fva_results$table[,1]), test_n = sum(table_9_fva_results$table[,2]), criteria_p = sum(table_9_fva_results$table[1,]), criteria_n = sum(table_9_fva_results$table[2,]))
 table_9_fva_totals
 
-table_9_fva_cramer_v= CramerV(table_9_fva_results$table, conf.level = .95)
+table_9_fva_cramer_v= CramerV(table_9_fva_results$table, conf.level = .99)
 table_9_fva_cramer_v
 ```
 Table 9 Results
@@ -994,7 +998,7 @@ Table 11
 ```{r}
 accurate_var = ifelse(clinical_sample$SASSDR == clinical_sample$NODIAG,1,0)
 accurate_var = as.factor(accurate_var)
-cramer_v_table11 = CramerV(clinical_sample$CLIENTSETTING, accurate_var,  conf.level = .95)
+cramer_v_table11 = CramerV(clinical_sample$CLIENTSETTING, accurate_var,  conf.level = .99)
 cramer_v_table11
 
 describe.factor(clinical_sample$CLIENTSETTING)
@@ -1107,9 +1111,503 @@ clinical_sample_other_total_n
 n_correct_SASSDR_clinical_other
 SASSDR_clinical_other_totals
 ```
+Table 18 data cleaning
+```{r}
+clinical_sample
+
+```
+
+Table 18 results
+
+Table 19 data cleaning
+28 = 5th
+29 = 6th
+30 = 7th
+31 = 8th
+32 = 9th
+33 = 10th
+34 = 11th
+35 = 12th
+36 = Other
+```{r}
+
+five_six_dat = subset(clinical_sample, YEARS_ED == 28 | YEARS_ED == 29)
+describe.factor(five_six_dat$YEARS_ED)
+
+five_six_dat_total_n =  dim(five_six_dat)[1]
+
+five_six_dat_results=  confusionMatrix(as.factor(five_six_dat$SASSDR), as.factor(five_six_dat$NODIAG), positive = "1")
+
+five_six_dat_accurate =  sum(five_six_dat_results$table[1,1], five_six_dat_results$table[2,2])
+five_six_dat_inaccurate =  sum(five_six_dat_results$table[1,2], five_six_dat_results$table[2,1])
+
+seven_eight_nine_dat = subset(clinical_sample, YEARS_ED == 30 | YEARS_ED == 31 | YEARS_ED == 32)
+describe.factor(seven_eight_nine_dat$YEARS_ED)
+
+seven_eight_nine_dat_total_n =  dim(seven_eight_nine_dat)[1]
+
+seven_eight_nine_dat_results=  confusionMatrix(as.factor(seven_eight_nine_dat$SASSDR), as.factor(seven_eight_nine_dat$NODIAG), positive = "1")
+
+seven_eight_nine_dat_accurate =  sum(seven_eight_nine_dat_results$table[1,1], seven_eight_nine_dat_results$table[2,2])
+seven_eight_nine_dat_inaccurate =  sum(seven_eight_nine_dat_results$table[1,2], seven_eight_nine_dat_results$table[2,1])
+
+ten_eleven_twelve_dat = subset(clinical_sample, YEARS_ED == 33 | YEARS_ED == 34 | YEARS_ED == 35)
+describe.factor(ten_eleven_twelve_dat$YEARS_ED)
+
+ten_eleven_twelve_dat_total_n =  dim(ten_eleven_twelve_dat)[1]
+
+ten_eleven_twelve_dat_results=  confusionMatrix(as.factor(ten_eleven_twelve_dat$SASSDR), as.factor(ten_eleven_twelve_dat$NODIAG), positive = "1")
+
+ten_eleven_twelve_dat_accurate =  sum(ten_eleven_twelve_dat_results$table[1,1], ten_eleven_twelve_dat_results$table[2,2])
+ten_eleven_twelve_dat_inaccurate =  sum(ten_eleven_twelve_dat_results$table[1,2], ten_eleven_twelve_dat_results$table[2,1])
+
+total_n_five_twelve = sum(five_six_dat_total_n, seven_eight_nine_dat_total_n, ten_eleven_twelve_dat_total_n)
+
+edu_dat_cramer = subset(clinical_sample, YEARS_ED < 36)
+edu_dat_cramer$accurate = ifelse(edu_dat_cramer$SASSDR == edu_dat_cramer$NODIAG,1,0)
+
+edu_cramersV = CramerV(edu_dat_cramer$YEARS_ED, edu_dat_cramer$accurate, conf.level = .99)
+edu_cramersV
+```
+Table 19 results
+```{r}
+five_six_dat_total_n
+five_six_dat_results
+five_six_dat_accurate
+five_six_dat_inaccurate
+
+seven_eight_nine_dat_total_n
+seven_eight_nine_dat_results
+seven_eight_nine_dat_accurate
+seven_eight_nine_dat_inaccurate
+
+ten_eleven_twelve_dat_total_n
+ten_eleven_twelve_dat_results
+ten_eleven_twelve_dat_accurate
+ten_eleven_twelve_dat_inaccurate
+
+edu_cramersV
+```
+Table 20 - 23
+
+22 = Full time
+23 = part time
+24 = not employed
+25= volunteer
+
+Just doing part time and not employed
+```{r}
+describe.factor(clinical_sample$EMP_STATUS)
+
+not_employed_dat = subset(clinical_sample,  EMP_STATUS == 24)
+describe.factor(not_employed_dat$YEARS_ED)
+
+not_employed_dat_total_n =  dim(not_employed_dat)[1]
+
+not_employed_dat_results=  confusionMatrix(as.factor(not_employed_dat$SASSDR), as.factor(not_employed_dat$NODIAG), positive = "1")
+
+not_employed_dat_accurate =  sum(not_employed_dat_results$table[1,1], not_employed_dat_results$table[2,2])
+not_employed_dat_inaccurate =  sum(not_employed_dat_results$table[1,2], not_employed_dat_results$table[2,1])
+
+
+part_employed_dat = subset(clinical_sample,  EMP_STATUS == 23)
+describe.factor(part_employed_dat$YEARS_ED)
+
+part_employed_dat_total_n =  dim(part_employed_dat)[1]
+
+part_employed_dat_results=  confusionMatrix(as.factor(part_employed_dat$SASSDR), as.factor(part_employed_dat$NODIAG), positive = "1")
+
+part_employed_dat_accurate =  sum(part_employed_dat_results$table[1,1], part_employed_dat_results$table[2,2])
+part_employed_dat_inaccurate =  sum(part_employed_dat_results$table[1,2], part_employed_dat_results$table[2,1])
+
+employed_dat_cramer = subset(clinical_sample, EMP_STATUS == 23 | EMP_STATUS == 24)
+employed_dat_cramer$accurate = ifelse(employed_dat_cramer$SASSDR == employed_dat_cramer$NODIAG,1,0)
+
+employed_cramersV = CramerV(employed_dat_cramer$YEARS_ED, employed_dat_cramer$accurate, conf.level = .99)
+employed_cramersV
+
+employed_n = sum(not_employed_dat_total_n, part_employed_dat_total_n)
+
+```
+Tables 20 - 23 results
+```{r}
+not_employed_dat_total_n
+not_employed_dat_accurate
+not_employed_dat_inaccurate
+
+part_employed_dat_total_n
+part_employed_dat_accurate
+part_employed_dat_inaccurate
+employed_cramersV
+
+employed_n
+
+```
+Table 24 - 26
+
+Male = 1
+Female = 2
+```{r}
+male_dat = subset(clinical_sample,  SEX == 1)
+
+male_dat_total_n =  dim(male_dat)[1]
+
+male_dat_results=  confusionMatrix(as.factor(male_dat$SASSDR), as.factor(male_dat$NODIAG), positive = "1")
+
+male_dat_accurate =  sum(male_dat_results$table[1,1], male_dat_results$table[2,2])
+male_dat_inaccurate =  sum(male_dat_results$table[1,2], male_dat_results$table[2,1])
+
+
+female_dat = subset(clinical_sample,  SEX == 2)
+
+female_dat_total_n =  dim(female_dat)[1]
+
+female_dat_results=  confusionMatrix(as.factor(female_dat$SASSDR), as.factor(female_dat$NODIAG), positive = "1")
+
+female_dat_accurate =  sum(female_dat_results$table[1,1], female_dat_results$table[2,2])
+female_dat_inaccurate =  sum(female_dat_results$table[1,2], female_dat_results$table[2,1])
+
+male_dat = subset(clinical_sample, SEX == 1)
+
+male_dat_total_n =  dim(male_dat)[1]
+
+male_dat_results=  confusionMatrix(as.factor(male_dat$SASSDR), as.factor(male_dat$NODIAG), positive = "1")
+
+male_totals = data.frame(test_p = sum(male_dat_results$table[,1]), test_n = sum(male_dat_results$table[,2]), criteria_p = sum(male_dat_results$table[1,]), criteria_n = sum(male_dat_results$table[2,]))
+male_totals
+
+female_dat = subset(clinical_sample, SEX == 2)
+
+female_dat_total_n =  dim(female_dat)[1]
+
+female_dat_results=  confusionMatrix(as.factor(female_dat$SASSDR), as.factor(female_dat$NODIAG), positive = "1")
+
+female_totals = data.frame(test_p = sum(female_dat_results$table[,1]), test_n = sum(female_dat_results$table[,2]), criteria_p = sum(female_dat_results$table[1,]), criteria_n = sum(female_dat_results$table[2,]))
+female_totals
+
+
+total_gender_n = sum(male_dat_total_n, female_dat_total_n)
+total_gender_accurate = sum(male_dat_accurate, female_dat_accurate)
+total_gender_inaccurate = sum(male_dat_inaccurate, female_dat_inaccurate)
+
+```
+Tables 24 through 26
+```{r}
+male_dat_total_n
+male_dat_accurate
+male_dat_inaccurate
+
+female_dat_total_n
+female_dat_accurate
+female_dat_inaccurate
+
+male_dat_results
+male_totals
+
+female_dat_results
+female_totals
+total_gender_n
+
+total_gender_accurate
+total_gender_inaccurate
 
 
 
-Go back and clean up table 1 answers from Scarlett
+```
+Table 27 
+Ages 13,14,15,16,17,18
+```{r}
+thirteen_dat = subset(clinical_sample,  AGE == 13)
+
+thirteen_dat_total_n =  dim(thirteen_dat)[1]
+
+thirteen_dat_results=  confusionMatrix(as.factor(thirteen_dat$SASSDR), as.factor(thirteen_dat$NODIAG), positive = "1")
+
+thirteen_dat_accurate =  sum(thirteen_dat_results$table[1,1], thirteen_dat_results$table[2,2])
+thirteen_dat_inaccurate =  sum(thirteen_dat_results$table[1,2], thirteen_dat_results$table[2,1])
+
+
+fourteen_dat = subset(clinical_sample,  AGE == 14)
+
+fourteen_dat_total_n =  dim(fourteen_dat)[1]
+
+fourteen_dat_results=  confusionMatrix(as.factor(fourteen_dat$SASSDR), as.factor(fourteen_dat$NODIAG), positive = "1")
+
+fourteen_dat_accurate =  sum(fourteen_dat_results$table[1,1], fourteen_dat_results$table[2,2])
+fourteen_dat_inaccurate =  sum(fourteen_dat_results$table[1,2], fourteen_dat_results$table[2,1])
+
+
+fifteen_dat = subset(clinical_sample,  AGE == 15)
+
+fifteen_dat_total_n =  dim(fifteen_dat)[1]
+
+fifteen_dat_results=  confusionMatrix(as.factor(fifteen_dat$SASSDR), as.factor(fifteen_dat$NODIAG), positive = "1")
+
+fifteen_dat_accurate =  sum(fifteen_dat_results$table[1,1], fifteen_dat_results$table[2,2])
+fifteen_dat_inaccurate =  sum(fifteen_dat_results$table[1,2], fifteen_dat_results$table[2,1])
+
+sixteen_dat = subset(clinical_sample,  AGE == 16)
+
+sixteen_dat_total_n =  dim(sixteen_dat)[1]
+
+sixteen_dat_results=  confusionMatrix(as.factor(sixteen_dat$SASSDR), as.factor(sixteen_dat$NODIAG), positive = "1")
+
+sixteen_dat_accurate =  sum(sixteen_dat_results$table[1,1], sixteen_dat_results$table[2,2])
+sixteen_dat_inaccurate =  sum(sixteen_dat_results$table[1,2], sixteen_dat_results$table[2,1])
+
+seventeen_dat = subset(clinical_sample,  AGE == 17)
+
+seventeen_dat_total_n =  dim(seventeen_dat)[1]
+
+seventeen_dat_results=  confusionMatrix(as.factor(seventeen_dat$SASSDR), as.factor(seventeen_dat$NODIAG), positive = "1")
+
+seventeen_dat_accurate =  sum(seventeen_dat_results$table[1,1], seventeen_dat_results$table[2,2])
+seventeen_dat_inaccurate =  sum(seventeen_dat_results$table[1,2], seventeen_dat_results$table[2,1])
+
+eighteen_dat = subset(clinical_sample,  AGE == 18)
+
+eighteen_dat_total_n =  dim(eighteen_dat)[1]
+
+eighteen_dat_results=  confusionMatrix(as.factor(eighteen_dat$SASSDR), as.factor(eighteen_dat$NODIAG), positive = "1")
+
+eighteen_dat_accurate =  sum(eighteen_dat_results$table[1,1], eighteen_dat_results$table[2,2])
+eighteen_dat_inaccurate =  sum(eighteen_dat_results$table[1,2], eighteen_dat_results$table[2,1])
+
+
+total_age_accurate = sum(thirteen_dat_accurate, fourteen_dat_accurate, fifteen_dat_accurate, sixteen_dat_accurate, seventeen_dat_accurate, eighteen_dat_accurate)
+
+total_age_inaccurate = sum(thirteen_dat_inaccurate, fourteen_dat_inaccurate, fifteen_dat_inaccurate, sixteen_dat_inaccurate, seventeen_dat_inaccurate, eighteen_dat_inaccurate)
+
+age_dat_cramer = clinical_sample
+age_dat_cramer$accurate = ifelse(clinical_sample$SASSDR == age_dat_cramer$NODIAG,1,0)
+
+age_cramersV = CramerV(age_dat_cramer$AGE, age_dat_cramer$accurate, conf.level = .99)
+age_cramersV
+
+```
+Table 27 results
+```{r}
+thirteen_dat_total_n
+thirteen_dat_results
+thirteen_dat_accurate
+thirteen_dat_inaccurate
+
+fourteen_dat_total_n
+fourteen_dat_results
+fourteen_dat_accurate
+fourteen_dat_inaccurate
+
+fifteen_dat_total_n
+fifteen_dat_results
+fifteen_dat_accurate
+fifteen_dat_inaccurate
+
+sixteen_dat_total_n
+sixteen_dat_results
+sixteen_dat_accurate
+sixteen_dat_inaccurate
+
+eighteen_dat_total_n
+eighteen_dat_results
+eighteen_dat_accurate
+eighteen_dat_inaccurate
+
+age_cramersV
+
+
+```
+Table 28
+
+Only include the following ethnicities rest are below 10: 
+White = 7         
+Hispanic = 5  (per email)      
+Black = 3         
+Mixed race =  8
+```{r}
+describe.factor(clinical_sample$ETHN)
+
+white_dat = subset(clinical_sample,  ETHN == 7)
+
+white_dat_total_n =  dim(white_dat)[1]
+
+white_dat_results=  confusionMatrix(as.factor(white_dat$SASSDR), as.factor(white_dat$NODIAG), positive = "1")
+
+white_dat_accurate =  sum(white_dat_results$table[1,1], white_dat_results$table[2,2])
+
+white_totals = data.frame(test_p = sum(white_dat_results$table[,1]), test_n = sum(white_dat_results$table[,2]), criteria_p = sum(white_dat_results$table[1,]), criteria_n = sum(white_dat_results$table[2,]))
+white_totals
+
+
+hispanic_dat = subset(clinical_sample,  ETHN == 5)
+
+hispanic_dat_total_n =  dim(hispanic_dat)[1]
+
+hispanic_dat_results=  confusionMatrix(as.factor(hispanic_dat$SASSDR), as.factor(hispanic_dat$NODIAG), positive = "1")
+
+hispanic_dat_accurate =  sum(hispanic_dat_results$table[1,1], hispanic_dat_results$table[2,2])
+
+
+hispanic_totals = data.frame(test_p = sum(hispanic_dat_results$table[,1]), test_n = sum(hispanic_dat_results$table[,2]), criteria_p = sum(hispanic_dat_results$table[1,]), criteria_n = sum(hispanic_dat_results$table[2,]))
+hispanic_totals
+
+
+black_dat = subset(clinical_sample,  ETHN == 3)
+
+black_dat_total_n =  dim(black_dat)[1]
+
+black_dat_results=  confusionMatrix(as.factor(black_dat$SASSDR), as.factor(black_dat$NODIAG), positive = "1")
+
+black_dat_accurate =  sum(black_dat_results$table[1,1], black_dat_results$table[2,2])
+
+black_totals = data.frame(test_p = sum(black_dat_results$table[,1]), test_n = sum(black_dat_results$table[,2]), criteria_p = sum(black_dat_results$table[1,]), criteria_n = sum(black_dat_results$table[2,]))
+black_totals
+
+mixed_dat = subset(clinical_sample,  ETHN == 8)
+
+mixed_dat_total_n =  dim(mixed_dat)[1]
+
+mixed_dat_results =  confusionMatrix(as.factor(mixed_dat$SASSDR), as.factor(mixed_dat$NODIAG), positive = "1")
+
+mixed_dat_accurate =  sum(mixed_dat_results$table[1,1], mixed_dat_results$table[2,2])
+
+mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[,1]), test_n = sum(mixed_dat_results$table[,2]), criteria_p = sum(mixed_dat_results$table[1,]), criteria_n = sum(mixed_dat_results$table[2,]))
+mixed_totals
+
+```
+Tables 29 - 35 results
+```{r}
+white_dat_total_n
+white_dat_results
+white_dat_accurate
+white_totals
+
+hispanic_dat_total_n
+hispanic_dat_results
+hispanic_dat_accurate
+hispanic_totals
+
+
+black_dat_total_n
+black_dat_results
+black_dat_accurate
+black_totals
+
+mixed_dat_total_n
+mixed_dat_results
+mixed_dat_accurate
+mixed_totals
+
+
+
+```
+Table 36 data cleaning
+```{r}
+legal_dat = subset(clinical_sample, TOT_ARREST > 0)
+
+legal_dat_total_n =  dim(legal_dat)[1]
+
+legal_dat_results=  confusionMatrix(as.factor(legal_dat$SASSDR), as.factor(legal_dat$NODIAG), positive = "1")
+
+legal_dat_accurate =  sum(legal_dat_results$table[1,1], legal_dat_results$table[2,2])
+
+legal_totals = data.frame(test_p = sum(legal_dat_results$table[,1]), test_n = sum(legal_dat_results$table[,2]), criteria_p = sum(legal_dat_results$table[1,]), criteria_n = sum(legal_dat_results$table[2,]))
+legal_totals
+
+
+```
+Table 36 results
+```{r}
+legal_dat_total_n
+legal_dat_results
+legal_dat_accurate
+legal_totals
+```
+Table 37 data cleaning
+9 = Parents
+13 = residential
+10 = other relatives
+```{r}
+describe.factor(clinical_sample$LIVING_SIT)
+
+living_sit_dat = subset(clinical_sample, LIVING_SIT != 9)
+
+living_sit_dat_total_n =  dim(living_sit_dat)[1]
+
+living_sit_dat_results=  confusionMatrix(as.factor(living_sit_dat$SASSDR), as.factor(living_sit_dat$NODIAG), positive = "1")
+
+living_sit_dat_accurate =  sum(living_sit_dat_results$table[1,1], living_sit_dat_results$table[2,2])
+
+living_sit_totals = data.frame(test_p = sum(living_sit_dat_results$table[,1]), test_n = sum(living_sit_dat_results$table[,2]), criteria_p = sum(living_sit_dat_results$table[1,]), criteria_n = sum(living_sit_dat_results$table[2,]))
+living_sit_totals
+
+```
+Table 37 results
+```{r}
+living_sit_dat_total_n
+living_sit_dat_results
+living_sit_dat_accurate
+living_sit_totals
+
+
+
+```
+Table 38 data cleaning
+The SASSI test is represented by the Rx score or 2 or more which is considered “High prob of Prescription Drug Abuse” and an Rx score of less than 2 is considered “Low probability of prescription Drug Abuse.” The “truth” is represented by the clinician’s diagnosis of an Opioid or Sedative SUD which is indicated by a 1 in either the OPIOIDDIAG and/or SEDDIAG field. No SUD is of course a 1 in the NODIAG field.
+```{r}
+
+table_38_dat = clinical_sample
+table_38_dat$Rx_test = ifelse(table_38_dat$Rx >=2, 1, 0)
+table_38_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDIAG == 1,1,0)
+
+
+table_38_dat_total_n =  dim(table_38_dat)[1]
+
+table_38_dat_results=  confusionMatrix(as.factor(table_38_dat$Rx_test), as.factor(table_38_dat$Rx_truth), positive = "1")
+table_38_dat_results$table
+table_38_dat_results_row1 = data.frame(one_one= table_38_dat_results$table[2,2], one_zero = table_38_dat_results$table[2,1], row1_total = sum(table_38_dat_results$table[2,]))
+table_38_dat_results_row1
+
+table_38_dat_nodiag_results=  confusionMatrix(as.factor(table_38_dat$Rx_bin), as.factor(table_38_dat$NODIAG), positive = "0")
+table_38_dat_nodiag_results$table
+table_38_dat_nodiag_results_row1 = data.frame(one_one= table_38_dat_nodiag_results$table[2,2], one_zero = table_38_dat_nodiag_results$table[2,1], row1_total = sum(table_38_dat_nodiag_results$table[2,]))
+table_38_dat_nodiag_results_row1
+
+
+table_38_dat_accurate =  sum(table_38_dat_results$table[1,1], table_38_dat_results$table[2,2])
+
+table_38_totals = data.frame(test_p = sum(table_38_dat_results$table[,1]), test_n = sum(table_38_dat_results$table[,2]), criteria_p = sum(table_38_dat_results$table[1,]), criteria_n = sum(table_38_dat_results$table[2,]))
+table_38
+
+```
+Table 38 results
+```{r}
+
+
+
+```
+
+
+Table 38 new table data cleaning
+In addition, we asked another variable in this table for this in the teen sample that we didn’t for the adults so that could possibly be included on the table in addition to or separate from the Opioid Sedative SUD. That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. If it’s zero and one of the following categories has a one in it (indicating that’s the Rx of abuse) then they are diagnosed with a  prescription drug abuse diag in that category: RXPOTDIAG; RXOPIOIDDIAG; RXSEDDIAG; RXSTIMDIAG; RXOTHERDIAG. If it’s 0 in NoRXDIAG and no categories are marked, it means they left the field blank and No Rx diag present (sorry, I didn’t do this coding).
+
+```{r}
+table_38_2_dat = clinical_sample
+
+table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$NORXDIAG == 1 | table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
+table_38_2_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDIAG == 1,1,0)
+
+
+table_38_2_dat_total_n =  dim(table_38_2_dat)[1]
+
+table_38_2_dat_results=  confusionMatrix(as.factor(table_38_2_dat$rx_2_test), as.factor(table_38_2_dat$Rx_truth), positive = "1")
+
+table_38_2_dat_accurate =  sum(table_38_2_dat_results$table[1,1], table_38_2_dat_results$table[2,2])
+
+table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[,1]), test_n = sum(table_38_2_dat_results$table[,2]), criteria_p = sum(table_38_2_dat_results$table[1,]), criteria_n = sum(table_38_2_dat_results$table[2,]))
+table_38_2_totals
+
+```
+
+
 
 
