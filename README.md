@@ -469,7 +469,7 @@ SASSDR_development =  confusionMatrix(development_sample$SASSDR, development_sam
 n_correct_SASSDR_development =  sum(SASSDR_development$table[1,1], SASSDR_development$table[2,2])
 n_correct_SASSDR_development
 
-SASSDR_development_totals = data.frame(test_p = sum(SASSDR_development$table[,1]), test_n = sum(SASSDR_development$table[,2]), criteria_p = sum(SASSDR_development$table[1,]), criteria_n = sum(SASSDR_development$table[2,]))
+SASSDR_development_totals = data.frame(test_p = sum(SASSDR_development$table[2,]), test_n = sum(SASSDR_development$table[1,]), criteria_p = sum(SASSDR_development$table[,2]), criteria_n = sum(SASSDR_development$table[,1]))
 
 
 cramer_v_SASSDR_development = CramerV(SASSDR_development$table, conf.level = .99)
@@ -483,7 +483,7 @@ SASSDR_cross_validation =  confusionMatrix(cross_validation_sample$SASSDR, cross
 n_correct_SASSDR_cross_validation =  sum(SASSDR_cross_validation$table[1,1], SASSDR_cross_validation$table[2,2])
 n_correct_SASSDR_cross_validation
 
-cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[,1]), test_n = sum(SASSDR_cross_validation$table[,2]), criteria_p = sum(SASSDR_cross_validation$table[1,]), criteria_n = sum(SASSDR_cross_validation$table[2,]))
+cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[2,]), test_n = sum(SASSDR_cross_validation$table[1,]), criteria_p = sum(SASSDR_cross_validation$table[,2]), criteria_n = sum(SASSDR_cross_validation$table[,1]))
 cross_validation_sample_totals
 
 cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .99)
@@ -496,7 +496,7 @@ SASSDR_clinical=  confusionMatrix(clinical_sample$SASSDR, clinical_sample$NODIAG
 n_correct_SASSDR_clinical=  sum(SASSDR_clinical$table[1,1], SASSDR_clinical$table[2,2])
 n_correct_SASSDR_clinical
 
-clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[,1]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[1,]), criteria_n = sum(SASSDR_clinical$table[2,]))
+clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[2,]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[,2]), criteria_n = sum(SASSDR_clinical$table[2,]))
 clinical_sample_totals
 
 cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .99)
@@ -542,7 +542,7 @@ SASSDR_clinical_def_9
 n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_clinical_def_9$table[2,2])
 n_correct_SASSDR_clinical_def_9
 
-SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[,1]), test_n = sum(SASSDR_clinical_def_9$table[,2]), criteria_p = sum(SASSDR_clinical_def_9$table[1,]), criteria_n = sum(SASSDR_clinical_def_9$table[2,]))
+SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[2,]), test_n = sum(SASSDR_clinical_def_9$table[1,]), criteria_p = sum(SASSDR_clinical_def_9$table[,2]), criteria_n = sum(SASSDR_clinical_def_9$table[,1]))
 
 
 cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
@@ -558,7 +558,7 @@ SASSDR_clinical_def_10
 n_correct_SASSDR_clinical_def_10=  sum(SASSDR_clinical_def_10$table[1,1], SASSDR_clinical_def_10$table[2,2])
 n_correct_SASSDR_clinical_def_10
 
-SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[,1]), test_n = sum(SASSDR_clinical_def_10$table[,2]), criteria_p = sum(SASSDR_clinical_def_10$table[1,]), criteria_n = sum(SASSDR_clinical_def_10$table[2,]))
+SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[2,]), test_n = sum(SASSDR_clinical_def_10$table[,1]), criteria_p = sum(SASSDR_clinical_def_10$table[,2]), criteria_n = sum(SASSDR_clinical_def_10$table[,1]))
 SASSDR_clinical_def_10_totals
 
 cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .99)
@@ -673,7 +673,7 @@ table_9_fva_results
 table_9_fva_n_correct=  sum(table_9_fva_results$table[1,1], table_9_fva_results$table[2,2])
 table_9_fva_n_correct
 
-table_9_fva_totals = data.frame(test_p = sum(table_9_fva_results$table[,1]), test_n = sum(table_9_fva_results$table[,2]), criteria_p = sum(table_9_fva_results$table[1,]), criteria_n = sum(table_9_fva_results$table[2,]))
+table_9_fva_totals = data.frame(test_p = sum(table_9_fva_results$table[2,]), test_n = sum(table_9_fva_results$table[1,]), criteria_p = sum(table_9_fva_results$table[,2]), criteria_n = sum(table_9_fva_results$table[,1]))
 table_9_fva_totals
 
 table_9_fva_cramer_v= CramerV(table_9_fva_results$table, conf.level = .99)
@@ -719,7 +719,7 @@ rule1_diag_p = sum(rule1_results$table[,2])
 rule1_accurate = rule1_test_p /rule1_diag_p 
 rule1_accurate
 
-rule1_totals = data.frame(test_p = sum(rule1_results$table[,1]), test_n = sum(rule1_results$table[,2]), criteria_p = sum(rule1_results$table[1,]), criteria_n = sum(rule1_results$table[2,]))
+rule1_totals = data.frame(test_p = sum(rule1_results$table[2,]), test_n = sum(rule1_results$table[1,]), criteria_p = sum(rule1_results$table[,2]), criteria_n = sum(rule1_results$table[,1]))
 rule1_totals
 
 
@@ -733,7 +733,7 @@ rule2_diag_p = sum(rule2_results$table[,2])
 rule2_accurate = rule2_test_p /rule2_diag_p 
 rule2_accurate
 
-rule2_totals = data.frame(test_p = sum(rule2_results$table[,1]), test_n = sum(rule2_results$table[,2]), criteria_p = sum(rule2_results$table[1,]), criteria_n = sum(rule2_results$table[2,]))
+rule2_totals = data.frame(test_p = sum(rule2_results$table[2,]), test_n = sum(rule2_results$table[1,]), criteria_p = sum(rule2_results$table[,2]), criteria_n = sum(rule2_results$table[,1]))
 rule2_totals
 
 
@@ -747,7 +747,7 @@ rule3_diag_p = sum(rule3_results$table[,2])
 rule3_accurate = rule3_test_p /rule3_diag_p 
 rule3_accurate
 
-rule3_totals = data.frame(test_p = sum(rule3_results$table[,1]), test_n = sum(rule3_results$table[,2]), criteria_p = sum(rule3_results$table[1,]), criteria_n = sum(rule3_results$table[2,]))
+rule3_totals = data.frame(test_p = sum(rule3_results$table[2,]), test_n = sum(rule3_results$table[1,]), criteria_p = sum(rule3_results$table[,2]), criteria_n = sum(rule3_results$table[,1]))
 rule3_totals
 
 
@@ -761,7 +761,7 @@ rule4_diag_p = sum(rule4_results$table[,2])
 rule4_accurate = rule4_test_p /rule4_diag_p 
 rule4_accurate
 
-rule4_totals = data.frame(test_p = sum(rule4_results$table[,1]), test_n = sum(rule4_results$table[,2]), criteria_p = sum(rule4_results$table[1,]), criteria_n = sum(rule4_results$table[2,]))
+rule4_totals = data.frame(test_p = sum(rule4_results$table[2,]), test_n = sum(rule4_results$table[1,]), criteria_p = sum(rule4_results$table[,2]), criteria_n = sum(rule4_results$table[,1]))
 rule4_totals
 
 
@@ -775,7 +775,7 @@ rule5_diag_p = sum(rule5_results$table[,2])
 rule5_accurate = rule5_test_p /rule5_diag_p 
 rule5_accurate
 
-rule5_totals = data.frame(test_p = sum(rule5_results$table[,1]), test_n = sum(rule5_results$table[,2]), criteria_p = sum(rule5_results$table[1,]), criteria_n = sum(rule5_results$table[2,]))
+rule5_totals = data.frame(test_p = sum(rule5_results$table[2,]), test_n = sum(rule5_results$table[1,]), criteria_p = sum(rule5_results$table[,2]), criteria_n = sum(rule5_results$table[,1]))
 rule5_totals
 
 
@@ -790,7 +790,7 @@ rule6_diag_p = sum(rule6_results$table[,2])
 rule6_accurate = rule6_test_p /rule6_diag_p 
 rule6_accurate
 
-rule6_totals = data.frame(test_p = sum(rule6_results$table[,1]), test_n = sum(rule6_results$table[,2]), criteria_p = sum(rule6_results$table[1,]), criteria_n = sum(rule6_results$table[2,]))
+rule6_totals = data.frame(test_p = sum(rule6_results$table[2,]), test_n = sum(rule6_results$table[1,]), criteria_p = sum(rule6_results$table[,2]), criteria_n = sum(rule6_results$table[,1]))
 rule6_totals
 
 
@@ -805,7 +805,7 @@ rule7_diag_p = sum(rule7_results$table[,2])
 rule7_accurate = rule7_test_p /rule7_diag_p 
 rule7_accurate
 
-rule7_totals = data.frame(test_p = sum(rule7_results$table[,1]), test_n = sum(rule7_results$table[,2]), criteria_p = sum(rule7_results$table[1,]), criteria_n = sum(rule7_results$table[2,]))
+rule7_totals = data.frame(test_p = sum(rule7_results$table[2,]), test_n = sum(rule7_results$table[1,]), criteria_p = sum(rule7_results$table[,2]), criteria_n = sum(rule7_results$table[,1]))
 rule7_totals
 
 
@@ -821,7 +821,7 @@ rule8_diag_p = sum(rule8_results$table[,2])
 rule8_accurate = rule8_test_p /rule8_diag_p 
 rule8_accurate
 
-rule8_totals = data.frame(test_p = sum(rule8_results$table[,1]), test_n = sum(rule8_results$table[,2]), criteria_p = sum(rule8_results$table[1,]), criteria_n = sum(rule8_results$table[2,]))
+rule8_totals = data.frame(test_p = sum(rule8_results$table[2,]), test_n = sum(rule8_results$table[1,]), criteria_p = sum(rule8_results$table[,2]), criteria_n = sum(rule8_results$table[,1]))
 rule8_totals
 
 
@@ -885,7 +885,7 @@ rule1_diag_p = sum(rule1_results$table[,2])
 rule1_accurate = rule1_test_p /rule1_diag_p 
 rule1_accurate
 
-rule1_totals = data.frame(test_p = sum(rule1_results$table[,1]), test_n = sum(rule1_results$table[,2]), criteria_p = sum(rule1_results$table[1,]), criteria_n = sum(rule1_results$table[2,]))
+rule1_totals = data.frame(test_p = sum(rule1_results$table[2,]), test_n = sum(rule1_results$table[1,]), criteria_p = sum(rule1_results$table[,2]), criteria_n = sum(rule1_results$table[,1]))
 rule1_totals
 
 
@@ -899,7 +899,7 @@ rule2_diag_p = sum(rule2_results$table[,2])
 rule2_accurate = rule2_test_p /rule2_diag_p 
 rule2_accurate
 
-rule2_totals = data.frame(test_p = sum(rule2_results$table[,1]), test_n = sum(rule2_results$table[,2]), criteria_p = sum(rule2_results$table[1,]), criteria_n = sum(rule2_results$table[2,]))
+rule2_totals = data.frame(test_p = sum(rule2_results$table[2,]), test_n = sum(rule2_results$table[1,]), criteria_p = sum(rule2_results$table[,2]), criteria_n = sum(rule2_results$table[,1]))
 rule2_totals
 
 
@@ -913,7 +913,7 @@ rule3_diag_p = sum(rule3_results$table[,2])
 rule3_accurate = rule3_test_p /rule3_diag_p 
 rule3_accurate
 
-rule3_totals = data.frame(test_p = sum(rule3_results$table[,1]), test_n = sum(rule3_results$table[,2]), criteria_p = sum(rule3_results$table[1,]), criteria_n = sum(rule3_results$table[2,]))
+rule3_totals = data.frame(test_p = sum(rule3_results$table[2,]), test_n = sum(rule3_results$table[1,]), criteria_p = sum(rule3_results$table[,2]), criteria_n = sum(rule3_results$table[,1]))
 rule3_totals
 
 
@@ -927,7 +927,7 @@ rule4_diag_p = sum(rule4_results$table[,2])
 rule4_accurate = rule4_test_p /rule4_diag_p 
 rule4_accurate
 
-rule4_totals = data.frame(test_p = sum(rule4_results$table[,1]), test_n = sum(rule4_results$table[,2]), criteria_p = sum(rule4_results$table[1,]), criteria_n = sum(rule4_results$table[2,]))
+rule4_totals = data.frame(test_p = sum(rule4_results$table[2,]), test_n = sum(rule4_results$table[1,]), criteria_p = sum(rule4_results$table[,2]), criteria_n = sum(rule4_results$table[,1]))
 rule4_totals
 
 
@@ -941,7 +941,7 @@ rule5_diag_p = sum(rule5_results$table[,2])
 rule5_accurate = rule5_test_p /rule5_diag_p 
 rule5_accurate
 
-rule5_totals = data.frame(test_p = sum(rule5_results$table[,1]), test_n = sum(rule5_results$table[,2]), criteria_p = sum(rule5_results$table[1,]), criteria_n = sum(rule5_results$table[2,]))
+rule5_totals = data.frame(test_p = sum(rule5_results$table[2,]), test_n = sum(rule5_results$table[1,]), criteria_p = sum(rule5_results$table[,2]), criteria_n = sum(rule5_results$table[,1]))
 rule5_totals
 
 #Rule 6: FVOD 7 or more and FRISK or ATT or SAM 3 or more and OAT 5 or more
@@ -956,7 +956,7 @@ rule6_diag_p = sum(rule6_results$table[,2])
 rule6_accurate = rule6_test_p /rule6_diag_p 
 rule6_accurate
 
-rule6_totals = data.frame(test_p = sum(rule6_results$table[,1]), test_n = sum(rule6_results$table[,2]), criteria_p = sum(rule6_results$table[1,]), criteria_n = sum(rule6_results$table[2,]))
+rule6_totals = data.frame(test_p = sum(rule6_results$table[2,]), test_n = sum(rule6_results$table[1,]), criteria_p = sum(rule6_results$table[,2]), criteria_n = sum(rule6_results$table[,1]))
 rule6_totals
 
 #Rule 7: FVA or FVOD 5 or more and OAT 4 or more and DEF 7 or more
@@ -972,7 +972,7 @@ rule7_diag_p = sum(rule7_results$table[,2])
 rule7_accurate = rule7_test_p /rule7_diag_p 
 rule7_accurate
 
-rule7_totals = data.frame(test_p = sum(rule7_results$table[,1]), test_n = sum(rule7_results$table[,2]), criteria_p = sum(rule7_results$table[1,]), criteria_n = sum(rule7_results$table[2,]))
+rule7_totals = data.frame(test_p = sum(rule7_results$table[2,]), test_n = sum(rule7_results$table[1,]), criteria_p = sum(rule7_results$table[,2]), criteria_n = sum(rule7_results$table[,1]))
 rule7_totals
 
 #Rule 8: FVA or FVOD 5 or more and SAT 3 or more and DEF 4 or more and SAM 3 or more
@@ -988,7 +988,7 @@ rule8_diag_p = sum(rule8_results$table[,2])
 rule8_accurate = rule8_test_p /rule8_diag_p 
 rule8_accurate
 
-rule8_totals = data.frame(test_p = sum(rule8_results$table[,1]), test_n = sum(rule8_results$table[,2]), criteria_p = sum(rule8_results$table[1,]), criteria_n = sum(rule8_results$table[2,]))
+rule8_totals = data.frame(test_p = sum(rule8_results$table[2,]), test_n = sum(rule8_results$table[1,]), criteria_p = sum(rule8_results$table[,2]), criteria_n = sum(rule8_results$table[,1]))
 rule8_totals
 ```
 
@@ -1031,7 +1031,7 @@ SASSDR_clinical_crime
 n_correct_SASSDR_clinical_crime=  sum(SASSDR_clinical_crime$table[1,1], SASSDR_clinical_crime$table[2,2])
 n_correct_SASSDR_clinical_crime
 
-SASSDR_clinical_crime_totals = data.frame(test_p = sum(SASSDR_clinical_crime$table[,1]), test_n = sum(SASSDR_clinical_crime$table[,2]), criteria_p = sum(SASSDR_clinical_crime$table[1,]), criteria_n = sum(SASSDR_clinical_crime$table[2,]))
+SASSDR_clinical_crime_totals = data.frame(test_p = sum(SASSDR_clinical_crime$table[2,]), test_n = sum(SASSDR_clinical_crime$table[1,]), criteria_p = sum(SASSDR_clinical_crime$table[,2]), criteria_n = sum(SASSDR_clinical_crime$table[,1]))
 SASSDR_clinical_crime_totals
 
 
@@ -1047,7 +1047,7 @@ SASSDR_clinical_social_services
 n_correct_SASSDR_clinical_social_services=  sum(SASSDR_clinical_social_services$table[1,1], SASSDR_clinical_social_services$table[2,2])
 n_correct_SASSDR_clinical_social_services
 
-SASSDR_clinical_social_services_totals = data.frame(test_p = sum(SASSDR_clinical_social_services$table[,1]), test_n = sum(SASSDR_clinical_social_services$table[,2]), criteria_p = sum(SASSDR_clinical_social_services$table[1,]), criteria_n = sum(SASSDR_clinical_social_services$table[2,]))
+SASSDR_clinical_social_services_totals = data.frame(test_p = sum(SASSDR_clinical_social_services$table[2,]), test_n = sum(SASSDR_clinical_social_services$table[1,]), criteria_p = sum(SASSDR_clinical_social_services$table[,2]), criteria_n = sum(SASSDR_clinical_social_services$table[,1]))
 SASSDR_clinical_social_services_totals
 
 
@@ -1072,7 +1072,7 @@ SASSDR_clinical_substance_use=  confusionMatrix(as.factor(clinical_sample_substa
 n_correct_SASSDR_clinical_substance_use=  sum(SASSDR_clinical_substance_use$table[1,1], SASSDR_clinical_substance_use$table[2,2])
 n_correct_SASSDR_clinical_substance_use
 
-SASSDR_clinical_substance_use_totals = data.frame(test_p = sum(SASSDR_clinical_substance_use$table[,1]), test_n = sum(SASSDR_clinical_substance_use$table[,2]), criteria_p = sum(SASSDR_clinical_substance_use$table[1,]), criteria_n = sum(SASSDR_clinical_substance_use$table[2,]))
+SASSDR_clinical_substance_use_totals = data.frame(test_p = sum(SASSDR_clinical_substance_use$table[2,]), test_n = sum(SASSDR_clinical_substance_use$table[1,]), criteria_p = sum(SASSDR_clinical_substance_use$table[,2]), criteria_n = sum(SASSDR_clinical_substance_use$table[,1]))
 SASSDR_clinical_substance_use_totals
 
 #### other
@@ -1084,7 +1084,7 @@ SASSDR_clinical_other
 n_correct_SASSDR_clinical_other=  sum(SASSDR_clinical_other$table[1,1], SASSDR_clinical_other$table[2,2])
 n_correct_SASSDR_clinical_other
 
-SASSDR_clinical_other_totals = data.frame(test_p = sum(SASSDR_clinical_other$table[,1]), test_n = sum(SASSDR_clinical_other$table[,2]), criteria_p = sum(SASSDR_clinical_other$table[1,]), criteria_n = sum(SASSDR_clinical_other$table[2,]))
+SASSDR_clinical_other_totals = data.frame(test_p = sum(SASSDR_clinical_other$table[2,]), test_n = sum(SASSDR_clinical_other$table[1,]), criteria_p = sum(SASSDR_clinical_other$table[,2]), criteria_n = sum(SASSDR_clinical_other$table[,1]))
 SASSDR_clinical_other_totals
 
 
@@ -1273,7 +1273,7 @@ male_dat_total_n =  dim(male_dat)[1]
 
 male_dat_results=  confusionMatrix(as.factor(male_dat$SASSDR), as.factor(male_dat$NODIAG), positive = "1")
 
-male_totals = data.frame(test_p = sum(male_dat_results$table[,1]), test_n = sum(male_dat_results$table[,2]), criteria_p = sum(male_dat_results$table[1,]), criteria_n = sum(male_dat_results$table[2,]))
+male_totals = data.frame(test_p = sum(male_dat_results$table[2,]), test_n = sum(male_dat_results$table[,2]), criteria_p = sum(male_dat_results$table[,2]), criteria_n = sum(male_dat_results$table[2,]))
 male_totals
 
 female_dat = subset(clinical_sample, SEX == 2)
@@ -1282,7 +1282,7 @@ female_dat_total_n =  dim(female_dat)[1]
 
 female_dat_results=  confusionMatrix(as.factor(female_dat$SASSDR), as.factor(female_dat$NODIAG), positive = "1")
 
-female_totals = data.frame(test_p = sum(female_dat_results$table[,1]), test_n = sum(female_dat_results$table[,2]), criteria_p = sum(female_dat_results$table[1,]), criteria_n = sum(female_dat_results$table[2,]))
+female_totals = data.frame(test_p = sum(female_dat_results$table[2,]), test_n = sum(female_dat_results$table[1,]), criteria_p = sum(female_dat_results$table[,2]), criteria_n = sum(female_dat_results$table[,1]))
 female_totals
 
 
@@ -1434,7 +1434,7 @@ white_dat_results=  confusionMatrix(as.factor(white_dat$SASSDR), as.factor(white
 
 white_dat_accurate =  sum(white_dat_results$table[1,1], white_dat_results$table[2,2])
 
-white_totals = data.frame(test_p = sum(white_dat_results$table[,1]), test_n = sum(white_dat_results$table[,2]), criteria_p = sum(white_dat_results$table[1,]), criteria_n = sum(white_dat_results$table[2,]))
+white_totals = data.frame(test_p = sum(white_dat_results$table[2,]), test_n = sum(white_dat_results$table[1,]), criteria_p = sum(white_dat_results$table[,2]), criteria_n = sum(white_dat_results$table[,1]))
 white_totals
 
 
@@ -1447,7 +1447,7 @@ hispanic_dat_results=  confusionMatrix(as.factor(hispanic_dat$SASSDR), as.factor
 hispanic_dat_accurate =  sum(hispanic_dat_results$table[1,1], hispanic_dat_results$table[2,2])
 
 
-hispanic_totals = data.frame(test_p = sum(hispanic_dat_results$table[,1]), test_n = sum(hispanic_dat_results$table[,2]), criteria_p = sum(hispanic_dat_results$table[1,]), criteria_n = sum(hispanic_dat_results$table[2,]))
+hispanic_totals = data.frame(test_p = sum(hispanic_dat_results$table[2,]), test_n = sum(hispanic_dat_results$table[1,]), criteria_p = sum(hispanic_dat_results$table[,2]), criteria_n = sum(hispanic_dat_results$table[,1]))
 hispanic_totals
 
 
@@ -1459,7 +1459,7 @@ black_dat_results=  confusionMatrix(as.factor(black_dat$SASSDR), as.factor(black
 
 black_dat_accurate =  sum(black_dat_results$table[1,1], black_dat_results$table[2,2])
 
-black_totals = data.frame(test_p = sum(black_dat_results$table[,1]), test_n = sum(black_dat_results$table[,2]), criteria_p = sum(black_dat_results$table[1,]), criteria_n = sum(black_dat_results$table[2,]))
+black_totals = data.frame(test_p = sum(black_dat_results$table[2,]), test_n = sum(black_dat_results$table[1,]), criteria_p = sum(black_dat_results$table[,2]), criteria_n = sum(black_dat_results$table[,1]))
 black_totals
 
 mixed_dat = subset(clinical_sample,  ETHN == 8)
@@ -1470,7 +1470,7 @@ mixed_dat_results =  confusionMatrix(as.factor(mixed_dat$SASSDR), as.factor(mixe
 
 mixed_dat_accurate =  sum(mixed_dat_results$table[1,1], mixed_dat_results$table[2,2])
 
-mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[,1]), test_n = sum(mixed_dat_results$table[,2]), criteria_p = sum(mixed_dat_results$table[1,]), criteria_n = sum(mixed_dat_results$table[2,]))
+mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[2,]), test_n = sum(mixed_dat_results$table[1,]), criteria_p = sum(mixed_dat_results$table[,2]), criteria_n = sum(mixed_dat_results$table[,1]))
 mixed_totals
 
 ```
@@ -1510,7 +1510,7 @@ legal_dat_results=  confusionMatrix(as.factor(legal_dat$SASSDR), as.factor(legal
 
 legal_dat_accurate =  sum(legal_dat_results$table[1,1], legal_dat_results$table[2,2])
 
-legal_totals = data.frame(test_p = sum(legal_dat_results$table[,1]), test_n = sum(legal_dat_results$table[,2]), criteria_p = sum(legal_dat_results$table[1,]), criteria_n = sum(legal_dat_results$table[2,]))
+legal_totals = data.frame(test_p = sum(legal_dat_results$table[2,]), test_n = sum(legal_dat_results$table[1,]), criteria_p = sum(legal_dat_results$table[,2]), criteria_n = sum(legal_dat_results$table[,1]))
 legal_totals
 
 
@@ -1537,7 +1537,7 @@ living_sit_dat_results=  confusionMatrix(as.factor(living_sit_dat$SASSDR), as.fa
 
 living_sit_dat_accurate =  sum(living_sit_dat_results$table[1,1], living_sit_dat_results$table[2,2])
 
-living_sit_totals = data.frame(test_p = sum(living_sit_dat_results$table[,1]), test_n = sum(living_sit_dat_results$table[,2]), criteria_p = sum(living_sit_dat_results$table[1,]), criteria_n = sum(living_sit_dat_results$table[2,]))
+living_sit_totals = data.frame(test_p = sum(living_sit_dat_results$table[2,]), test_n = sum(living_sit_dat_results$table[1,]), criteria_p = sum(living_sit_dat_results$table[,2]), criteria_n = sum(living_sit_dat_results$table[,1]))
 living_sit_totals
 
 ```
@@ -1575,7 +1575,7 @@ table_38_dat_nodiag_results_row1
 
 table_38_dat_accurate =  sum(table_38_dat_results$table[1,1], table_38_dat_results$table[2,2])
 
-table_38_totals = data.frame(test_p = sum(table_38_dat_results$table[,1]), test_n = sum(table_38_dat_results$table[,2]), criteria_p = sum(table_38_dat_results$table[1,]), criteria_n = sum(table_38_dat_results$table[2,]))
+table_38_totals = data.frame(test_p = sum(table_38_dat_results$table[2,]), test_n = sum(table_38_dat_results$table[1,]), criteria_p = sum(table_38_dat_results$table[,2]), criteria_n = sum(table_38_dat_results$table[,1]))
 table_38
 
 ```
@@ -1603,7 +1603,7 @@ table_38_2_dat_results=  confusionMatrix(as.factor(table_38_2_dat$rx_2_test), as
 
 table_38_2_dat_accurate =  sum(table_38_2_dat_results$table[1,1], table_38_2_dat_results$table[2,2])
 
-table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[,1]), test_n = sum(table_38_2_dat_results$table[,2]), criteria_p = sum(table_38_2_dat_results$table[1,]), criteria_n = sum(table_38_2_dat_results$table[2,]))
+table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[2,]), test_n = sum(table_38_2_dat_results$table[1,]), criteria_p = sum(table_38_2_dat_results$table[,2]), criteria_n = sum(table_38_2_dat_results$table[,1]))
 table_38_2_totals
 
 ```
