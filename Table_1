@@ -1,0 +1,132 @@
+setwd("S:/Indiana Research & Evaluation/Matthew Hanauer/SASSI/Data/2-10-20_contract")
+clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = c(255,98))
+cross_validation_sample = read.csv("cross_validation_sample.csv", header = TRUE, na.strings = c(255,98))
+development_sample = read.csv("development_sample.csv", header = TRUE, na.strings = c(255,98))
+normative_sample = read.csv("normative_sample.csv", header= TRUE, na.strings = c(255,98))
+stability_sample = read.csv("stability_sample.csv", header = TRUE, na.strings =c(255,98))
+
+dim(clinical_sample)
+dim(cross_validation_sample)
+dim(development_sample)
+dim(normative_sample)
+dim(stability_sample)
+
+#describe(clinical_sample)
+## Do this to get counts if you are having trouble
+apply(clinical_sample[,c(3:6,5)], 2, function(x){describe.factor(x)})
+         
+#describe(development_sample)
+apply(development_sample[,c(10:20,5)], 2, function(x){describe.factor(x)})
+describe.factor(development_sample$YEARS_ED)
+development_sample$education = development_sample$YEARS_ED
+development_sample$education <- (ifelse(development_sample$education == 28, 5, ifelse(development_sample$education == 29, 6, ifelse(development_sample$education == 30,7, ifelse(development_sample$education==31, 8, ifelse(development_sample$education == 32, 9, ifelse(development_sample$education ==33, 10, ifelse(development_sample$education == 34, 11, ifelse(development_sample$education==35,12,development_sample$education)))))))))
+
+
+development_sample$education[development_sample$education==36] <- NA
+
+describe.factor(development_sample$education)
+
+mean(development_sample$education, na.rm=TRUE)
+sd(development_sample$education, na.rm=TRUE)
+
+describe.factor(development_sample$ETHN)
+
+development_sample$AGE
+mean(development_sample$AGE)
+sd(development_sample$AGE)
+
+describe.factor(development_sample$B5)
+
+describe.factor(development_sample$NODIAG)
+development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT + development_sample$SEDTOT + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
+
+diagnoses = subset(development_sample$diag_totals, development_sample$NODIAG==0)
+
+describe.factor(development_sample$NODIAG)
+describe.factor(diagnoses)
+length(which(diagnoses>=6))/173
+length(which(diagnoses<6&diagnoses>=4))/173
+length(which(diagnoses<4&diagnoses>=2))/173
+length(which(diagnoses<2))/173
+                                  
+#describe(cross_validation_sample)
+describe.factor(cross_validation_sample$SEX)
+
+describe.factor(cross_validation_sample$YEARS_ED)
+cross_validation_sample$education = cross_validation_sample$YEARS_ED
+cross_validation_sample$education <- (ifelse(cross_validation_sample$education == 28, 5, ifelse(cross_validation_sample$education == 29, 6, ifelse(cross_validation_sample$education == 30,7, ifelse(cross_validation_sample$education==31, 8, ifelse(cross_validation_sample$education == 32, 9, ifelse(cross_validation_sample$education ==33, 10, ifelse(cross_validation_sample$education == 34, 11, ifelse(cross_validation_sample$education==35,12,98)))))))))
+cross_validation_sample$education[development_sample$education==98] <- NA
+
+mean(cross_validation_sample$education, na.rm=TRUE)
+sd(cross_validation_sample$education, na.rm=TRUE)
+
+cross_validation_sample$AGE
+mean(cross_validation_sample$AGE)
+sd(cross_validation_sample$AGE)
+
+describe.factor(cross_validation_sample$EMP_STATUS)
+
+describe.factor(cross_validation_sample$LIVING_SIT)
+
+describe.factor(cross_validation_sample$ETHN)
+
+describe.factor(cross_validation_sample$CLIENTSETTING)
+
+describe.factor(cross_validation_sample$B5)
+
+describe.factor(cross_validation_sample$NODIAG)
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT + cross_validation_sample$SEDTOT + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+
+diagnoses = subset(cross_validation_sample$diag_totals, cross_validation_sample$NODIAG==0)
+
+describe.factor(cross_validation_sample$NODIAG)
+length(which(diagnoses>=6))/173
+length(which(diagnoses<6&diagnoses>=4))/173
+length(which(diagnoses<4&diagnoses>=2))/173
+length(which(diagnoses<2))/173
+
+
+diagnoses = subset(cross_validation_sample$diag_totals, cross_validation_sample$NODIAG==1)
+                   
+
+#describe(normative_sample)
+
+describe.factor(normative_sample$TN_GENDER)
+
+describe.factor(normative_sample$YEARS_ED)
+normative_sample$education = normative_sample$TN_EDUC
+normative_sample$education <- (ifelse(normative_sample$education == 1, 5, ifelse(normative_sample$education == 2, 6, ifelse(normative_sample$education == 3,7, ifelse(normative_sample$education==4, 8, ifelse(normative_sample$education == 5, 9, ifelse(normative_sample$education ==6, 10, ifelse(normative_sample$education == 7, 11, ifelse(normative_sample$education==8,12,ifelse(normative_sample$education==9,13,98))))))))))
+normative_sample$education[normative_sample$education==98] <- NA
+
+mean(normative_sample$education, na.rm=TRUE)
+sd(normative_sample$education, na.rm=TRUE)
+
+normative_sample$TN_AGE
+mean(normative_sample$TN_AGE)
+sd(normative_sample$TN_AGE)
+
+describe.factor(normative_sample$TN_WORK)
+
+describe.factor(normative_sample$Living_SIt)
+#something wrong, 4 different values say "Parents"
+
+describe.factor(normative_sample$TN_RACEETH)
+describe.factor(normative_sample$TN_RACEOther)
+
+describe.factor(normative_sample$CLIENTSETTING)
+#no such variable or like variable
+
+describe.factor(normative_sample$TN_LAW)
+
+describe.factor(normative_sample$TN_RACEETH)
+
+describe.factor(normative_sample$NODIAG)
+normative_sample$diag_totals =  normative_sample$ normative_sample$ALCTO + normative_sample$POTTOT + normative_sample$HALLUCTOT + normative_sample$INHALTOT + normative_sample$OPIOIDTOT + normative_sample$SEDTOT + normative_sample$SEDTOT + normative_sample$STIMTOT + normative_sample$OTHRDRUGTOT
+
+diagnoses = subset(normative_sample$diag_totals, normative_sample$NODIAG==1)
+
+describe.factor(normative_sample$NODIAG)
+length(which(diagnoses>=6))/173
+length(which(diagnoses<6&diagnoses>=4))/173
+length(which(diagnoses<4&diagnoses>=2))/173
+length(which(diagnoses<2))/173
