@@ -496,7 +496,7 @@ SASSDR_clinical=  confusionMatrix(clinical_sample$SASSDR, clinical_sample$NODIAG
 n_correct_SASSDR_clinical=  sum(SASSDR_clinical$table[1,1], SASSDR_clinical$table[2,2])
 n_correct_SASSDR_clinical
 
-clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[2,]), test_n = sum(SASSDR_clinical$table[,2]), criteria_p = sum(SASSDR_clinical$table[,2]), criteria_n = sum(SASSDR_clinical$table[2,]))
+clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[2,]), test_n = sum(SASSDR_clinical$table[1,]), criteria_p = sum(SASSDR_clinical$table[,2]), criteria_n = sum(SASSDR_clinical$table[,1]))
 clinical_sample_totals
 
 cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .99)
@@ -1564,23 +1564,79 @@ table_38_dat_total_n =  dim(table_38_dat)[1]
 
 table_38_dat_results=  confusionMatrix(as.factor(table_38_dat$Rx_test), as.factor(table_38_dat$Rx_truth), positive = "1")
 table_38_dat_results$table
-table_38_dat_results_row1 = data.frame(one_one= table_38_dat_results$table[2,2], one_zero = table_38_dat_results$table[2,1], row1_total = sum(table_38_dat_results$table[2,]))
+table_38_dat_results_row1 = data.frame(one_one= table_38_dat_results$table[2,2], one_zero = table_38_dat_results$table[1,2], row1_total = sum(table_38_dat_results$table[,2]))
 table_38_dat_results_row1
 
-table_38_dat_nodiag_results=  confusionMatrix(as.factor(table_38_dat$Rx_bin), as.factor(table_38_dat$NODIAG), positive = "0")
+table_38_dat$NODIAG_real = ifelse(table_38_dat$NODIAG == 0,1,0)
+table_38_dat_nodiag_results=  confusionMatrix(as.factor(table_38_dat$Rx_test), as.factor(table_38_dat$NODIAG_real), positive = "1")
 table_38_dat_nodiag_results$table
-table_38_dat_nodiag_results_row1 = data.frame(one_one= table_38_dat_nodiag_results$table[2,2], one_zero = table_38_dat_nodiag_results$table[2,1], row1_total = sum(table_38_dat_nodiag_results$table[2,]))
+table_38_dat_nodiag_results_row1 = data.frame(one_one= table_38_dat_nodiag_results$table[2,2], one_zero = table_38_dat_nodiag_results$table[1,2], row1_total = sum(table_38_dat_nodiag_results$table[,2]))
 table_38_dat_nodiag_results_row1
 
 
 table_38_dat_accurate =  sum(table_38_dat_results$table[1,1], table_38_dat_results$table[2,2])
-
-table_38_totals = data.frame(test_p = sum(table_38_dat_results$table[2,]), test_n = sum(table_38_dat_results$table[1,]), criteria_p = sum(table_38_dat_results$table[,2]), criteria_n = sum(table_38_dat_results$table[,1]))
-table_38
+table_38_dat_accurate
 
 ```
+Table 38 text data
+```{r}
+clinical_sample$SASSDR = as.factor(clinical_sample$SASSDR)
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
+SASSDR_clinical =  confusionMatrix(clinical_sample$SASSDR, clinical_sample$NODIAG, positive = "1")
+n_correct_SASSDR_clinical =  sum(SASSDR_clinical$table[1,1], SASSDR_clinical$table[2,2])
+n_correct_SASSDR_clinical
+
+SASSDR_clinical_totals = data.frame(test_p = sum(SASSDR_clinical$table[2,]), test_n = sum(SASSDR_clinical$table[1,]), criteria_p = sum(SASSDR_clinical$table[,2]), criteria_n = sum(SASSDR_clinical$table[,1]))
+
+
+cramer_v_SASSDR_clinical = CramerV(SASSDR_clinical$table, conf.level = .99)
+cramer_v_SASSDR_clinical
+
+table_38_text_dat = clinical_sample
+table_38_text_dat$accurate = ifelse(table_38_text_dat$SASSDR == table_38_text_dat$NODIAG,1,0)
+describe.factor(table_38_text_dat$accurate)
+
+#education, employment status, ethnic group membership, gender, and age
+table_38_text_dat$ETHN = ifelse(table_38_text_dat$ETHN == 7, 1,0)
+### Causing problems drop
+describe.factor(table_38_text_dat$LIVING_SIT)
+#table_38_text_dat$LIVING_SIT = ifelse(table_38_text_dat$LIVING_SIT == 9,1,0)
+table_38_text_dat$LIVING_SIT = NULL
+describe.factor(table_38_text_dat$MANDATED)
+describe.factor(table_38_text_dat$REFERRAL)
+table_38_text_dat$REFERRAL = ifelse(table_38_text_dat$REFERRAL == 7,1,0)
+head(table_38_text_dat)
+describe.factor(table_38_text_dat$DWI_ARREST)
+### Not enough to include
+table_38_text_dat$DWI_ARREST = NULL
+### Employment status too few
+describe.factor(table_38_text_dat$EMP_STATUS)
+table_38_text_dat$EMP_STATUS = NULL
+describe.factor(table_38_text_dat$TOT_ARREST)
+table_38_text_dat$TOT_ARREST = ifelse(table_38_text_dat$TOT_ARREST == 0,1,0)
+describe.factor(table_38_text_dat$PRIOR_TREAT)
+table_38_text_dat$PRIOR_TREAT = ifelse(table_38_text_dat$PRIOR_TREAT == 1, 1,0)
+
+table_38_text_logit = glm(accurate ~ ETHN + MANDATED + REFERRAL + TOT_ARREST + PRIOR_TREAT, data = table_38_text_dat, family = "binomial")
+summary(table_38_text_logit)
+```
+
+
 Table 38 results
 ```{r}
+table_38_dat_total_n
+table_38_dat_results
+table_38_dat_results_row1
+table_38_dat_accurate
+
+table_38_dat_nodiag_results
+table_38_dat_nodiag_results_row1
+
+## text results
+n_correct_SASSDR_clinical
+SASSDR_clinical
+SASSDR_clinical_totals
+cramer_v_SASSDR_clinical
 
 
 
@@ -1588,12 +1644,12 @@ Table 38 results
 
 
 Table 38 new table data cleaning
-In addition, we asked another variable in this table for this in the teen sample that we didn’t for the adults so that could possibly be included on the table in addition to or separate from the Opioid Sedative SUD. That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. If it’s zero and one of the following categories has a one in it (indicating that’s the Rx of abuse) then they are diagnosed with a  prescription drug abuse diag in that category: RXPOTDIAG; RXOPIOIDDIAG; RXSEDDIAG; RXSTIMDIAG; RXOTHERDIAG. If it’s 0 in NoRXDIAG and no categories are marked, it means they left the field blank and No Rx diag present (sorry, I didn’t do this coding).
+That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. If it’s zero and one of the following categories has a one in it (indicating that’s the Rx of abuse) then they are diagnosed with a  prescription drug abuse diag in that category: RXPOTDIAG; RXOPIOIDDIAG; RXSEDDIAG; RXSTIMDIAG; RXOTHERDIAG. If it’s 0 in NoRXDIAG and no categories are marked, it means they left the field blank and No Rx diag present (sorry, I didn’t do this coding).
 
 ```{r}
 table_38_2_dat = clinical_sample
 
-table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$NORXDIAG == 1 | table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
+table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$NORXDIAG == 0 & table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
 table_38_2_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDIAG == 1,1,0)
 
 
@@ -1607,7 +1663,10 @@ table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[2,]), t
 table_38_2_totals
 
 ```
-
-
-
-
+Table 38 new table results
+```{r}
+table_38_2_dat_total_n
+table_38_2_dat_results
+table_38_2_dat_accurate
+table_38_2_totals
+```
