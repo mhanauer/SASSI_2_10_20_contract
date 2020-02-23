@@ -29,7 +29,6 @@ dim(stability_sample)
 
 #describe(clinical_sample)
 ## Do this to get counts if you are having trouble
-apply(clinical_sample[,c(3:4,5)], 2, function(x){describe.factor(x)})
 
 
 #describe(development_sample)
@@ -113,12 +112,24 @@ development_sample$S15 = ifelse(development_sample$S15 == 2,1,2)
 normative_sample$S15 = ifelse(normative_sample$S15 == 2,1,2)
 stability_sample$S15 = ifelse(stability_sample$S15 == 2,1,2)
 
+clinical_sample$S20 = ifelse(clinical_sample$S20 == 2,1,2)
+cross_validation_sample$S20 = ifelse(cross_validation_sample$S20 == 2,1,2)
+development_sample$S20 = ifelse(development_sample$S20 == 2,1,2)
+normative_sample$S20 = ifelse(normative_sample$S20 == 2,1,2)
+stability_sample$S20 = ifelse(stability_sample$S20 == 2,1,2)
+
+
 clinical_sample$S61 = ifelse(clinical_sample$S61 == 2,1,2)
 cross_validation_sample$S61 = ifelse(cross_validation_sample$S61 == 2,1,2)
 development_sample$S61 = ifelse(development_sample$S61 == 2,1,2)
 normative_sample$S61 = ifelse(normative_sample$S61 == 2,1,2)
 stability_sample$S61 = ifelse(stability_sample$S61 == 2,1,2)
 
+clinical_sample$S67 = ifelse(clinical_sample$S67 == 2,1,2)
+cross_validation_sample$S67 = ifelse(cross_validation_sample$S67 == 2,1,2)
+development_sample$S67 = ifelse(development_sample$S67 == 2,1,2)
+normative_sample$S67 = ifelse(normative_sample$S67 == 2,1,2)
+stability_sample$S67 = ifelse(stability_sample$S67 == 2,1,2)
 
 #DEF  = S5,S14,S22,S24,S30  (1)   AND   S2,S4,S9,S17,S23,S68,S69 (2).
 ## Recode S14, S30
@@ -226,6 +237,8 @@ development_sample$S32_VAL = ifelse(development_sample$S32 == 2,1,2)
 normative_sample$S32_VAL = ifelse(normative_sample$S32 == 2,1,2)
 stability_sample$S32_VAL = ifelse(stability_sample$S32 == 2,1,2)
 
+
+
 ### These are just two for VAL
 clinical_sample$S51_VAL = ifelse(clinical_sample$S51 == 2,1,2)
 cross_validation_sample$S51_VAL = ifelse(cross_validation_sample$S51 == 2,1,2)
@@ -310,7 +323,7 @@ Table 2 Omegas
 library(psych)
 head(clinical_sample)
 head(clinical_sample[,15:101])
-sassi_omega =  ci.reliability(clinical_sample[,15:101])
+#sassi_omega =  ci.reliability(clinical_sample[,15:101])
 
 head(clinical_sample[,102:115])
 
@@ -353,11 +366,9 @@ cronbach.alpha(sat_omega_complete, CI = TRUE)
 def = data.frame(S5 = clinical_sample$S5, S14 = clinical_sample$S14_DEF, S22 = clinical_sample$S22, S24 = clinical_sample$S24, S30 = clinical_sample$S30_DEF, S2 = clinical_sample$S2_DEF, S4 = clinical_sample$S4, S9 = clinical_sample$S9, S17 = clinical_sample$S17, S23 = clinical_sample$S23, S68 = clinical_sample$S68, S69 = clinical_sample$S69_DEF)
 def_omega = ci.reliability(def)
 def_omega
-def_complete = na.omit(def)
-cronbach.alpha(def_complete, CI = TRUE)
 ########
 ### sam s16,S21,s26,s38,s42,s46,s51,s60,s63,s70,s84 (1)   AND  s11 (2).
-sam = data.frame(S16 =  clinical_sample$S16, S21 = clinical_sample$S21, S26 = clinical_sample$S26, S38 = clinical_sample$S38, S42 = clinical_sample$S42, S51 = clinical_sample$S51, S60 = clinical_sample$S60, S63 = clinical_sample$S63, S70 = clinical_sample$S70, S84 = clinical_sample$S84, S11 = clinical_sample$S11)
+sam = data.frame(S16 =  clinical_sample$S16, S21 = clinical_sample$S21, S26 = clinical_sample$S26, S38 = clinical_sample$S38, S42 = clinical_sample$S42, S46 = clinical_sample$S46, S51 = clinical_sample$S51, S60 = clinical_sample$S60, S63 = clinical_sample$S63, S70 = clinical_sample$S70, S84 = clinical_sample$S84, S11 = clinical_sample$S11)
 sam_omega = ci.reliability(sam)
 sam_omega
 ######################
@@ -367,10 +378,14 @@ correct_omega = ci.reliability(correct)
 correct_omega
 
 ## VAL    = S15,S27,S30,S36,S47    (1)  AND    S1,S23,S25,S32,S51,S54 (2).
-val = data.frame(S15 = clinical_sample$S15_VAL, S27 = clinical_sample$S27_VAL, S30 = clinical_sample$S30_VAL, S36 = clinical_sample$S36, S1 = clinical_sample$S1, S23 = clinical_sample$S23, S32 = clinical_sample$S32_VAL, S51 = clinical_sample$S51_VAL, S54 = clinical_sample$S54)
-val_omega = ci.reliability(val)
-val_omega
+#val = data.frame(S15 = clinical_sample$S15_VAL, S27 = clinical_sample$S27_VAL, S30 = clinical_sample$S30_VAL, S36 = clinical_sample$S36, S1 = clinical_sample$S1, S23 = clinical_sample$S23, S32 = clinical_sample$S32_VAL, S51 = clinical_sample$S51_VAL, S54 = clinical_sample$S54)
+#val_omega = ci.reliability(val)
+#val_omega
 
+# Rx Rx= s74, s75 (1). + SUM (D9+D17+D18).
+rx = data.frame(S74 = clinical_sample$S74, S75 = clinical_sample$S75, D9 = clinical_sample$D9, D17 = clinical_sample$D17, D18 = clinical_sample$D18)
+rx_omega = ci.reliability(rx)
+rx_omega
 ```
 Stability coefficents
 ```{r}
@@ -417,11 +432,8 @@ sam_stable
 cor_stable = cor.test(stable_norm$COR.x, stable_norm$COR.y)
 cor_stable
 
-val_stable = cor.test(stable_norm$VAL.x, stable_norm$VAL.y)
-val_stable
-
-
-
+rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y)
+rx_stable
 
 ```
 
