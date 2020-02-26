@@ -597,7 +597,7 @@ SASSDR_clinical_def_10_totals
 ```
 Table 8 data prep and analysis
 ```{r}
-clinical_sample_def_0_4 = subset(clinical_sample, DEF <= 4)
+clinical_sample_def_0_4 = subset(clinical_sample, DEF = 4)
 dim(clinical_sample_def_0_4)
 SASSDR_clinical_def_0_4=  confusionMatrix(clinical_sample_def_0_4$SASSDR, clinical_sample_def_0_4$NODIAG, positive = "1")
 SASSDR_clinical_def_0_4
@@ -605,7 +605,7 @@ SASSDR_clinical_def_0_4
 n_correct_SASSDR_clinical_def_0_4=  sum(SASSDR_clinical_def_0_4$table[1,1], SASSDR_clinical_def_0_4$table[2,2])
 n_correct_SASSDR_clinical_def_0_4
 
-clinical_sample_def_5 = subset(clinical_sample, DEF <= 5)
+clinical_sample_def_5 = subset(clinical_sample, DEF = 5)
 dim(clinical_sample_def_5)
 SASSDR_clinical_def_5=  confusionMatrix(clinical_sample_def_5$SASSDR, clinical_sample_def_5$NODIAG, positive = "1")
 SASSDR_clinical_def_5
@@ -613,7 +613,7 @@ SASSDR_clinical_def_5
 n_correct_SASSDR_clinical_def_5=  sum(SASSDR_clinical_def_5$table[1,1], SASSDR_clinical_def_5$table[2,2])
 n_correct_SASSDR_clinical_def_5
 
-clinical_sample_def_6 = subset(clinical_sample, DEF <= 6)
+clinical_sample_def_6 = subset(clinical_sample, DEF = 6)
 dim(clinical_sample_def_6)
 SASSDR_clinical_def_6=  confusionMatrix(clinical_sample_def_6$SASSDR, clinical_sample_def_6$NODIAG, positive = "1")
 SASSDR_clinical_def_6
@@ -622,7 +622,7 @@ n_correct_SASSDR_clinical_def_6=  sum(SASSDR_clinical_def_6$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_6
 
 
-clinical_sample_def_7 = subset(clinical_sample, DEF <= 7)
+clinical_sample_def_7 = subset(clinical_sample, DEF = 7)
 dim(clinical_sample_def_7)
 SASSDR_clinical_def_7=  confusionMatrix(clinical_sample_def_7$SASSDR, clinical_sample_def_7$NODIAG, positive = "1")
 SASSDR_clinical_def_7
@@ -630,7 +630,7 @@ SASSDR_clinical_def_7
 n_correct_SASSDR_clinical_def_7=  sum(SASSDR_clinical_def_7$table[1,1], SASSDR_clinical_def_7$table[2,2])
 n_correct_SASSDR_clinical_def_7
 
-clinical_sample_def_8 = subset(clinical_sample, DEF <= 8)
+clinical_sample_def_8 = subset(clinical_sample, DEF = 8)
 dim(clinical_sample_def_8)
 SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR, clinical_sample_def_8$NODIAG, positive = "1")
 SASSDR_clinical_def_8
@@ -638,7 +638,7 @@ SASSDR_clinical_def_8
 n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_clinical_def_8$table[2,2])
 n_correct_SASSDR_clinical_def_8
 
-clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
+clinical_sample_def_9 = subset(clinical_sample, DEF = 9)
 dim(clinical_sample_def_9)
 SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR, clinical_sample_def_9$NODIAG, positive = "1")
 SASSDR_clinical_def_9
