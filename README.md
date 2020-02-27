@@ -807,7 +807,7 @@ rule6_totals
 
 
 
-rule7 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$oat >= 4 & clinical_sample$DEF >= 7,1,0))
+rule7 = as.factor(ifelse(clinical_sample$FVA >= 5 | clinical_sample$FVOD >= 5 & clinical_sample$oat >= 4 & clinical_sample$DEF >= 9,1,0))
 rule7
 rule7_results =  confusionMatrix(rule7, clinical_sample$NODIAG, positive = "1")
 rule7_results
@@ -860,6 +860,7 @@ rule4_accurate
 rule5_test_p
 rule5_diag_p
 rule5_accurate
+rule5_results
 
 rule6_test_p
 rule6_diag_p
@@ -869,9 +870,11 @@ rule7_test_p
 rule7_diag_p
 rule7_accurate
 
+
 rule8_test_p
 rule8_diag_p
 rule8_accurate
+
 
 
 ```
