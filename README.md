@@ -516,6 +516,24 @@ cramer_v_SASSDR_clinical
 
 
 ```
+Table 3 Discrimint analysis
+```{r}
+head(development_sample)
+development_sample[,15:101]
+dis_dat = data.frame(NODIAG =  development_sample$NODIAG, development_sample[,15:101]) 
+dis_dat_complete = na.omit(dis_dat)
+dim(dis_dat_complete)
+fit <- lda(NODIAG ~ ., data=dis_dat_complete, CV=TRUE)
+fit$class
+length(dis_dat$NODIAG)
+length(fit$class)
+correct = table(dis_dat_complete$NODIAG, fit$class)
+correct
+sum(diag(prop.table(correct)))
+
+```
+
+
 Tables 3 through 5 results
 ```{r}
 ## 3
@@ -534,9 +552,9 @@ n_correct_SASSDR_clinical
 clinical_sample_totals
 cramer_v_SASSDR_clinical
 
-SASSDR_development$table
-
-
+0.8266-0.9767
+0.8571-0.8488
+0.8366-0.9341
 
 ```
 Table 6
@@ -593,7 +611,7 @@ n_correct_SASSDR_clinical_def_10
 cramer_v_SASSDR_clinical_def_10
 SASSDR_clinical_def_10_totals
 
-427/475 
+
 ```
 Table 8 data prep and analysis
 ```{r}
@@ -1003,28 +1021,70 @@ rule8_accurate
 rule8_totals = data.frame(test_p = sum(rule8_results$table[2,]), test_n = sum(rule8_results$table[1,]), criteria_p = sum(rule8_results$table[,2]), criteria_n = sum(rule8_results$table[,1]))
 rule8_totals
 ```
+Table 10 other rules results make another table for these results
+```{r}
+rule1_test_p
+rule1_diag_p
+rule1_accurate
 
+rule2_test_p
+rule2_diag_p
+rule2_accurate
+
+rule3_test_p
+rule3_diag_p
+rule3_accurate
+
+rule4_test_p
+rule4_diag_p
+rule4_accurate
+
+rule5_test_p
+rule5_diag_p
+rule5_accurate
+
+rule6_test_p
+rule6_diag_p
+rule6_accurate
+
+rule7_test_p
+rule7_diag_p
+rule7_accurate
+
+rule8_test_p
+rule8_diag_p
+rule8_accurate
+
+
+```
 
 
 Table 11
 ```{r}
-table11_dat = clinical_sample
-table11_dat = ifelse(table11_dat$CLIENTSETTING == 5, 7, table11_dat$CLIENTSETTING)
-accurate_var = ifelse(table11_dat$SASSDR == table11_dat$NODIAG,1,0)
+accurate_var = ifelse(clinical_sample$SASSDR == clinical_sample$NODIAG,1,0)
 accurate_var = as.factor(accurate_var)
-cramer_v_table11 = CramerV(table11_dat$CLIENTSETTING, accurate_var,  conf.level = .99)
+cramer_v_table11 = CramerV(clinical_sample$CLIENTSETTING, accurate_var,  conf.level = .99)
 cramer_v_table11
 
-describe.factor(table11_dat$CLIENTSETTING)
-percent_table11 = tapply(accurate_var,table11_dat$CLIENTSETTING,function(x){prop.table(table(x))})
+CLIENTSETTING_sample_table_11 = clinical_sample
+CLIENTSETTING_sample_table_11$CLIENTSETTING = ifelse(CLIENTSETTING_sample_table_11$CLIENTSETTING ==5,7,CLIENTSETTING_sample_table_11$CLIENTSETTING)
+describe.factor(CLIENTSETTING_sample_table_11$CLIENTSETTING)
 
-n_table11 =  tapply(accurate_var,table11_dat$CLIENTSETTING,function(x){table(x)})
+percent_table11 = tapply(accurate_var,CLIENTSETTING_sample_table_11$CLIENTSETTING,function(x){prop.table(table(x))})
+percent_table11
 
+n_table11 =  tapply(accurate_var,CLIENTSETTING_sample_table_11$CLIENTSETTING,function(x){table(x)})
+n_table11 =  unlist(n_table11)
+n_table11 = matrix(n_table11, ncol = 2, byrow = TRUE)
+inaccurate_n_table11 = sum(n_table11[,1])
+accurate_n_table11 =  sum(n_table11[,2])
 ```
 Table 11 results
 ```{r}
 percent_table11
-n_table11
+inaccurate_n_table11
+accurate_n_table11
+describe.factor(CLIENTSETTING_sample_table_11$CLIENTSETTING)
 
 ```
 Table 12 through 17 data cleaning
@@ -1127,7 +1187,7 @@ SASSDR_clinical_other_totals
 ```
 Table 18 data cleaning
 ```{r}
-clinical_sample
+clinical_sample$
 
 ```
 
@@ -1307,6 +1367,8 @@ total_gender_inaccurate = sum(male_dat_inaccurate, female_dat_inaccurate)
 ```
 Tables 24 through 26
 ```{r}
+
+### Table 24
 male_dat_total_n
 male_dat_accurate
 male_dat_inaccurate
@@ -1315,18 +1377,24 @@ female_dat_total_n
 female_dat_accurate
 female_dat_inaccurate
 
-male_dat_results
-male_totals
-
-female_dat_results
-female_totals
 total_gender_n
-
 total_gender_accurate
 total_gender_inaccurate
 
+## Table 25
+male_dat_results
+male_totals
 
 
+### Table 26
+female_dat_results
+female_totals
+
+gender_dat_cramer = clinical_sample
+gender_dat_cramer$accurate = ifelse(clinical_sample$SASSDR == gender_dat_cramer$NODIAG,1,0)
+
+gender_cramersV = CramerV(gender_dat_cramer$SEX, gender_dat_cramer$accurate, conf.level = .99)
+gender_cramersV
 ```
 Table 27 
 Ages 13,14,15,16,17,18
@@ -1398,6 +1466,7 @@ age_dat_cramer$accurate = ifelse(clinical_sample$SASSDR == age_dat_cramer$NODIAG
 age_cramersV = CramerV(age_dat_cramer$AGE, age_dat_cramer$accurate, conf.level = .99)
 age_cramersV
 
+
 ```
 Table 27 results
 ```{r}
@@ -1425,6 +1494,9 @@ eighteen_dat_total_n
 eighteen_dat_results
 eighteen_dat_accurate
 eighteen_dat_inaccurate
+
+total_age_accurate
+total_age_inaccurate
 
 age_cramersV
 
@@ -1487,6 +1559,12 @@ mixed_dat_accurate =  sum(mixed_dat_results$table[1,1], mixed_dat_results$table[
 mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[2,]), test_n = sum(mixed_dat_results$table[1,]), criteria_p = sum(mixed_dat_results$table[,2]), criteria_n = sum(mixed_dat_results$table[,1]))
 mixed_totals
 
+
+race_dat_cramer = clinical_sample
+race_dat_cramer$accurate = ifelse(race_dat_cramer$SASSDR == race_dat_cramer$NODIAG,1,0)
+
+race_dat_cramer = CramerV(race_dat_cramer$ETHN, race_dat_cramer$accurate, conf.level = .99)
+race_dat_cramer
 ```
 Tables 29 - 35 results
 ```{r}
@@ -1511,7 +1589,7 @@ mixed_dat_results
 mixed_dat_accurate
 mixed_totals
 
-
+race_dat_cramer
 
 ```
 Table 36 data cleaning
