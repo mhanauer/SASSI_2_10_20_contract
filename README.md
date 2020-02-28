@@ -593,7 +593,7 @@ n_correct_SASSDR_clinical_def_10
 cramer_v_SASSDR_clinical_def_10
 SASSDR_clinical_def_10_totals
 
-
+427/475 
 ```
 Table 8 data prep and analysis
 ```{r}
@@ -1008,15 +1008,17 @@ rule8_totals
 
 Table 11
 ```{r}
-accurate_var = ifelse(clinical_sample$SASSDR == clinical_sample$NODIAG,1,0)
+table11_dat = clinical_sample
+table11_dat = ifelse(table11_dat$CLIENTSETTING == 5, 7, table11_dat$CLIENTSETTING)
+accurate_var = ifelse(table11_dat$SASSDR == table11_dat$NODIAG,1,0)
 accurate_var = as.factor(accurate_var)
-cramer_v_table11 = CramerV(clinical_sample$CLIENTSETTING, accurate_var,  conf.level = .99)
+cramer_v_table11 = CramerV(table11_dat$CLIENTSETTING, accurate_var,  conf.level = .99)
 cramer_v_table11
 
-describe.factor(clinical_sample$CLIENTSETTING)
-percent_table11 = tapply(accurate_var,clinical_sample$CLIENTSETTING,function(x){prop.table(table(x))})
+describe.factor(table11_dat$CLIENTSETTING)
+percent_table11 = tapply(accurate_var,table11_dat$CLIENTSETTING,function(x){prop.table(table(x))})
 
-n_table11 =  tapply(accurate_var,clinical_sample$CLIENTSETTING,function(x){table(x)})
+n_table11 =  tapply(accurate_var,table11_dat$CLIENTSETTING,function(x){table(x)})
 
 ```
 Table 11 results
@@ -1088,7 +1090,7 @@ SASSDR_clinical_substance_use_totals = data.frame(test_p = sum(SASSDR_clinical_s
 SASSDR_clinical_substance_use_totals
 
 #### other
-clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7)
+clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7 | CLIENTSETTING == 5)
 clinical_sample_other_total_n =  dim(clinical_sample_other)[1]
 SASSDR_clinical_other=  confusionMatrix(as.factor(clinical_sample_other$SASSDR), as.factor(clinical_sample_other$NODIAG), positive = "1")
 SASSDR_clinical_other
