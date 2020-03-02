@@ -517,20 +517,29 @@ cramer_v_SASSDR_clinical
 
 ```
 Table 3 Discrimint analysis
+Do this training and test set
 ```{r}
 head(development_sample)
 development_sample[,15:101]
 dis_dat = data.frame(NODIAG =  development_sample$NODIAG, development_sample[,15:101]) 
-dis_dat_complete = na.omit(dis_dat)
+inTrain = createDataPartition(y = dis_dat$NODIAG, p = .75, list = FALSE)
+training = dis_dat[inTrain,]
+testing = dis_dat[-inTrain,]
 dim(dis_dat_complete)
-fit <- lda(NODIAG ~ ., data=dis_dat_complete, CV=TRUE)
-fit$class
-length(dis_dat$NODIAG)
-length(fit$class)
-correct = table(dis_dat_complete$NODIAG, fit$class)
+library(klaR)
+fit <- rda(NODIAG ~ ., data=training)
+predictions = predict(fit, newdata = testing)
+length(testing$NODIAG)
+length(predictions$class)
+correct = table(testing$NODIAG, predictions$class)
 correct
 sum(diag(prop.table(correct)))
-
+```
+Try logisitic regression
+```{r}
+dim(dis_dat_complete)
+fit_items = glm(NODIAG ~., data= dis_dat, family = "binomial")
+summary(fit_items)
 ```
 
 
@@ -615,7 +624,8 @@ SASSDR_clinical_def_10_totals
 ```
 Table 8 data prep and analysis
 ```{r}
-clinical_sample_def_0_4 = subset(clinical_sample, DEF = 4)
+clinical_sample$DEF = as.numeric(clinical_sample$DEF)
+clinical_sample_def_0_4 = subset(clinical_sample, DEF < 5)
 dim(clinical_sample_def_0_4)
 SASSDR_clinical_def_0_4=  confusionMatrix(clinical_sample_def_0_4$SASSDR, clinical_sample_def_0_4$NODIAG, positive = "1")
 SASSDR_clinical_def_0_4
@@ -623,7 +633,7 @@ SASSDR_clinical_def_0_4
 n_correct_SASSDR_clinical_def_0_4=  sum(SASSDR_clinical_def_0_4$table[1,1], SASSDR_clinical_def_0_4$table[2,2])
 n_correct_SASSDR_clinical_def_0_4
 
-clinical_sample_def_5 = subset(clinical_sample, DEF = 5)
+clinical_sample_def_5 = subset(clinical_sample, DEF == 5)
 dim(clinical_sample_def_5)
 SASSDR_clinical_def_5=  confusionMatrix(clinical_sample_def_5$SASSDR, clinical_sample_def_5$NODIAG, positive = "1")
 SASSDR_clinical_def_5
@@ -631,7 +641,7 @@ SASSDR_clinical_def_5
 n_correct_SASSDR_clinical_def_5=  sum(SASSDR_clinical_def_5$table[1,1], SASSDR_clinical_def_5$table[2,2])
 n_correct_SASSDR_clinical_def_5
 
-clinical_sample_def_6 = subset(clinical_sample, DEF = 6)
+clinical_sample_def_6 = subset(clinical_sample, DEF == 6)
 dim(clinical_sample_def_6)
 SASSDR_clinical_def_6=  confusionMatrix(clinical_sample_def_6$SASSDR, clinical_sample_def_6$NODIAG, positive = "1")
 SASSDR_clinical_def_6
@@ -640,7 +650,7 @@ n_correct_SASSDR_clinical_def_6=  sum(SASSDR_clinical_def_6$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_6
 
 
-clinical_sample_def_7 = subset(clinical_sample, DEF = 7)
+clinical_sample_def_7 = subset(clinical_sample, DEF == 7)
 dim(clinical_sample_def_7)
 SASSDR_clinical_def_7=  confusionMatrix(clinical_sample_def_7$SASSDR, clinical_sample_def_7$NODIAG, positive = "1")
 SASSDR_clinical_def_7
@@ -648,7 +658,7 @@ SASSDR_clinical_def_7
 n_correct_SASSDR_clinical_def_7=  sum(SASSDR_clinical_def_7$table[1,1], SASSDR_clinical_def_7$table[2,2])
 n_correct_SASSDR_clinical_def_7
 
-clinical_sample_def_8 = subset(clinical_sample, DEF = 8)
+clinical_sample_def_8 = subset(clinical_sample, DEF == 8)
 dim(clinical_sample_def_8)
 SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR, clinical_sample_def_8$NODIAG, positive = "1")
 SASSDR_clinical_def_8
@@ -656,7 +666,7 @@ SASSDR_clinical_def_8
 n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_clinical_def_8$table[2,2])
 n_correct_SASSDR_clinical_def_8
 
-clinical_sample_def_9 = subset(clinical_sample, DEF = 9)
+clinical_sample_def_9 = subset(clinical_sample, DEF == 9)
 dim(clinical_sample_def_9)
 SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR, clinical_sample_def_9$NODIAG, positive = "1")
 SASSDR_clinical_def_9
@@ -693,7 +703,7 @@ n_correct_SASSDR_clinical_def_10_11
 ```
 Table 9 data analysis
 ```{r}
-table_9_fva = ifelse(clinical_sample$FVA >= 7, 1, ifelse(clinical_sample$FVOD >= 12, 1,ifelse(clinical_sample$sym >= 6, 1,0)))
+table_9_fva = ifelse(clinical_sample$FVA >= 12  | clinical_sample$FVOD >= 12 | clinical_sample$frisk >= 5 | clinical_sample$sym >= 5,1,0)
 table_9_fva = as.factor(table_9_fva)
 clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
 
@@ -715,6 +725,12 @@ table_9_fva_results
 table_9_fva_n_correct
 table_9_fva_totals
 table_9_fva_cramer_v
+### in text top results
+88.74-82.14
+90.17-76.59
+### in text bottom
+1-.8214
+457-423
 ```
 Table 10 data analysis
 Rule 1: FVA 12 or FVOD 12 or more
@@ -724,6 +740,8 @@ Rule 2: FRISK 5 or more
 Rule 3: SYM 5 or more
 
 Face Valid Classification: Rules 1 or 2 or 3
+
+
 
 Rule 4: SAT 9 or more
 
@@ -739,7 +757,7 @@ Rule 8: FVA or FVOD 5 or more and SAT 3 or more and DEF 4 or more and SAM 3 or m
 
  
 ```{r}
-rule1 = as.factor(ifelse(clinical_sample$FVA >= 7, 1,ifelse(clinical_sample$FVOD >= 12,1,0)))
+rule1 = as.factor(ifelse(clinical_sample$FVA >= 12, 1,ifelse(clinical_sample$FVOD >= 12,1,0)))
 clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
 rule1_results =  confusionMatrix(rule1, clinical_sample$NODIAG, positive = "1")
 rule1_results
@@ -870,6 +888,11 @@ rule2_accurate
 rule3_test_p
 rule3_diag_p
 rule3_accurate
+
+## See table 9 for all three
+### All three see table 9
+258/346
+
 
 rule4_test_p
 rule4_diag_p
