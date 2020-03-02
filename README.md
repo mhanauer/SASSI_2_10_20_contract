@@ -997,7 +997,7 @@ rule5_accurate
 rule5_totals = data.frame(test_p = sum(rule5_results$table[2,]), test_n = sum(rule5_results$table[1,]), criteria_p = sum(rule5_results$table[,2]), criteria_n = sum(rule5_results$table[,1]))
 rule5_totals
 
-#Rule 6: FVOD 7 or more and FRISK or ATT or SAM 3 or more and OAT 5 or more
+#Rule 6: (FVOD 7 or more and FRISK or ATT) or (SAM 3 or more and OAT 5 or more)
 
 rule6 = as.factor(ifelse(clinical_sample$FVOD >= 7 & clinical_sample$frisk >= 3 | clinical_sample$att >= 3 | clinical_sample$sam >= 3 & clinical_sample$oat >= 5,1,0))
 rule6
@@ -1297,7 +1297,6 @@ Just doing part time and not employed
 describe.factor(clinical_sample$EMP_STATUS)
 
 not_employed_dat = subset(clinical_sample,  EMP_STATUS == 24)
-describe.factor(not_employed_dat$YEARS_ED)
 
 not_employed_dat_total_n =  dim(not_employed_dat)[1]
 
@@ -1308,7 +1307,6 @@ not_employed_dat_inaccurate =  sum(not_employed_dat_results$table[1,2], not_empl
 
 
 part_employed_dat = subset(clinical_sample,  EMP_STATUS == 23)
-describe.factor(part_employed_dat$YEARS_ED)
 
 part_employed_dat_total_n =  dim(part_employed_dat)[1]
 
@@ -1320,7 +1318,7 @@ part_employed_dat_inaccurate =  sum(part_employed_dat_results$table[1,2], part_e
 employed_dat_cramer = subset(clinical_sample, EMP_STATUS == 23 | EMP_STATUS == 24)
 employed_dat_cramer$accurate = ifelse(employed_dat_cramer$SASSDR == employed_dat_cramer$NODIAG,1,0)
 
-employed_cramersV = CramerV(employed_dat_cramer$YEARS_ED, employed_dat_cramer$accurate, conf.level = .99)
+employed_cramersV = CramerV(employed_dat_cramer$EMP_STATUS, employed_dat_cramer$accurate, conf.level = .99)
 employed_cramersV
 
 employed_n = sum(not_employed_dat_total_n, part_employed_dat_total_n)
