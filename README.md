@@ -36,8 +36,8 @@ dim(stability_sample)
 #describe(cross_validation_sample)
 #describe(normative_sample)
 
-
-### NODIAG change to 1 = NODIAG; 0 = DIAG; 
+### NODIAG  currently 1 means NODIAG, but need 1 to mean DIAG 
+### NODIAG change to 1 = DIAG; 0 = DIAG; 
 ### Change SASSDR  2 low prob = 0, 1 high prob = 1 
 clinical_sample$NODIAG = ifelse(clinical_sample$NODIAG == 1,0,1)
 clinical_sample$SASSDR = ifelse(clinical_sample$SASSDR == 2,0,1)
@@ -1021,12 +1021,127 @@ n_correct_SASSDR_clinical_other
 SASSDR_clinical_other_totals
 ```
 Table 18 data cleaning
+DEPRESNONSUB
+BIPNONSUB
+ANXNONSUB
+PTSDNONSUB
+ADHDNONSUB
+EATINGNONSUB
+OTHRNONSUB
+NODIAG == 0 (no diagnosis)
+http://gim.unmc.edu/dxtests/reviewof.htm
 ```{r}
-clinical_sample$
+table18_dat_table1 = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
+dim(table18_dat_table1)
+table18_dat_table1$table_1 = rowSums(table18_dat_table1[,1:7])
+table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 >0,1,0)
+table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 == 1 & table18_dat_table1$NODIAG == 1,1,0)
+table18_dat_table1 = subset(table18_dat_table1, table_1 == 1)
+n_total_table18_table1 = dim(table18_dat_table1)[1]
+n_p_table18_table1 = sum(table18_dat_table1$NODIAG)
+n_n_table18_table1 = sum(ifelse(table18_dat_table1$NODIAG == 1,0,1))
+n_p_table18_table1+n_n_table18_table1 == n_total_table18_table1
+
+
+table18_dat_table2 = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
+dim(table18_dat_table2)
+table18_dat_table2$table_2 = rowSums(table18_dat_table2[,1:7])
+table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 >0,1,0)
+table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 == 1 & table18_dat_table2$NODIAG == 0,1,0)
+table18_dat_table2 = subset(table18_dat_table2, table_2 == 1)
+n_total_table18_table2 = dim(table18_dat_table2)[1]
+n_p_table18_table2 = sum(table18_dat_table2$NODIAG)
+n_n_table18_table2 = sum(ifelse(table18_dat_table2$NODIAG == 1,0,1))
+n_p_table18_table2+n_n_table18_table2 == n_total_table18_table2
+
+### Now get psychometrics
+#test_psycho = table18_dat_table1
+#test_psycho$tp = ifelse(table18_dat_table1$SASSDR ==1 & table18_dat_table1$NODIAG == 1,1,0)
+#test_psycho
+tp_table1 = sum(ifelse(table18_dat_table1$SASSDR ==1 & table18_dat_table1$NODIAG == 1,1,0))
+tn_table1 = sum(ifelse(table18_dat_table1$SASSDR ==0 & table18_dat_table1$NODIAG == 0,1,0))
+
+fp_table1 = sum(ifelse(table18_dat_table1$SASSDR == 1 & table18_dat_table1$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(table18_dat_table1$SASSDR == 0 & table18_dat_table1$NODIAG == 1,1,0)
+fn_table1 = sum(ifelse(table18_dat_table1$SASSDR == 0 & table18_dat_table1$NODIAG == 1,1,0))
+dim(table18_dat_table1)[1] == sum(tp_table1, tn_table1, fp_table1, fn_table1)
+
+table18_sen_table1 = tp_table1/(tp_table1+fn_table1)
+table18_spec_table1 = tn_table1 / (tn_table1+fp_table1)
+table18_pred_p_table1 = tp_table1 / (tp_table1+fp_table1)
+table18_pred_n_table1 = tn_table1/(tn_table1+fn_table1)
+table18_accurate_table1 = (tp_table1+tn_table1) / sum(tp_table1, tn_table1, fp_table1, fn_table1)
+n_accurate_table1= (tp_table1+tn_table1)
+
+
+tp_table2 = sum(ifelse(table18_dat_table2$SASSDR ==1 & table18_dat_table2$NODIAG == 1,1,0))
+tn_table2 = sum(ifelse(table18_dat_table2$SASSDR ==0 & table18_dat_table2$NODIAG == 0,1,0))
+
+fp_table2 = sum(ifelse(table18_dat_table2$SASSDR == 1 & table18_dat_table2$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(table18_dat_table2$SASSDR == 0 & table18_dat_table2$NODIAG == 1,1,0)
+fn_table2 = sum(ifelse(table18_dat_table2$SASSDR == 0 & table18_dat_table2$NODIAG == 1,1,0))
+dim(table18_dat_table2)[1] == sum(tp_table2, tn_table2, fp_table2, fn_table2)
+
+table18_sen_table2 = tp_table2/(tp_table2+fn_table2)
+table18_spec_table2 = tn_table2 / (tn_table2+fp_table2)
+table18_pred_p_table2 = tp_table2 / (tp_table2+fp_table2)
+table18_pred_n_table2 = tn_table2/(tn_table2+fn_table2)
+table18_accurate_table2 = (tp_table2+tn_table2) / sum(tp_table2, tn_table2, fp_table2, fn_table2)
+n_accurate_table2 = (tp_table2+tn_table2)
+
+### overall accuracy
+table18_dat_screen = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
+dim(table18_dat_screen)
+table18_dat_screen$table_1 = rowSums(table18_dat_screen[,1:7])
+table18_dat_screen$table_1 = ifelse(table18_dat_screen$table_1 >0,1,0)
+table18_dat_screen$table_1 = ifelse(table18_dat_screen$table_1 == 1,1,0)
+table18_dat_screen = subset(table18_dat_screen, table_1 == 1)
+dim(table18_dat_screen)
+
+tp_screen = sum(ifelse(table18_dat_screen$SASSDR ==1 & table18_dat_screen$NODIAG == 1,1,0))
+tn_screen = sum(ifelse(table18_dat_screen$SASSDR ==0 & table18_dat_screen$NODIAG == 0,1,0))
+
+fp_screen = sum(ifelse(table18_dat_screen$SASSDR == 1 & table18_dat_screen$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(table18_dat_screen$SASSDR == 0 & table18_dat_screen$NODIAG == 1,1,0)
+fn_screen = sum(ifelse(table18_dat_screen$SASSDR == 0 & table18_dat_screen$NODIAG == 1,1,0))
+dim(table18_dat_screen)[1] == sum(tp_screen, tn_screen, fp_screen, fn_screen)
+
+table18_accurate_screen = (tp_screen+tn_screen) / sum(tp_screen, tn_screen, fp_screen, fn_screen)
+n_accurate_screen = (tp_screen+tn_screen)
+
+
+
 
 ```
-
 Table 18 results
+```{r}
+n_total_table18_table1
+n_p_table18_table1
+n_n_table18_table1
+
+n_total_table18_table2
+n_p_table18_table2
+n_n_table18_table2
+
+table18_sen_table1
+table18_spec_table1
+table18_pred_p_table1
+table18_pred_n_table1
+table18_accurate_table1
+dim(table18_dat_table2)[1]
+n_accurate_table1
+
+table18_sen_table2
+table18_spec_table2
+table18_pred_p_table2
+table18_pred_n_table2
+table18_accurate_table2
+dim(table18_dat_table2)[1]
+n_accurate_table2
+
+table18_accurate_screen
+```
+
 
 Table 19 data cleaning
 28 = 5th
