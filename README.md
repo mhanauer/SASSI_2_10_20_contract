@@ -1769,16 +1769,19 @@ That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. 
 ```{r}
 table_38_2_dat = clinical_sample
 
-table_38_2_dat$rx_2_truth = ifelse(table_38_2_dat$NORXDIAG == 0 & table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
+table_38_2_dat$rx_2_truth = ifelse(table_38_2_dat$NORXDIAG == 0 & table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOPIOIDDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
 
-table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$rx)
-table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, rx_2_truth = table_38_2_dat$rx_2_truth)
+
+
+table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$Rx >= 2,1,0)
+
+table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, rx_2_truth = table_38_2_dat$rx_2_truth, rx_2_test = table_38_2_dat$rx_2_test, Rx = table_38_2_dat$Rx)
 
 table_38_2_dat
 
 table_38_2_dat_total_n =  dim(table_38_2_dat)[1]
 
-table_38_2_dat_results=  confusionMatrix(as.factor(table_38_2_dat$rx_2_test), as.factor(table_38_2_dat$Rx_truth), positive = "1")
+table_38_2_dat_results=  confusionMatrix(as.factor(table_38_2_dat$rx_2_test), as.factor(table_38_2_dat$rx_2_truth), positive = "1")
 
 table_38_2_dat_accurate =  sum(table_38_2_dat_results$table[1,1], table_38_2_dat_results$table[2,2])
 
@@ -1786,8 +1789,7 @@ table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[2,]), t
 table_38_2_totals
 
 ```
-Table 38 new table results
-
+Table 38.2 new table results
 ```{r}
 table_38_2_dat_total_n
 table_38_2_dat_results
