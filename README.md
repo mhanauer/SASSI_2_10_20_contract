@@ -1540,6 +1540,7 @@ Hispanic = 5  (per email)
 Black = 3         
 Mixed race =  8
 ```{r}
+library(caret)
 describe.factor(clinical_sample$ETHN)
 
 white_dat = subset(clinical_sample,  ETHN == 7)
@@ -1713,23 +1714,19 @@ table_38_dat_nosud_total = sum(table_38_dat_nosud_high_prob,table_38_dat_nosud_l
 
 
 
-n_table_38_dat_accurate =  sum(table_38_dat_opioid_results$table[1,1], table_38_dat_results$table[2,2])
-n_table_38_dat_accurate
-
 ```
 Table 38 Results
 ```{r}
 table_38_dat_total_n
+table_38_dat_opioid_results
 table_38_dat_opioid_high_prob
 table_38_dat_opioid_low_prob
 table_38_dat_opioid_total
 
+table_38_dat_nosud_results
 table_38_dat_nosud_high_prob
 table_38_dat_nosud_low_prob
 table_38_dat_nosud_total
-
-table_38_dat_opioid_results
-table_38_dat_total_n
 n_table_38_dat_accurate
 
 ```
