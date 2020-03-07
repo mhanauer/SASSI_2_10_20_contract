@@ -1827,3 +1827,120 @@ table_38_2_dat_accurate
 table_38_2_totals
 381/515 
 ```
+Paper Table 3
+length(which(diagnoses>=6))/173
+length(which(diagnoses<6&diagnoses>=4))/173
+length(which(diagnoses<4&diagnoses>=2))/173
+length(which(diagnoses<2))/173
+
+So much be increasing, because saying someone has a mild and not moderate the SASSI just says yes for all.
+
+```{r}
+### Create variables in cross validation sample
+table_3_paper_dat = cross_validation_sample
+### Diagnosis no, mild, mod, severe
+table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
+describe.factor(table_3_paper_dat$NODIAG)
+
+table_3_paper_dat$noSUD = ifelse(table_3_paper_dat$diag_totals <2, 1, 0) 
+describe.factor(table_3_paper_dat$noSUD)
+
+table_3_paper_dat$mildSUD = ifelse(table_3_paper_dat$diag_totals >=2 & table_3_paper_dat$diag_totals < 4,1,0)
+describe.factor(table_3_paper_dat$mildSUD)
+
+table_3_paper_dat$modSUD = ifelse(table_3_paper_dat$diag_totals >=4 & table_3_paper_dat$diag_totals < 6,1,0)
+describe.factor(table_3_paper_dat$modSUD)
+
+table_3_paper_dat$sevSUD = ifelse(table_3_paper_dat$diag_totals >=6, 1,0)
+describe.factor(table_3_paper_dat$sevSUD)
+
+sum(table_3_paper_dat$noSUD, table_3_paper_dat$mildSUD, table_3_paper_dat$modSUD, table_3_paper_dat$sevSUD) == dim(table_3_paper_dat)[1]
+### check it is right
+dat_check_paper_table3 = table_3_paper_dat[c("noSUD", "mildSUD", "modSUD", "sevSUD", "diag_totals")]
+dat_check_paper_table3
+### results for diagnosis
+diagnosis_n = data.frame(n_noSUD = sum(table_3_paper_dat$noSUD), n_mildSUD = sum(table_3_paper_dat$mildSUD), n_modSUD = sum(table_3_paper_dat$modSUD), n_sevSUD = sum(table_3_paper_dat$sevSUD))
+##n's
+diagnosis_n
+## results
+mildSUD_dat = subset(table_3_paper_dat, mildSUD == 1)
+mildSUD_dat$mildSUD = as.factor(mildSUD_dat$mildSUD)
+mildSUD_dat$SASSDR = as.factor(mildSUD_dat$SASSDR)
+diagnosis_results_mildSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mildSUD, positive = "1")
+diagnosis_results_mildSUD
+
+table_3_paper_dat$modSUD = as.factor(table_3_paper_dat$modSUD)
+diagnosis_results_modSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$modSUD, positive = "1")
+diagnosis_results_modSUD
+
+table_3_paper_dat$sevSUD = as.factor(table_3_paper_dat$sevSUD)
+diagnosis_results_sevSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$sevSUD, positive = "1")
+diagnosis_results_sevSUD
+confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$sevSUD)
+confusionMatrix(cross_validation_sample$SASSDR, cross_validation_sample$NODIAG)
+
+cross_validation_sample
+#### Co-occuring
+co_occuring_all = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+
+table_3_paper_dat$co_occuring = rowSums(co_occuring_all[,1:7])
+table_3_paper_dat$co_occuring = ifelse(table_3_paper_dat$co_occuring >0,1,0)
+table_3_paper_dat$co_occuring = ifelse(table_3_paper_dat$co_occuring == 1 & table_3_paper_dat$NODIAG == 1,1,0)
+co_occuring_dat = subset(table_3_paper_dat, co_occuring == 1)
+dim(co_occuring_dat)
+```
+Raw score stability (z-score)
+```{r}
+SASDR_raw = t.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
+
+FVA_raw =  t.test(stable_norm$FVA.x, stable_norm$FVA.y)
+
+
+FVOD_raw = t.test(stable_norm$FVOD.x, stable_norm$FVOD.y)
+
+
+FRISK_raw = t.test(stable_norm$frisk.x, stable_norm$frisk.y)
+
+
+att_raw = t.test(stable_norm$att.x, stable_norm$att.y)
+
+
+sym_raw = t.test(stable_norm$sym.x, stable_norm$sym.y)
+
+
+oat_raw = t.test(stable_norm$oat.x, stable_norm$oat.y)
+
+
+sat_raw = t.test(stable_norm$sat.x, stable_norm$sat.y)
+
+
+def_raw = t.test(stable_norm$DEF.x, stable_norm$DEF.y)
+
+
+sam_raw = t.test(stable_norm$sam.x, stable_norm$sam.y)
+
+
+cor_raw = t.test(stable_norm$COR.x, stable_norm$COR.y)
+
+rx_raw = t.test(stable_norm$Rx.x, stable_norm$Rx.y)
+
+
+
+
+```
+Stable results
+```{r}
+SASDR_raw
+FVA_raw
+FVOD_raw
+FRISK_raw
+att_raw
+sym_raw
+oat_raw
+sat_raw
+def_raw
+sam_raw
+cor_raw
+val_raw
+```
+
