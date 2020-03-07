@@ -1374,7 +1374,7 @@ male_dat_total_n =  dim(male_dat)[1]
 
 male_dat_results=  confusionMatrix(as.factor(male_dat$SASSDR), as.factor(male_dat$NODIAG), positive = "1")
 
-male_totals = data.frame(test_p = sum(male_dat_results$table[2,]), test_n = sum(male_dat_results$table[,2]), criteria_p = sum(male_dat_results$table[,2]), criteria_n = sum(male_dat_results$table[2,]))
+male_totals = data.frame(test_p = sum(male_dat_results$table[2,]), test_n = sum(male_dat_results$table[1,]), criteria_p = sum(male_dat_results$table[,2]), criteria_n = sum(male_dat_results$table[,1]))
 male_totals
 
 female_dat = subset(clinical_sample, SEX == 2)
@@ -1631,6 +1631,7 @@ mixed_totals
 
 race_dat_cramer
 
+describe.factor(clinical_sample$ETHN)
 ```
 Table 36 data cleaning
 ```{r}
@@ -1764,15 +1765,15 @@ Table 38.2
 That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. If it’s zero and one of the following categories has a one in it (indicating that’s the Rx of abuse) then they are diagnosed with a  prescription drug abuse diag in that category: RXPOTDIAG; RXOPIOIDDIAG; RXSEDDIAG; RXSTIMDIAG; RXOTHERDIAG. If it’s 0 in NoRXDIAG and no categories are marked, it means they left the field blank and No Rx diag present (sorry, I didn’t do this coding).
 
 ```{r}
+library(caret)
 table_38_2_dat = clinical_sample
-
 table_38_2_dat$rx_2_truth = ifelse(table_38_2_dat$NORXDIAG == 0 & table_38_2_dat$RXPOTDIAG == 1 | table_38_2_dat$RXOPIOIDDIAG == 1 |table_38_2_dat$RXSEDDIAG == 1 | table_38_2_dat$RXSTIMDIAG == 1 | table_38_2_dat$RXOTHRDRUGDIAG == 1,1,0)
 
 
 
 table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$Rx >= 2,1,0)
 
-table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, rx_2_truth = table_38_2_dat$rx_2_truth, rx_2_test = table_38_2_dat$rx_2_test, Rx = table_38_2_dat$Rx)
+table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOPIOIDDIAG = table_38_2_dat$RXOPIOIDDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, rx_2_truth = table_38_2_dat$rx_2_truth, rx_2_test = table_38_2_dat$rx_2_test, Rx = table_38_2_dat$Rx)
 
 table_38_2_dat
 
@@ -1784,12 +1785,45 @@ table_38_2_dat_accurate =  sum(table_38_2_dat_results$table[1,1], table_38_2_dat
 
 table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[2,]), test_n = sum(table_38_2_dat_results$table[1,]), criteria_p = sum(table_38_2_dat_results$table[,2]), criteria_n = sum(table_38_2_dat_results$table[,1]))
 table_38_2_totals
+library(DescTools)
+table38_2_dat_cramer = CramerV(table_38_2_dat_results$table, conf.level = .99)
+table38_2_dat_cramer
+
 
 ```
+Check table 38.2 is following the rules
+That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. If it’s zero and one of the following categories has a one in it (indicating that’s the Rx of abuse) then they are diagnosed with a  prescription drug abuse diag in that category: RXPOTDIAG; RXOPIOIDDIAG; RXSEDDIAG; RXSTIMDIAG; RXOTHERDIAG. If it’s 0 in NoRXDIAG and no categories are marked, it means they left the field blank and No Rx diag present (sorry, I didn’t do this coding).
+```{r}
+table_38_2_dat
+```
+Table 38.2 AUC and cut point
+```{r}
+library(pROC)
+test_roc =  roc(table_38_2_dat$rx_2_test, table_38_2_dat$rx_2_truth)
+test_roc
+test_auc_95 = ci.auc(test_roc)
+test_auc_95
+
+cp_rx = cutpointr(table_38_2_dat, Rx, rx_2_truth, method = maximize_metric, metric = sum_sens_spec)
+cp_rx
+
+library(cutpointr)
+
+data(suicide)
+head(suicide)
+library(prettyR)
+describe.factor(suicide$dsi)
+cp <- cutpointr(suicide, dsi, suicide, method = maximize_metric, metric = sum_sens_spec)
+cp
+```
+
+
+
 Table 38.2 new table results
 ```{r}
 table_38_2_dat_total_n
 table_38_2_dat_results
 table_38_2_dat_accurate
 table_38_2_totals
+381/515 
 ```
