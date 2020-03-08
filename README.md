@@ -1038,8 +1038,8 @@ table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 >0,1,0)
 table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 == 1 & table18_dat_table1$NODIAG == 1,1,0)
 table18_dat_table1 = subset(table18_dat_table1, table_1 == 1)
 n_total_table18_table1 = dim(table18_dat_table1)[1]
-n_p_table18_table1 = sum(table18_dat_table1$NODIAG)
-n_n_table18_table1 = sum(ifelse(table18_dat_table1$NODIAG == 1,0,1))
+n_p_table18_table1 = sum(table18_dat_table1$SASSDR)
+n_n_table18_table1 = sum(ifelse(table18_dat_table1$SASSDR == 1,0,1))
 n_p_table18_table1+n_n_table18_table1 == n_total_table18_table1
 
 
@@ -1050,8 +1050,8 @@ table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 >0,1,0)
 table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 == 1 & table18_dat_table2$NODIAG == 0,1,0)
 table18_dat_table2 = subset(table18_dat_table2, table_2 == 1)
 n_total_table18_table2 = dim(table18_dat_table2)[1]
-n_p_table18_table2 = sum(table18_dat_table2$NODIAG)
-n_n_table18_table2 = sum(ifelse(table18_dat_table2$NODIAG == 1,0,1))
+n_p_table18_table2 = sum(table18_dat_table2$SASSDR)
+n_n_table18_table2 = sum(ifelse(table18_dat_table2$SASSDR == 1,0,1))
 n_p_table18_table2+n_n_table18_table2 == n_total_table18_table2
 
 ### Now get psychometrics
@@ -1862,16 +1862,20 @@ dat_check_paper_table3
 diagnosis_n = data.frame(n_noSUD = sum(table_3_paper_dat$noSUD), n_mildSUD = sum(table_3_paper_dat$mildSUD), n_modSUD = sum(table_3_paper_dat$modSUD), n_sevSUD = sum(table_3_paper_dat$sevSUD))
 ##n's
 diagnosis_n
-## results
-mildSUD_dat = subset(table_3_paper_dat, mildSUD == 1)
-mildSUD_dat$mildSUD = as.factor(mildSUD_dat$mildSUD)
-mildSUD_dat$SASSDR = as.factor(mildSUD_dat$SASSDR)
-diagnosis_results_mildSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mildSUD, positive = "1")
+
+## results get mild or greater and so on
+table_3_paper_dat$SASSDR = as.factor(table_3_paper_dat$SASSDR)
+
+table_3_paper_dat$mild_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 2,1,0))
+diagnosis_results_mildSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mild_greater, positive = "1")
 diagnosis_results_mildSUD
 
-table_3_paper_dat$modSUD = as.factor(table_3_paper_dat$modSUD)
-diagnosis_results_modSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$modSUD, positive = "1")
+table_3_paper_dat$mod_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 4,1,0))
+
+diagnosis_results_modSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mod_greater, positive = "1")
 diagnosis_results_modSUD
+
+table_3_paper_dat$mod_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 6,1,0))
 
 table_3_paper_dat$sevSUD = as.factor(table_3_paper_dat$sevSUD)
 diagnosis_results_sevSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$sevSUD, positive = "1")
