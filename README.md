@@ -1029,117 +1029,54 @@ ADHDNONSUB
 EATINGNONSUB
 OTHRNONSUB
 NODIAG == 0 (no diagnosis)
+
+I believe the Table is referring to 
+
+true negatives in the criterion positive group as individuals who do not have a co-occurring disorder with their SUD 
+
+true positives in the criterion negative group as individuals who have a non-SUD disorder but no SUD.
+
+Do you subset out those who have an SUD only?
+Must have first or second criteria.  So make second criteria then subset
+
+
+
+
 http://gim.unmc.edu/dxtests/reviewof.htm
 ```{r}
-table18_dat_table1 = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
-dim(table18_dat_table1)
-table18_dat_table1$table_1 = rowSums(table18_dat_table1[,1:7])
-table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 >0,1,0)
-table18_dat_table1$table_1 = ifelse(table18_dat_table1$table_1 == 1 & table18_dat_table1$NODIAG == 1,1,0)
-table18_dat_table1 = subset(table18_dat_table1, table_1 == 1)
-n_total_table18_table1 = dim(table18_dat_table1)[1]
-n_p_table18_table1 = sum(table18_dat_table1$SASSDR)
-n_n_table18_table1 = sum(ifelse(table18_dat_table1$SASSDR == 1,0,1))
-n_p_table18_table1+n_n_table18_table1 == n_total_table18_table1
+table18_dat = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
+dim(table18_dat)
+table18_dat$co_occuring = rowSums(table18_dat[,1:7])
+table18_dat$co_occuring = ifelse(table18_dat$co_occuring >0,1,0)
+table18_dat$co_occuring = ifelse(table18_dat$co_occuring == 1 & table18_dat$NODIAG == 1,1,0)
 
+### Create negative criteria group only those with yes co_occuring and yes for other non-SUD and no SUD
 
-table18_dat_table2 = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
-dim(table18_dat_table2)
-table18_dat_table2$table_2 = rowSums(table18_dat_table2[,1:7])
-table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 >0,1,0)
-table18_dat_table2$table_2 = ifelse(table18_dat_table2$table_2 == 1 & table18_dat_table2$NODIAG == 0,1,0)
-table18_dat_table2 = subset(table18_dat_table2, table_2 == 1)
-n_total_table18_table2 = dim(table18_dat_table2)[1]
-n_p_table18_table2 = sum(table18_dat_table2$SASSDR)
-n_n_table18_table2 = sum(ifelse(table18_dat_table2$SASSDR == 1,0,1))
-n_p_table18_table2+n_n_table18_table2 == n_total_table18_table2
+non_sud = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB)
+dim(table18_dat)
+table18_dat$non_sud = rowSums(non_sud[,1:7])
+table18_dat$non_sud = ifelse(table18_dat$non_sud > 0, 1, 0)
 
-### Now get psychometrics
-#test_psycho = table18_dat_table1
-#test_psycho$tp = ifelse(table18_dat_table1$SASSDR ==1 & table18_dat_table1$NODIAG == 1,1,0)
-#test_psycho
-tp_table1 = sum(ifelse(table18_dat_table1$SASSDR ==1 & table18_dat_table1$NODIAG == 1,1,0))
-tn_table1 = sum(ifelse(table18_dat_table1$SASSDR ==0 & table18_dat_table1$NODIAG == 0,1,0))
+table18_dat = subset(table18_dat, co_occuring == 1 | non_sud == 1)
+n_total8 = dim(table18_dat)[1]
 
-fp_table1 = sum(ifelse(table18_dat_table1$SASSDR == 1 & table18_dat_table1$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(table18_dat_table1$SASSDR == 0 & table18_dat_table1$NODIAG == 1,1,0)
-fn_table1 = sum(ifelse(table18_dat_table1$SASSDR == 0 & table18_dat_table1$NODIAG == 1,1,0))
-dim(table18_dat_table1)[1] == sum(tp_table1, tn_table1, fp_table1, fn_table1)
+table_18_results=  confusionMatrix(as.factor(table18_dat$SASSDR), as.factor(table18_dat$co_occuring), positive = "1")
+table_18_results
 
-table18_sen_table1 = tp_table1/(tp_table1+fn_table1)
-table18_spec_table1 = tn_table1 / (tn_table1+fp_table1)
-table18_pred_p_table1 = tp_table1 / (tp_table1+fp_table1)
-table18_pred_n_table1 = tn_table1/(tn_table1+fn_table1)
-table18_accurate_table1 = (tp_table1+tn_table1) / sum(tp_table1, tn_table1, fp_table1, fn_table1)
-n_accurate_table1= (tp_table1+tn_table1)
+n_correct_table_18=  sum(table_18_results$table[1,1], table_18_results$table[2,2])
+n_correct_table_18
 
+table_18_totals = data.frame(test_p = sum(table_18_results$table[2,]), test_n = sum(table_18_results$table[1,]), criteria_p = sum(table_18_results$table[,2]), criteria_n = sum(table_18_results$table[,1]))
+table_18_totals
 
-tp_table2 = sum(ifelse(table18_dat_table2$SASSDR ==1 & table18_dat_table2$NODIAG == 1,1,0))
-tn_table2 = sum(ifelse(table18_dat_table2$SASSDR ==0 & table18_dat_table2$NODIAG == 0,1,0))
-
-fp_table2 = sum(ifelse(table18_dat_table2$SASSDR == 1 & table18_dat_table2$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(table18_dat_table2$SASSDR == 0 & table18_dat_table2$NODIAG == 1,1,0)
-fn_table2 = sum(ifelse(table18_dat_table2$SASSDR == 0 & table18_dat_table2$NODIAG == 1,1,0))
-dim(table18_dat_table2)[1] == sum(tp_table2, tn_table2, fp_table2, fn_table2)
-
-table18_sen_table2 = tp_table2/(tp_table2+fn_table2)
-table18_spec_table2 = tn_table2 / (tn_table2+fp_table2)
-table18_pred_p_table2 = tp_table2 / (tp_table2+fp_table2)
-table18_pred_n_table2 = tn_table2/(tn_table2+fn_table2)
-table18_accurate_table2 = (tp_table2+tn_table2) / sum(tp_table2, tn_table2, fp_table2, fn_table2)
-n_accurate_table2 = (tp_table2+tn_table2)
-
-### overall accuracy
-table18_dat_screen = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
-dim(table18_dat_screen)
-table18_dat_screen$table_1 = rowSums(table18_dat_screen[,1:7])
-table18_dat_screen$table_1 = ifelse(table18_dat_screen$table_1 >0,1,0)
-table18_dat_screen$table_1 = ifelse(table18_dat_screen$table_1 == 1,1,0)
-table18_dat_screen = subset(table18_dat_screen, table_1 == 1)
-dim(table18_dat_screen)
-
-tp_screen = sum(ifelse(table18_dat_screen$SASSDR ==1 & table18_dat_screen$NODIAG == 1,1,0))
-tn_screen = sum(ifelse(table18_dat_screen$SASSDR ==0 & table18_dat_screen$NODIAG == 0,1,0))
-
-fp_screen = sum(ifelse(table18_dat_screen$SASSDR == 1 & table18_dat_screen$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(table18_dat_screen$SASSDR == 0 & table18_dat_screen$NODIAG == 1,1,0)
-fn_screen = sum(ifelse(table18_dat_screen$SASSDR == 0 & table18_dat_screen$NODIAG == 1,1,0))
-dim(table18_dat_screen)[1] == sum(tp_screen, tn_screen, fp_screen, fn_screen)
-
-table18_accurate_screen = (tp_screen+tn_screen) / sum(tp_screen, tn_screen, fp_screen, fn_screen)
-n_accurate_screen = (tp_screen+tn_screen)
-
-
-
-
+table18_dat
 ```
 Table 18 results
 ```{r}
-n_total_table18_table1
-n_p_table18_table1
-n_n_table18_table1
-
-n_total_table18_table2
-n_p_table18_table2
-n_n_table18_table2
-
-table18_sen_table1
-table18_spec_table1
-table18_pred_p_table1
-table18_pred_n_table1
-table18_accurate_table1
-dim(table18_dat_table2)[1]
-n_accurate_table1
-
-table18_sen_table2
-table18_spec_table2
-table18_pred_p_table2
-table18_pred_n_table2
-table18_accurate_table2
-dim(table18_dat_table2)[1]
-n_accurate_table2
-
-table18_accurate_screen
+n_total8
+table_18_results
+n_correct_table_18
+table_18_totals
 ```
 
 
@@ -1657,9 +1594,7 @@ describe.factor(clinical_sample$ETHN)
 ```
 Table 36 data cleaning
 ```{r}
-legal_dat = subset(clinical_sample, TOT_ARREST > 0 & B5 == 1)
-legal_dat_test = legal_dat[c("TOT_ARREST", "B5")]
-legal_dat_test
+legal_dat = subset(clinical_sample, B5 == 1)
 legal_dat_total_n =  dim(legal_dat)[1]
 
 legal_dat_results=  confusionMatrix(as.factor(legal_dat$SASSDR), as.factor(legal_dat$NODIAG), positive = "1")
@@ -1674,8 +1609,7 @@ legal_totals
 Table 36 results
 ```{r}
 ## Text answer
-legal_trouble = ifelse(clinical_sample$TOT_ARREST >0 | clinical_sample$B5 == 1 ,1,0)
-describe.factor(legal_trouble)
+describe.factor(clinical_sample$B5)
 
 legal_dat_total_n
 legal_dat_results
@@ -1713,13 +1647,19 @@ living_sit_totals
 ```
 Table 38 data cleaning
 The SASSI test is represented by the Rx score or 2 or more which is considered “High prob of Prescription Drug Abuse” and an Rx score of less than 2 is considered “Low probability of prescription Drug Abuse.” The “truth” is represented by the clinician’s diagnosis of an Opioid or Sedative SUD which is indicated by a 1 in either the OPIOIDDIAG and/or SEDDIAG field. No SUD is of course a 1 in the NODIAG field.
+
+Among those with Rx1 and Rx2 and those with no diagnosis how many did we get right? This is how you get no diagnosis, because if it isn’t Rx1 or Rx2, then no diagnosis 
 ```{r}
 library(caret)
 table_38_dat = clinical_sample
 table_38_dat$Rx_test = ifelse(table_38_dat$Rx >=2, 1, 0)
 describe.factor(table_38_dat$Rx_truth)
 table_38_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDIAG == 1,1,0)
-test_table_38 = table_38_dat[c("OPIOIDDIAG", "SEDDIAG", "Rx_truth")]
+
+## You either have Rx diagnosis or you don't have a diagnosis
+table_38_dat = subset(table_38_dat, Rx_truth == 1 | NODIAG == 0)
+dim(table_38_dat)
+test_table_38 = table_38_dat[c("OPIOIDDIAG", "SEDDIAG", "Rx_truth", "Rx_test", "NODIAG")]
 test_table_38
 table_38_dat_total_n =  dim(table_38_dat)[1]
 
@@ -1858,13 +1798,14 @@ length(which(diagnoses<6&diagnoses>=4))/173
 length(which(diagnoses<4&diagnoses>=2))/173
 length(which(diagnoses<2))/173
 
-So much be increasing, because saying someone has a mild and not moderate the SASSI just says yes for all.
+For diagnosis limit to those who do not have the diagnosis and those who have a mild diagnosis and so on for the rest. 
 
 ```{r}
 ### Create variables in cross validation sample
 table_3_paper_dat = cross_validation_sample
 ### Diagnosis no, mild, mod, severe
 table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
+library(prettyR)
 describe.factor(table_3_paper_dat$NODIAG)
 
 table_3_paper_dat$noSUD = ifelse(table_3_paper_dat$diag_totals <2, 1, 0) 
@@ -1886,38 +1827,79 @@ dat_check_paper_table3
 ### results for diagnosis
 diagnosis_n = data.frame(n_noSUD = sum(table_3_paper_dat$noSUD), n_mildSUD = sum(table_3_paper_dat$mildSUD), n_modSUD = sum(table_3_paper_dat$modSUD), n_sevSUD = sum(table_3_paper_dat$sevSUD))
 ##n's
+sum(diagnosis_n) == dim(table_3_paper_dat)[1]
+### Only mild and nosud
+table_3_paper_dat_mild = subset(table_3_paper_dat, mildSUD == 1 |table_3_paper_dat$noSUD == 1)
+
+table_3_paper_dat_mild_results = confusionMatrix(as.factor(table_3_paper_dat_mild$SASSDR), as.factor(table_3_paper_dat_mild$NODIAG), positive = "1")
+table_3_paper_dat_mild_results
+table_3_paper_dat_mild_roc =  roc(table_3_paper_dat_mild$SASSDR, table_3_paper_dat_mild$NODIAG, ci = TRUE)
+table_3_paper_dat_mild_roc
+library(caret)
+
+table_3_paper_dat_mod = subset(table_3_paper_dat, modSUD == 1 |table_3_paper_dat$noSUD == 1)
+table_3_paper_dat_mod_results = confusionMatrix(as.factor(table_3_paper_dat_mod$SASSDR), as.factor(table_3_paper_dat_mod$NODIAG), positive = "1")
+table_3_paper_dat_mod_results
+table_3_paper_dat_mod_roc =  roc(table_3_paper_dat_mod$SASSDR, table_3_paper_dat_mod$NODIAG, ci = TRUE)
+table_3_paper_dat_mod_roc
+
+table_3_paper_dat_sev = subset(table_3_paper_dat, sevSUD == 1 |table_3_paper_dat$noSUD == 1)
+table_3_paper_dat_sev_results = confusionMatrix(as.factor(table_3_paper_dat_sev$SASSDR), as.factor(table_3_paper_dat_sev$NODIAG), positive = "1")
+table_3_paper_dat_sev_results
+table_3_paper_dat_sev_roc =  roc(table_3_paper_dat_sev$SASSDR, table_3_paper_dat_sev$NODIAG, ci = TRUE)
+table_3_paper_dat_sev_roc
+
+#### other mental health co_occuring numbers and just n non-co_occuring and total
+table_3_paper_dat_mh = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+dim(table_3_paper_dat_mh)
+table_3_paper_dat_mh$co_occuring = rowSums(table_3_paper_dat_mh[,1:7])
+table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring >0,1,0)
+table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring == 1 & table_3_paper_dat_mh$NODIAG == 1,1,0)
+
+### Create negative criteria group only those with yes co_occuring and yes for other non-SUD and no SUD
+
+non_sud = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB)
+table_3_paper_dat_mh$non_sud = rowSums(non_sud[,1:7])
+table_3_paper_dat_mh
+table_3_paper_dat_mh$non_sud = ifelse(table_3_paper_dat_mh$non_sud  > 0, 1, 0)
+dim(table_3_paper_dat_mh)
+
+table_3_paper_dat_mh = subset(table_3_paper_dat_mh, co_occuring == 1 | non_sud == 1)
+n_total_table_3_mh = dim(table_3_paper_dat_mh)[1]
+
+table_3_paper_mh_results=  confusionMatrix(as.factor(table_3_paper_dat_mh$SASSDR), as.factor(table_3_paper_dat_mh$NODIAG), positive = "1")
+table_3_paper_mh_results
+describe.factor(table_3_paper_dat_mh$co_occuring)
+
+
+table_3_paper_dat_mh_roc =  roc(table_3_paper_dat_mh$SASSDR, table_3_paper_dat_mh$NODIAG, ci = TRUE)
+table_3_paper_dat_mh_roc
+
+```
+Table 3 Paper results
+```{r}
 diagnosis_n
 
-## results get mild or greater and so on
-table_3_paper_dat$SASSDR = as.factor(table_3_paper_dat$SASSDR)
+table_3_paper_dat_mild_results
+table_3_paper_dat_mild_roc
 
-table_3_paper_dat$mild_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 2,1,0))
-diagnosis_results_mildSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mild_greater, positive = "1")
-diagnosis_results_mildSUD
+table_3_paper_dat_mod_results
+table_3_paper_dat_mod_roc
 
-table_3_paper_dat$mod_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 4,1,0))
+table_3_paper_dat_sev_results
+table_3_paper_dat_sev_roc
 
-diagnosis_results_modSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$mod_greater, positive = "1")
-diagnosis_results_modSUD
+### mh n's below
+n_total_table_3_mh
+describe.factor(table_3_paper_dat_mh$co_occuring)
+table_3_paper_mh_results
+table_3_paper_dat_mh_roc
 
-table_3_paper_dat$mod_greater = as.factor(ifelse(table_3_paper_dat$diag_totals >= 6,1,0))
 
-table_3_paper_dat$sevSUD = as.factor(table_3_paper_dat$sevSUD)
-diagnosis_results_sevSUD = confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$sevSUD, positive = "1")
-diagnosis_results_sevSUD
-confusionMatrix(table_3_paper_dat$SASSDR, table_3_paper_dat$sevSUD)
-confusionMatrix(cross_validation_sample$SASSDR, cross_validation_sample$NODIAG)
-
-cross_validation_sample
-#### Co-occuring
-co_occuring_all = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
-
-table_3_paper_dat$co_occuring = rowSums(co_occuring_all[,1:7])
-table_3_paper_dat$co_occuring = ifelse(table_3_paper_dat$co_occuring >0,1,0)
-table_3_paper_dat$co_occuring = ifelse(table_3_paper_dat$co_occuring == 1 & table_3_paper_dat$NODIAG == 1,1,0)
-co_occuring_dat = subset(table_3_paper_dat, co_occuring == 1)
-dim(co_occuring_dat)
 ```
+
+
+
 Raw score stability (z-score)
 ```{r}
 SASDR_raw = t.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
@@ -1982,115 +1964,7 @@ sassi_roc_95 = ci.auc(sassi_roc)
 sassi_roc_95
 
 ```
-Accuracy in detecting likely SUD in persons diagnosis with non-substance related disorders
-http://gim.unmc.edu/dxtests/reviewof.htm
-```{r}
-paper_nonSUD_dat_table1 = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
-dim(paper_nonSUD_dat_table1)
-paper_nonSUD_dat_table1$table_1 = rowSums(paper_nonSUD_dat_table1[,1:7])
-paper_nonSUD_dat_table1$table_1 = ifelse(paper_nonSUD_dat_table1$table_1 >0,1,0)
-paper_nonSUD_dat_table1$table_1 = ifelse(paper_nonSUD_dat_table1$table_1 == 1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
-paper_nonSUD_dat_table1 = subset(paper_nonSUD_dat_table1, table_1 == 1)
-n_total_paper_nonSUD_table1 = dim(paper_nonSUD_dat_table1)[1]
-n_p_paper_nonSUD_table1 = sum(paper_nonSUD_dat_table1$SASSDR)
-n_n_paper_nonSUD_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 1,0,1))
-n_p_paper_nonSUD_table1+n_n_paper_nonSUD_table1 == n_total_paper_nonSUD_table1
 
-
-paper_nonSUD_dat_table2 = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
-dim(paper_nonSUD_dat_table2)
-paper_nonSUD_dat_table2$table_2 = rowSums(paper_nonSUD_dat_table2[,1:7])
-paper_nonSUD_dat_table2$table_2 = ifelse(paper_nonSUD_dat_table2$table_2 >0,1,0)
-paper_nonSUD_dat_table2$table_2 = ifelse(paper_nonSUD_dat_table2$table_2 == 1 & paper_nonSUD_dat_table2$NODIAG == 0,1,0)
-paper_nonSUD_dat_table2 = subset(paper_nonSUD_dat_table2, table_2 == 1)
-n_total_paper_nonSUD_table2 = dim(paper_nonSUD_dat_table2)[1]
-n_p_paper_nonSUD_table2 = sum(paper_nonSUD_dat_table2$SASSDR)
-n_n_paper_nonSUD_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 1,0,1))
-n_p_paper_nonSUD_table2+n_n_paper_nonSUD_table2 == n_total_paper_nonSUD_table2
-
-### Now get psychometrics
-#test_psycho = paper_nonSUD_dat_table1
-#test_psycho$tp = ifelse(paper_nonSUD_dat_table1$SASSDR ==1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
-#test_psycho
-tp_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR ==1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0))
-tn_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR ==0 & paper_nonSUD_dat_table1$NODIAG == 0,1,0))
-
-fp_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 1 & paper_nonSUD_dat_table1$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(paper_nonSUD_dat_table1$SASSDR == 0 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
-fn_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 0 & paper_nonSUD_dat_table1$NODIAG == 1,1,0))
-dim(paper_nonSUD_dat_table1)[1] == sum(tp_table1, tn_table1, fp_table1, fn_table1)
-
-paper_nonSUD_sen_table1 = tp_table1/(tp_table1+fn_table1)
-paper_nonSUD_spec_table1 = tn_table1 / (tn_table1+fp_table1)
-paper_nonSUD_pred_p_table1 = tp_table1 / (tp_table1+fp_table1)
-paper_nonSUD_pred_n_table1 = tn_table1/(tn_table1+fn_table1)
-paper_nonSUD_accurate_table1 = (tp_table1+tn_table1) / sum(tp_table1, tn_table1, fp_table1, fn_table1)
-n_accurate_table1= (tp_table1+tn_table1)
-
-
-tp_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR ==1 & paper_nonSUD_dat_table2$NODIAG == 1,1,0))
-tn_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR ==0 & paper_nonSUD_dat_table2$NODIAG == 0,1,0))
-
-fp_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 1 & paper_nonSUD_dat_table2$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(paper_nonSUD_dat_table2$SASSDR == 0 & paper_nonSUD_dat_table2$NODIAG == 1,1,0)
-fn_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 0 & paper_nonSUD_dat_table2$NODIAG == 1,1,0))
-dim(paper_nonSUD_dat_table2)[1] == sum(tp_table2, tn_table2, fp_table2, fn_table2)
-
-paper_nonSUD_sen_table2 = tp_table2/(tp_table2+fn_table2)
-paper_nonSUD_spec_table2 = tn_table2 / (tn_table2+fp_table2)
-paper_nonSUD_pred_p_table2 = tp_table2 / (tp_table2+fp_table2)
-paper_nonSUD_pred_n_table2 = tn_table2/(tn_table2+fn_table2)
-paper_nonSUD_accurate_table2 = (tp_table2+tn_table2) / sum(tp_table2, tn_table2, fp_table2, fn_table2)
-n_accurate_table2 = (tp_table2+tn_table2)
-
-### overall accuracy
-paper_nonSUD_dat_screen = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
-dim(paper_nonSUD_dat_screen)
-paper_nonSUD_dat_screen$table_1 = rowSums(paper_nonSUD_dat_screen[,1:7])
-paper_nonSUD_dat_screen$table_1 = ifelse(paper_nonSUD_dat_screen$table_1 >0,1,0)
-paper_nonSUD_dat_screen$table_1 = ifelse(paper_nonSUD_dat_screen$table_1 == 1,1,0)
-paper_nonSUD_dat_screen = subset(paper_nonSUD_dat_screen, table_1 == 1)
-dim(paper_nonSUD_dat_screen)
-
-tp_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR ==1 & paper_nonSUD_dat_screen$NODIAG == 1,1,0))
-tn_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR ==0 & paper_nonSUD_dat_screen$NODIAG == 0,1,0))
-
-fp_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR == 1 & paper_nonSUD_dat_screen$NODIAG == 0,1,0))
-#test_psycho$tn = ifelse(paper_nonSUD_dat_screen$SASSDR == 0 & paper_nonSUD_dat_screen$NODIAG == 1,1,0)
-fn_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR == 0 & paper_nonSUD_dat_screen$NODIAG == 1,1,0))
-dim(paper_nonSUD_dat_screen)[1] == sum(tp_screen, tn_screen, fp_screen, fn_screen)
-
-paper_nonSUD_accurate_screen = (tp_screen+tn_screen) / sum(tp_screen, tn_screen, fp_screen, fn_screen)
-n_accurate_screen = (tp_screen+tn_screen)
-```
-Paper Table 3 results
-```{r}
-n_total_paper_nonSUD_table1
-n_p_paper_nonSUD_table1
-n_n_paper_nonSUD_table1
-
-n_total_paper_nonSUD_table2
-n_p_paper_nonSUD_table2
-n_n_paper_nonSUD_table2
-
-paper_nonSUD_sen_table1
-paper_nonSUD_spec_table1
-paper_nonSUD_pred_p_table1
-paper_nonSUD_pred_n_table1
-paper_nonSUD_accurate_table1
-dim(paper_nonSUD_dat_table2)[1]
-n_accurate_table1
-
-paper_nonSUD_sen_table2
-paper_nonSUD_spec_table2
-paper_nonSUD_pred_p_table2
-paper_nonSUD_pred_n_table2
-paper_nonSUD_accurate_table2
-dim(paper_nonSUD_dat_table2)[1]
-n_accurate_table2
-
-paper_nonSUD_accurate_screen
-```
 Omega heir paper
 ```{r}
 sassi_omega 
