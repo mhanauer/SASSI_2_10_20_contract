@@ -1659,6 +1659,8 @@ table_38_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDI
 ## You either have Rx diagnosis or you don't have a diagnosis
 table_38_dat = subset(table_38_dat, Rx_truth == 1 | NODIAG == 0)
 dim(table_38_dat)
+table_38_dat_test = table_38_dat[c("Rx_truth", "NODIAG")]
+table_38_dat_test
 test_table_38 = table_38_dat[c("OPIOIDDIAG", "SEDDIAG", "Rx_truth", "Rx_test", "NODIAG")]
 test_table_38
 table_38_dat_total_n =  dim(table_38_dat)[1]
@@ -1745,10 +1747,11 @@ table_38_2_dat$rx_2_truth = ifelse(table_38_2_dat$NORXDIAG == 0 & table_38_2_dat
 
 table_38_2_dat$rx_2_test = ifelse(table_38_2_dat$Rx >= 2,1,0)
 
-table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOPIOIDDIAG = table_38_2_dat$RXOPIOIDDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, rx_2_truth = table_38_2_dat$rx_2_truth, rx_2_test = table_38_2_dat$rx_2_test, Rx = table_38_2_dat$Rx)
+table_38_2_dat = data.frame(NORXDIAG = table_38_2_dat$NORXDIAG, RXPOTDIAG = table_38_2_dat$RXPOTDIAG, RXOPIOIDDIAG = table_38_2_dat$RXOPIOIDDIAG, RXSEDDIAG = table_38_2_dat$RXSEDDIAG, RXSTIMDIAG = table_38_2_dat$RXSTIMDIAG, RXOTHRDRUGDIAG = table_38_2_dat$RXOTHRDRUGDIAG, rx_2_truth = table_38_2_dat$rx_2_truth, rx_2_test = table_38_2_dat$rx_2_test, Rx = table_38_2_dat$Rx, NODIAG = table_38_2_dat$NODIAG)
 
 table_38_2_dat
 
+table_38_2_dat = subset(table_38_2_dat, rx_2_truth == 1 | NODIAG == 0)
 table_38_2_dat_total_n =  dim(table_38_2_dat)[1]
 
 table_38_2_dat_results=  confusionMatrix(as.factor(table_38_2_dat$rx_2_test), as.factor(table_38_2_dat$rx_2_truth), positive = "1")
@@ -1757,9 +1760,6 @@ table_38_2_dat_accurate =  sum(table_38_2_dat_results$table[1,1], table_38_2_dat
 
 table_38_2_totals = data.frame(test_p = sum(table_38_2_dat_results$table[2,]), test_n = sum(table_38_2_dat_results$table[1,]), criteria_p = sum(table_38_2_dat_results$table[,2]), criteria_n = sum(table_38_2_dat_results$table[,1]))
 table_38_2_totals
-library(DescTools)
-table38_2_dat_cramer = CramerV(table_38_2_dat_results$table, conf.level = .99)
-table38_2_dat_cramer
 
 
 ```
@@ -1768,18 +1768,12 @@ That is the field of NORXDIAG. If that field is a 1 then it indicated NoRXDIAG. 
 ```{r}
 table_38_2_dat
 ```
-Table 38.2 AUC and cut point
+Table 38.2 results
 ```{r}
-library(pROC)
-test_roc =  roc(table_38_2_dat$rx_2_test, table_38_2_dat$rx_2_truth)
-test_roc
-test_auc_95 = ci.auc(test_roc)
-test_auc_95
-library(cutpointr)
-cp_rx = cutpointr(table_38_2_dat, Rx, rx_2_truth, method = maximize_metric, metric = sum_sens_spec)
-cp_rx
-
-
+table_38_2_dat_total_n
+table_38_2_dat_results
+table_38_2_dat_accurate
+table_38_2_totals
 ```
 
 
@@ -1790,7 +1784,7 @@ table_38_2_dat_total_n
 table_38_2_dat_results
 table_38_2_dat_accurate
 table_38_2_totals
-381/515 
+
 ```
 Paper Table 3
 length(which(diagnoses>=6))/173
@@ -1875,6 +1869,27 @@ describe.factor(table_3_paper_dat_mh$co_occuring)
 table_3_paper_dat_mh_roc =  roc(table_3_paper_dat_mh$SASSDR, table_3_paper_dat_mh$NODIAG, ci = TRUE)
 table_3_paper_dat_mh_roc
 
+#### Rx meds
+paper_table_3_rx_dat = cross_validation_sample
+paper_table_3_rx_dat$Rx_test = ifelse(paper_table_3_rx_dat$Rx >=2, 1, 0)
+describe.factor(paper_table_3_rx_dat$Rx_truth)
+paper_table_3_rx_dat$Rx_truth = ifelse(paper_table_3_rx_dat$OPIOIDDIAG == 1 | paper_table_3_rx_dat$SEDDIAG == 1,1,0)
+
+## You either have Rx diagnosis or you don't have a diagnosis
+paper_table_3_rx_dat = subset(paper_table_3_rx_dat, Rx_truth == 1 | NODIAG == 0)
+dim(paper_table_3_rx_dat)
+paper_table_3_rx_dat_test = paper_table_3_rx_dat[c("Rx_truth", "NODIAG")]
+paper_table_3_rx_dat_test
+test_paper_table_3_rx = paper_table_3_rx_dat[c("OPIOIDDIAG", "SEDDIAG", "Rx_truth", "Rx_test", "NODIAG")]
+test_paper_table_3_rx
+paper_table_3_rx_dat_total_n =  dim(paper_table_3_rx_dat)[1]
+
+paper_table_3_rx_dat_opioid_results=  confusionMatrix(as.factor(paper_table_3_rx_dat$Rx_test), as.factor(paper_table_3_rx_dat$Rx_truth), positive = "1")
+
+paper_table_3_rx_dat_roc =  roc(paper_table_3_rx_dat$Rx_test, paper_table_3_rx_dat$Rx_truth, ci = TRUE)
+paper_table_3_rx_dat_roc
+
+
 ```
 Table 3 Paper results
 ```{r}
@@ -1891,9 +1906,18 @@ table_3_paper_dat_sev_roc
 
 ### mh n's below
 n_total_table_3_mh
+### N for number of mental and non_suds
 describe.factor(table_3_paper_dat_mh$co_occuring)
+table_3_paper_dat_mh
 table_3_paper_mh_results
 table_3_paper_dat_mh_roc
+#### Rx use
+paper_table_3_rx_dat_total_n
+### for rx use and non-sud
+describe.factor(paper_table_3_rx_dat$Rx_truth)
+paper_table_3_rx_dat_opioid_results
+paper_table_3_rx_dat_roc
+
 
 
 ```
