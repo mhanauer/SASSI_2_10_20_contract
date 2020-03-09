@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "SAASI Table 1"
 author: "Elaina"
 date: "3/9/2020"
 output: html_document
@@ -244,19 +244,17 @@ describe.factor(stability_sample$TN_RACEETH_R)
 #no B5/no data
 
 #education
-describe.factor(clincal_sample$YEARS_ED)
-clincal_sample$education = clincal_sample$YEARS_ED
-clincal_sample$education <- (ifelse(clincal_sample$education == 28, 5, ifelse(clincal_sample$education == 29, 6, ifelse(clincal_sample$education == 30,7, ifelse(clincal_sample$education==31, 8, ifelse(clincal_sample$education == 32, 9, ifelse(clincal_sample$education ==33, 10, ifelse(clincal_sample$education == 34, 11, ifelse(clincal_sample$education==35,12,clincal_sample$education)))))))))
-clincal_sample$education[clincal_sample$education==36] <- NA
+describe.factor(stability_sample$YEARS_ED)
+stability_sample$education = stability_sample$TN_EDUC_R
+stability_sample$education <- (ifelse(stability_sample$education == 28, 5, ifelse(stability_sample$education == 29, 6, ifelse(stability_sample$education == 30,7, ifelse(stability_sample$education==31, 8, ifelse(stability_sample$education == 32, 9, ifelse(stability_sample$education ==33, 10, ifelse(stability_sample$education == 34, 11, ifelse(stability_sample$education==35,12,stability_sample$education)))))))))
+stability_sample$education[stability_sample$education==36] <- NA
 
-describe.factor(clincal_sample$education)
+describe.factor(stability_sample$education)
 
-mean(clincal_sample$education, na.rm=TRUE)
-sd(clincal_sample$education, na.rm=TRUE)
+mean(stability_sample$education, na.rm=TRUE)
+sd(stability_sample$education, na.rm=TRUE)
 
 #age
-clincal_sample$AGE
-mean(clincal_sample$AGE)
-sd(clincal_sample$AGE)
+#no data
 
 ```
