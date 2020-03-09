@@ -1,5 +1,5 @@
 ---
-title: "SAASI Table 1"
+title: "Untitled"
 author: "Elaina"
 date: "3/9/2020"
 output: html_document
@@ -22,6 +22,9 @@ dim(cross_validation_sample)
 dim(development_sample)
 dim(normative_sample)
 dim(stability_sample)
+
+library(DescTools)
+library(prettyR)
 ```
 
 ```{r}
@@ -91,10 +94,10 @@ describe.factor(cross_validation_sample$NODIAG)
 
 diagnoses=subset(cross_validation_sample$diag_totals,cross_validation_sample$diag_totals>=2)
 describe.factor(diagnoses)
-length(which(diagnoses>=6))/257
-length(which(diagnoses<6&diagnoses>=4))/257
-length(which(diagnoses<4&diagnoses>=2))/257
-length(which(diagnoses<2))/257
+length(which(diagnoses>=6))/258
+length(which(diagnoses<6&diagnoses>=4))/258
+length(which(diagnoses<4&diagnoses>=2))/258
+length(which(diagnoses<2))/258
 
 #gender
 describe.factor(cross_validation_sample$SEX)
@@ -129,7 +132,7 @@ sd(cross_validation_sample$AGE)
 ```
 
 ```{r}
-#describe(normative_sample)
+########describe(normative_sample)
 
 #client setting; 1=criminal setting, 2=social services program, 3=medical pain clinic, 4=medical facility (not pain), 6=substance use treatment, 7=Other
 #No data
@@ -146,10 +149,10 @@ describe.factor(normative_sample$TN_WORK)
 #Race/ethnicity; 1=American Indian/Alaskan Native, 2=Asian, 3=Black/African american, 4=White, 5=Hispanic (per email), 6=Native Hawaiian/Pacific Islander, 7=Multiracial, 8=Other
 describe.factor(normative_sample$TN_RACEETH)
 
-#Living situation; 1,2,3,4=Parents, 5=Other Relatives
+#Living situation; 9=parents, 10=Other relatives, 11=friends, 12=group home, 13=residential, 14=other
 describe.factor(normative_sample$Living_SIt)
 
-##trouble with the law
+##trouble with the law, 1=yes, 2=no
 describe.factor(normative_sample$TN_LAW)
 
 #education
@@ -170,57 +173,58 @@ sd(normative_sample$TN_AGE)
 ```
 
 ```{r}
-#describe(clinical_sample)
-
+#######describe(clinical_sample)
+dim(clinical_sample)
 #client setting; 1=criminal setting, 2=social services program, 3=medical pain clinic, 4=medical facility (not pain), 6=substance use treatment, 7=Other
-describe.factor(clincal_sample$CLIENTSETTING)
+describe.factor(clinical_sample$CLIENTSETTING)
 
 #clinical diagnosis
-describe.factor(clincal_sample$NODIAG)
-clincal_sample$diag_totals = clincal_sample$ALCTO + clincal_sample$POTTOT + clincal_sample$HALLUCTOT + clincal_sample$INHALTOT + clincal_sample$OPIOIDTOT + clincal_sample$SEDTOT + clincal_sample$SEDTOT + clincal_sample$STIMTOT + clincal_sample$OTHRDRUGTOT
+describe.factor(clinical_sample$NODIAG)
+clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT + clinical_sample$SEDTOT + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
 
-describe.factor(clincal_sample$NODIAG)
-#257 total in development sample
+#550 total in clinical sample
 
-diagnoses=subset(clincal_sample$diag_totals,clincal_sample$diag_totals>=2)
+diagnoses=subset(clinical_sample$diag_totals,clinical_sample$diag_totals>=2)
 describe.factor(diagnoses)
-length(which(diagnoses>=6))/257
-length(which(diagnoses<6&diagnoses>=4))/257
-length(which(diagnoses<4&diagnoses>=2))/257
-length(which(diagnoses<2))/257
+length(which(diagnoses>=6))/515
+length(which(diagnoses<6&diagnoses>=4))/515
+length(which(diagnoses<4&diagnoses>=2))/515
+length(which(diagnoses<2))/515
 
 #gender
-describe.factor(clincal_sample$SEX)
+describe.factor(clinical_sample$SEX)
 
 #employment; 22=full-time, 23=part-time, 24=not employed, 25=volunteer
-describe.factor(clincal_sample$EMP_STATUS)
+describe.factor(clinical_sample$EMP_STATUS)
 
 #Race/ethnicity; 1=American Indian/Alaskan Native, 2=Asian, 3=Black/African american, 4=Canadian Native, 5=Hispanic (per email), 6=Native Hawaiian/Pacific Islander, 7=White, 8=Mixed, 9=Other
-describe.factor(clincal_sample$ETHN)
+describe.factor(clinical_sample$ETHN)
 
 #Living situation; 9=parents, 10=Other relatives, 11=friends, 12=group home, 13=residential, 14=other
-describe.factor(clincal_sample$LIVING_SIT)
+describe.factor(clinical_sample$LIVING_SIT)
 
-#trouble with the law
-describe.factor(stability_sample$TN_LAW_R)
+#B5 trouble with the law; 1=yes 2=no
+describe.factor(clinical_sample$B5)
 
 #education
-describe.factor(stability_sample$TN_EDUC_R)
-stability_sample$education = stability_sample$TN_EDUC_R
-stability_sample$education <- (ifelse(stability_sample$education == 1, 5, ifelse(stability_sample$education == 2, 6, ifelse(stability_sample$education == 3,7, ifelse(stability_sample$education==4, 8, ifelse(stability_sample$education == 5, 9, ifelse(stability_sample$education ==6, 10, ifelse(stability_sample$education == 7, 11, ifelse(stability_sample$education==8,12,stability_sample$education)))))))))
-stability_sample$education[stability_sample$education==36] <- NA
+describe.factor(clinical_sample$YEARS_ED)
+clinical_sample$education = clinical_sample$YEARS_ED
+clinical_sample$education <- (ifelse(clinical_sample$education == 28, 5, ifelse(clinical_sample$education == 29, 6, ifelse(clinical_sample$education == 30,7, ifelse(clinical_sample$education==31, 8, ifelse(clinical_sample$education == 32, 9, ifelse(clinical_sample$education ==33, 10, ifelse(clinical_sample$education == 34, 11, ifelse(clinical_sample$education==35,12,clinical_sample$education)))))))))
+clinical_sample$education[clinical_sample$education==36] <- NA
 
-describe.factor(stability_sample$education)
+describe.factor(clinical_sample$education)
 
-mean(stability_sample$education, na.rm=TRUE)
-sd(stability_sample$education, na.rm=TRUE)
+mean(clinical_sample$education, na.rm=TRUE)
+sd(clinical_sample$education, na.rm=TRUE)
 
 #age
-#no data
+describe.factor(clinical_sample$AGE)
+mean(clinical_sample$AGE)
+sd(clinical_sample$AGE)
 ```
 
 ```{r}
-#describe(stability_sample)
+#####describe(stability_sample)
 
 #client setting; 1=criminal setting, 2=social services program, 3=medical pain clinic, 4=medical facility (not pain), 6=substance use treatment, 7=Other
 #no data
