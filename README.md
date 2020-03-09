@@ -724,7 +724,7 @@ table_9_fva_cramer_v
 88.74-83.11
 90.17-78.03
 ### in text bottom
-1-.8214
+88.74-83.11
 457-428
 ```
 
@@ -1531,6 +1531,7 @@ total_age_accurate
 total_age_inaccurate
 
 age_cramersV
+describe.factor(clinical_sample$ETHN)
 ```
 Table 28
 
@@ -1539,6 +1540,7 @@ White = 7
 Hispanic = 5  (per email)      
 Black = 3         
 Mixed race =  8
+Another race = 2,6,1,9
 ```{r}
 library(caret)
 describe.factor(clinical_sample$ETHN)
@@ -1595,6 +1597,19 @@ mixed_dat_inaccurate =  sum(mixed_dat_results$table[1,2], mixed_dat_results$tabl
 mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[2,]), test_n = sum(mixed_dat_results$table[1,]), criteria_p = sum(mixed_dat_results$table[,2]), criteria_n = sum(mixed_dat_results$table[,1]))
 mixed_totals
 
+# Another race = 2,6,1,9
+another_race_dat = subset(clinical_sample,  ETHN == 2 | ETHN == 6 | ETHN == 1 | ETHN == 9)
+
+another_race_dat_total_n =  dim(another_race_dat)[1]
+
+another_race_dat_results =  confusionMatrix(as.factor(another_race_dat$SASSDR), as.factor(another_race_dat$NODIAG), positive = "1")
+
+another_race_dat_accurate =  sum(another_race_dat_results$table[1,1], another_race_dat_results$table[2,2])
+
+another_race_dat_inaccurate =  sum(another_race_dat_results$table[1,2], another_race_dat_results$table[2,1])
+
+another_race_totals = data.frame(test_p = sum(another_race_dat_results$table[2,]), test_n = sum(another_race_dat_results$table[1,]), criteria_p = sum(another_race_dat_results$table[,2]), criteria_n = sum(another_race_dat_results$table[,1]))
+another_race_totals
 
 race_dat_cramer = clinical_sample
 race_dat_cramer$accurate = ifelse(race_dat_cramer$SASSDR == race_dat_cramer$NODIAG,1,0)
@@ -1629,14 +1644,22 @@ mixed_dat_accurate
 mixed_dat_inaccurate
 mixed_totals
 
+another_race_dat_total_n
+another_race_dat_results
+another_race_dat_accurate
+nother_race_dat_inaccurate
+another_race_totals
+
+
 race_dat_cramer
 
 describe.factor(clinical_sample$ETHN)
 ```
 Table 36 data cleaning
 ```{r}
-legal_dat = subset(clinical_sample, TOT_ARREST > 0)
-
+legal_dat = subset(clinical_sample, TOT_ARREST > 0 & B5 == 1)
+legal_dat_test = legal_dat[c("TOT_ARREST", "B5")]
+legal_dat_test
 legal_dat_total_n =  dim(legal_dat)[1]
 
 legal_dat_results=  confusionMatrix(as.factor(legal_dat$SASSDR), as.factor(legal_dat$NODIAG), positive = "1")
@@ -1651,7 +1674,7 @@ legal_totals
 Table 36 results
 ```{r}
 ## Text answer
-legal_trouble = ifelse(clinical_sample$TOT_ARREST >0,1,0)
+legal_trouble = ifelse(clinical_sample$TOT_ARREST >0 | clinical_sample$B5 == 1 ,1,0)
 describe.factor(legal_trouble)
 
 legal_dat_total_n
@@ -1691,46 +1714,54 @@ living_sit_totals
 Table 38 data cleaning
 The SASSI test is represented by the Rx score or 2 or more which is considered “High prob of Prescription Drug Abuse” and an Rx score of less than 2 is considered “Low probability of prescription Drug Abuse.” The “truth” is represented by the clinician’s diagnosis of an Opioid or Sedative SUD which is indicated by a 1 in either the OPIOIDDIAG and/or SEDDIAG field. No SUD is of course a 1 in the NODIAG field.
 ```{r}
-
+library(caret)
 table_38_dat = clinical_sample
 table_38_dat$Rx_test = ifelse(table_38_dat$Rx >=2, 1, 0)
+describe.factor(table_38_dat$Rx_truth)
 table_38_dat$Rx_truth = ifelse(table_38_dat$OPIOIDDIAG == 1 | table_38_dat$SEDDIAG == 1,1,0)
-
-
+test_table_38 = table_38_dat[c("OPIOIDDIAG", "SEDDIAG", "Rx_truth")]
+test_table_38
 table_38_dat_total_n =  dim(table_38_dat)[1]
 
 table_38_dat_opioid_results=  confusionMatrix(as.factor(table_38_dat$Rx_test), as.factor(table_38_dat$Rx_truth), positive = "1")
-table_38_dat_opioid_results$table
-table_38_dat_opioid_high_prob = sum(table_38_dat_opioid_results$table[2,])
-table_38_dat_opioid_low_prob = sum(table_38_dat_opioid_results$table[1,])
-table_38_dat_opioid_total = sum(table_38_dat_opioid_high_prob,table_38_dat_opioid_low_prob)
 
- 
-table_38_dat$NOSUD = ifelse(table_38_dat$NODIAG == 0,1,0)
-table_38_dat_nosud_results=  confusionMatrix(as.factor(table_38_dat$Rx_test), as.factor(table_38_dat$NOSUD), positive = "1")
-table_38_dat_nosud_results$table
-table_38_dat_nosud_high_prob = sum(table_38_dat_nosud_results$table[2,])
-table_38_dat_nosud_low_prob = sum(table_38_dat_nosud_results$table[1,])
-table_38_dat_nosud_total = sum(table_38_dat_nosud_high_prob,table_38_dat_nosud_low_prob)
+table_38_dat_opioid_accurate =  sum(table_38_dat_opioid_results$table[1,1], table_38_dat_opioid_results$table[2,2])
 
-
+table_38_dat_opioid_totals = data.frame(test_p = sum(table_38_dat_opioid_results$table[2,]), test_n = sum(table_38_dat_opioid_results$table[1,]), criteria_p = sum(table_38_dat_opioid_results$table[,2]), criteria_n = sum(table_38_dat_opioid_results$table[,1]))
+table_38_dat_opioid_totals
 
 ```
 Table 38 Results
 ```{r}
 table_38_dat_total_n
 table_38_dat_opioid_results
-table_38_dat_opioid_high_prob
-table_38_dat_opioid_low_prob
-table_38_dat_opioid_total
+table_38_dat_opioid_accurate
+table_38_dat_opioid_totals
 
-table_38_dat_nosud_results
-table_38_dat_nosud_high_prob
-table_38_dat_nosud_low_prob
-table_38_dat_nosud_total
-n_table_38_dat_accurate
 
 ```
+Table 38 cut point
+```{r}
+library(pROC)
+test_roc =  roc(table_38_dat$Rx, table_38_dat$Rx_truth)
+test_roc
+test_auc_95 = ci.auc(test_roc)
+test_auc_95
+library(cutpointr)
+cp_rx = cutpointr(table_38_dat, Rx, Rx_truth, method = maximize_metric, metric = sum_sens_spec)
+cp_rx
+
+
+
+data(suicide)
+head(suicide)
+library(prettyR)
+describe.factor(suicide$dsi)
+cp <- cutpointr(suicide, dsi, suicide, method = maximize_metric, metric = sum_sens_spec)
+cp
+```
+
+
 Table 38 regression  data
 22 = Full time
 23 = part time
@@ -1752,8 +1783,9 @@ describe.factor(table_38_text_dat$ETHN)
 ### Employment status too few
 describe.factor(table_38_text_dat$EMP_STATUS)
 table_38_text_dat$employed_vol = ifelse(table_38_text_dat$EMP_STATUS != 24,1,0)
-
-table_38_text_logit = glm(accurate ~ YEARS_ED+  employed_vol+ETHN + SEX + AGE, data = table_38_text_dat, family = "binomial")
+table_38_text_dat$CLIENTSETTING[table_38_text_dat$CLIENTSETTING == 5] = NA
+describe.factor(table_38_text_dat$CLIENTSETTING)
+table_38_text_logit = glm(accurate ~ YEARS_ED+  employed_vol+ETHN + SEX + AGE + factor(CLIENTSETTING), data = table_38_text_dat, family = "binomial")
 summary(table_38_text_logit)
 ```
 
@@ -1803,18 +1835,11 @@ test_roc =  roc(table_38_2_dat$rx_2_test, table_38_2_dat$rx_2_truth)
 test_roc
 test_auc_95 = ci.auc(test_roc)
 test_auc_95
-
+library(cutpointr)
 cp_rx = cutpointr(table_38_2_dat, Rx, rx_2_truth, method = maximize_metric, metric = sum_sens_spec)
 cp_rx
 
-library(cutpointr)
 
-data(suicide)
-head(suicide)
-library(prettyR)
-describe.factor(suicide$dsi)
-cp <- cutpointr(suicide, dsi, suicide, method = maximize_metric, metric = sum_sens_spec)
-cp
 ```
 
 
@@ -1929,10 +1954,8 @@ cor_raw = t.test(stable_norm$COR.x, stable_norm$COR.y)
 rx_raw = t.test(stable_norm$Rx.x, stable_norm$Rx.y)
 
 
-
-
 ```
-Stable results
+Raw results
 ```{r}
 SASDR_raw
 FVA_raw
@@ -1947,4 +1970,136 @@ sam_raw
 cor_raw
 val_raw
 ```
+Criteraion validity for cross validation sample
+Need AUC 
+And analyze the cases that are wrong maybe see if they have high DEF
+```{r}
+library(pROC)
+crit_val_paper = cross_validation_sample
+sassi_roc =  roc(crit_val_paper$SASSDR, crit_val_paper$NODIAG)
+sassi_roc
+sassi_roc_95 = ci.auc(sassi_roc)
+sassi_roc_95
+
+```
+Accuracy in detecting likely SUD in persons diagnosis with non-substance related disorders
+http://gim.unmc.edu/dxtests/reviewof.htm
+```{r}
+paper_nonSUD_dat_table1 = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+dim(paper_nonSUD_dat_table1)
+paper_nonSUD_dat_table1$table_1 = rowSums(paper_nonSUD_dat_table1[,1:7])
+paper_nonSUD_dat_table1$table_1 = ifelse(paper_nonSUD_dat_table1$table_1 >0,1,0)
+paper_nonSUD_dat_table1$table_1 = ifelse(paper_nonSUD_dat_table1$table_1 == 1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
+paper_nonSUD_dat_table1 = subset(paper_nonSUD_dat_table1, table_1 == 1)
+n_total_paper_nonSUD_table1 = dim(paper_nonSUD_dat_table1)[1]
+n_p_paper_nonSUD_table1 = sum(paper_nonSUD_dat_table1$SASSDR)
+n_n_paper_nonSUD_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 1,0,1))
+n_p_paper_nonSUD_table1+n_n_paper_nonSUD_table1 == n_total_paper_nonSUD_table1
+
+
+paper_nonSUD_dat_table2 = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+dim(paper_nonSUD_dat_table2)
+paper_nonSUD_dat_table2$table_2 = rowSums(paper_nonSUD_dat_table2[,1:7])
+paper_nonSUD_dat_table2$table_2 = ifelse(paper_nonSUD_dat_table2$table_2 >0,1,0)
+paper_nonSUD_dat_table2$table_2 = ifelse(paper_nonSUD_dat_table2$table_2 == 1 & paper_nonSUD_dat_table2$NODIAG == 0,1,0)
+paper_nonSUD_dat_table2 = subset(paper_nonSUD_dat_table2, table_2 == 1)
+n_total_paper_nonSUD_table2 = dim(paper_nonSUD_dat_table2)[1]
+n_p_paper_nonSUD_table2 = sum(paper_nonSUD_dat_table2$SASSDR)
+n_n_paper_nonSUD_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 1,0,1))
+n_p_paper_nonSUD_table2+n_n_paper_nonSUD_table2 == n_total_paper_nonSUD_table2
+
+### Now get psychometrics
+#test_psycho = paper_nonSUD_dat_table1
+#test_psycho$tp = ifelse(paper_nonSUD_dat_table1$SASSDR ==1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
+#test_psycho
+tp_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR ==1 & paper_nonSUD_dat_table1$NODIAG == 1,1,0))
+tn_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR ==0 & paper_nonSUD_dat_table1$NODIAG == 0,1,0))
+
+fp_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 1 & paper_nonSUD_dat_table1$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(paper_nonSUD_dat_table1$SASSDR == 0 & paper_nonSUD_dat_table1$NODIAG == 1,1,0)
+fn_table1 = sum(ifelse(paper_nonSUD_dat_table1$SASSDR == 0 & paper_nonSUD_dat_table1$NODIAG == 1,1,0))
+dim(paper_nonSUD_dat_table1)[1] == sum(tp_table1, tn_table1, fp_table1, fn_table1)
+
+paper_nonSUD_sen_table1 = tp_table1/(tp_table1+fn_table1)
+paper_nonSUD_spec_table1 = tn_table1 / (tn_table1+fp_table1)
+paper_nonSUD_pred_p_table1 = tp_table1 / (tp_table1+fp_table1)
+paper_nonSUD_pred_n_table1 = tn_table1/(tn_table1+fn_table1)
+paper_nonSUD_accurate_table1 = (tp_table1+tn_table1) / sum(tp_table1, tn_table1, fp_table1, fn_table1)
+n_accurate_table1= (tp_table1+tn_table1)
+
+
+tp_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR ==1 & paper_nonSUD_dat_table2$NODIAG == 1,1,0))
+tn_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR ==0 & paper_nonSUD_dat_table2$NODIAG == 0,1,0))
+
+fp_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 1 & paper_nonSUD_dat_table2$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(paper_nonSUD_dat_table2$SASSDR == 0 & paper_nonSUD_dat_table2$NODIAG == 1,1,0)
+fn_table2 = sum(ifelse(paper_nonSUD_dat_table2$SASSDR == 0 & paper_nonSUD_dat_table2$NODIAG == 1,1,0))
+dim(paper_nonSUD_dat_table2)[1] == sum(tp_table2, tn_table2, fp_table2, fn_table2)
+
+paper_nonSUD_sen_table2 = tp_table2/(tp_table2+fn_table2)
+paper_nonSUD_spec_table2 = tn_table2 / (tn_table2+fp_table2)
+paper_nonSUD_pred_p_table2 = tp_table2 / (tp_table2+fp_table2)
+paper_nonSUD_pred_n_table2 = tn_table2/(tn_table2+fn_table2)
+paper_nonSUD_accurate_table2 = (tp_table2+tn_table2) / sum(tp_table2, tn_table2, fp_table2, fn_table2)
+n_accurate_table2 = (tp_table2+tn_table2)
+
+### overall accuracy
+paper_nonSUD_dat_screen = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+dim(paper_nonSUD_dat_screen)
+paper_nonSUD_dat_screen$table_1 = rowSums(paper_nonSUD_dat_screen[,1:7])
+paper_nonSUD_dat_screen$table_1 = ifelse(paper_nonSUD_dat_screen$table_1 >0,1,0)
+paper_nonSUD_dat_screen$table_1 = ifelse(paper_nonSUD_dat_screen$table_1 == 1,1,0)
+paper_nonSUD_dat_screen = subset(paper_nonSUD_dat_screen, table_1 == 1)
+dim(paper_nonSUD_dat_screen)
+
+tp_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR ==1 & paper_nonSUD_dat_screen$NODIAG == 1,1,0))
+tn_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR ==0 & paper_nonSUD_dat_screen$NODIAG == 0,1,0))
+
+fp_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR == 1 & paper_nonSUD_dat_screen$NODIAG == 0,1,0))
+#test_psycho$tn = ifelse(paper_nonSUD_dat_screen$SASSDR == 0 & paper_nonSUD_dat_screen$NODIAG == 1,1,0)
+fn_screen = sum(ifelse(paper_nonSUD_dat_screen$SASSDR == 0 & paper_nonSUD_dat_screen$NODIAG == 1,1,0))
+dim(paper_nonSUD_dat_screen)[1] == sum(tp_screen, tn_screen, fp_screen, fn_screen)
+
+paper_nonSUD_accurate_screen = (tp_screen+tn_screen) / sum(tp_screen, tn_screen, fp_screen, fn_screen)
+n_accurate_screen = (tp_screen+tn_screen)
+```
+Paper Table 3 results
+```{r}
+n_total_paper_nonSUD_table1
+n_p_paper_nonSUD_table1
+n_n_paper_nonSUD_table1
+
+n_total_paper_nonSUD_table2
+n_p_paper_nonSUD_table2
+n_n_paper_nonSUD_table2
+
+paper_nonSUD_sen_table1
+paper_nonSUD_spec_table1
+paper_nonSUD_pred_p_table1
+paper_nonSUD_pred_n_table1
+paper_nonSUD_accurate_table1
+dim(paper_nonSUD_dat_table2)[1]
+n_accurate_table1
+
+paper_nonSUD_sen_table2
+paper_nonSUD_spec_table2
+paper_nonSUD_pred_p_table2
+paper_nonSUD_pred_n_table2
+paper_nonSUD_accurate_table2
+dim(paper_nonSUD_dat_table2)[1]
+n_accurate_table2
+
+paper_nonSUD_accurate_screen
+```
+Omega heir paper
+```{r}
+sassi_omega 
+
+sassi_omega_hier =  omega(clinical_sample[,15:101])
+sassi_omega_hier
+
+```
+
+
+
 
