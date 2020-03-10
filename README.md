@@ -12,6 +12,9 @@ library(prettyR)
 library(MBESS)
 library(descr)
 library(coefficientalpha)
+library(caret)
+library(DescTools)
+library(pROC)
 setwd("S:/Indiana Research & Evaluation/Matthew Hanauer/SASSI/Data/2-10-20_contract")
 #clinical_sample_dr.csv
 clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = c(98,255))
@@ -65,7 +68,9 @@ development_sample$diag_totals = development_sample$ALCTO + development_sample$P
 development_sample$noSUD = ifelse(development_sample$diag_totals < 2, 1, 0)
 describe.factor(development_sample$noSUD)
 
-
+describe.factor(clinical_sample$NODIAG)
+clinical_sample$diag_totals = clinical_sample$ALCTOT + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+# 0 = 344; 171 = 1
 ```
 
 Run this before any code below
@@ -1872,7 +1877,7 @@ table_3_paper_dat_mild_results = confusionMatrix(as.factor(table_3_paper_dat_mil
 table_3_paper_dat_mild_results
 table_3_paper_dat_mild_roc =  roc(table_3_paper_dat_mild$SASSDR, table_3_paper_dat_mild$NODIAG, ci = TRUE)
 table_3_paper_dat_mild_roc
-library(caret)
+
 
 table_3_paper_dat_mod = subset(table_3_paper_dat, modSUD == 1 |table_3_paper_dat$noSUD == 1)
 table_3_paper_dat_mod_results = confusionMatrix(as.factor(table_3_paper_dat_mod$SASSDR), as.factor(table_3_paper_dat_mod$NODIAG), positive = "1")
@@ -1900,7 +1905,7 @@ table_3_paper_dat_mh$non_sud = rowSums(non_sud[,1:7])
 table_3_paper_dat_mh
 table_3_paper_dat_mh$non_sud = ifelse(table_3_paper_dat_mh$non_sud  > 0, 1, 0)
 dim(table_3_paper_dat_mh)
-
+describe.factor(table_3_paper_dat_mh$co_occuring)
 table_3_paper_dat_mh = subset(table_3_paper_dat_mh, co_occuring == 1 | non_sud == 1)
 n_total_table_3_mh = dim(table_3_paper_dat_mh)[1]
 
@@ -1976,6 +1981,31 @@ paper_table_3_rx_dat_opioid_results
 paper_table_3_rx_dat_roc
 
 ```
+Paper participant character stats data cleaning
+```{r}
+## co-occuring
+table_3_paper_dat_mh = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
+dim(table_3_paper_dat_mh)
+table_3_paper_dat_mh$co_occuring = rowSums(table_3_paper_dat_mh[,1:7])
+table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring >0,1,0)
+table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring == 1 & table_3_paper_dat_mh$NODIAG == 1,1,0)
+co_occuring_paper = describe.factor(table_3_paper_dat_mh$co_occuring)
+co_occuring_paper
+
+### rx abuse 
+paper_table_3_rx_dat = clinical_sample
+paper_table_3_rx_dat$Rx_test = ifelse(paper_table_3_rx_dat$Rx >=2, 1, 0)
+describe.factor(paper_table_3_rx_dat$Rx_truth)
+paper_table_3_rx_dat$Rx_truth = ifelse(paper_table_3_rx_dat$OPIOIDDIAG == 1 | paper_table_3_rx_dat$SEDDIAG == 1,1,0)
+rx_abuse_paper =  describe.factor(paper_table_3_rx_dat$Rx_truth)
+
+```
+Paper participant results
+```{r}
+co_occuring_paper
+rx_abuse_paper
+```
+
 
 
 
