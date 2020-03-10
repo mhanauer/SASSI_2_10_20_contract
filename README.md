@@ -610,7 +610,6 @@ SASSDR_clinical
 n_correct_SASSDR_clinical
 clinical_sample_totals
 cramer_v_SASSDR_clinical
-
 0.8266-0.9767
 0.8571-0.8488
 0.8366-0.9341
@@ -1992,7 +1991,7 @@ table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring == 1 
 co_occuring_paper = describe.factor(table_3_paper_dat_mh$co_occuring)
 co_occuring_paper
 
-### rx abuse 
+### opioid or sedative abuse 
 paper_table_3_rx_dat = clinical_sample
 paper_table_3_rx_dat$Rx_test = ifelse(paper_table_3_rx_dat$Rx >=2, 1, 0)
 describe.factor(paper_table_3_rx_dat$Rx_truth)
@@ -2004,6 +2003,33 @@ Paper participant results
 ```{r}
 co_occuring_paper
 rx_abuse_paper
+```
+Paper DEF analysis for cross validation data cleaning
+```{r}
+cross_validation_sample$SASSDR = as.factor(cross_validation_sample$SASSDR)
+cross_validation_sample$NODIAG = as.factor(cross_validation_sample$NODIAG)
+no_class = cross_validation_sample[c("SASSDR", "NODIAG", "DEF")]
+no_class$wrong_but_high_def = ifelse(no_class$SASSDR != no_class$NODIAG & no_class$DEF > 8,1,0)
+no_class$wrong = ifelse(no_class$SASSDR != no_class$NODIAG,1,0)
+n_wrong = sum(no_class$wrong)
+n_wrong
+no_class_sub = subset(no_class, wrong_but_high_def == 1)
+no_class_sub
+SASSDR_cross_validation =  confusionMatrix(cross_validation_sample$SASSDR, cross_validation_sample$NODIAG, positive = "1")
+
+
+cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[2,]), test_n = sum(SASSDR_cross_validation$table[1,]), criteria_p = sum(SASSDR_cross_validation$table[,2]), criteria_n = sum(SASSDR_cross_validation$table[,1]))
+cross_validation_sample_totals
+
+cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .99)
+cramer_v_SASSDR_cross_validation
+
+```
+Paper DEF analysis for cross validation results
+```{r}
+n_wrong
+no_class_sub
+
 ```
 
 
