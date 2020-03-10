@@ -93,7 +93,7 @@ diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
 describe.factor(diagnosis$sevSUD)
 ```
 
-
+Run this before any code below
 Review for errors and descriptives
 ```{r}
 dim(clinical_sample)
@@ -126,7 +126,7 @@ stability_sample$SASSDR = ifelse(stability_sample$SASSDR == 2,0,1)
 
 ```
 
-
+Run this before any code below
 Recode the vars (see AR3 scoring)
 ```{r}
 #### Get rid of the "R" at the end of the S vars in stability sample
@@ -599,7 +599,7 @@ dis_dat = data.frame(NODIAG =  development_sample$NODIAG, development_sample[,15
 inTrain = createDataPartition(y = dis_dat$NODIAG, p = .75, list = FALSE)
 training = dis_dat[inTrain,]
 testing = dis_dat[-inTrain,]
-dim(dis_dat_complete)
+
 library(klaR)
 fit <- rda(NODIAG ~ ., data=training)
 predictions = predict(fit, newdata = testing)
@@ -609,6 +609,7 @@ correct = table(testing$NODIAG, predictions$class)
 correct
 sum(diag(prop.table(correct)))
 table3_result = sum(diag(prop.table(correct)))
+table3_result
 ```
 
 Tables 3 through 5 results
@@ -1997,8 +1998,6 @@ dim(paper_table_3_rx_dat)[1]
 describe.factor(paper_table_3_rx_dat$Rx_truth)
 paper_table_3_rx_dat_opioid_results
 paper_table_3_rx_dat_roc
-
-
 
 ```
 
