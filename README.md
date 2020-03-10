@@ -20,6 +20,80 @@ development_sample = read.csv("development_sample.csv", header = TRUE, na.string
 normative_sample = read.csv("normative_sample.csv", header= TRUE, na.strings = c(98,255))
 stability_sample = read.csv("stability_sample.csv", header = TRUE, na.strings = c(98,255))
 ```
+Confirm problems with NODIAG in clincial and cross validation
+```{r}
+describe.factor(clinical_sample$NODIAG)
+clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+
+#550 total in clinical sample
+describe.factor(clinical_sample$NODIAG)
+
+clinical_sample$noSUD = ifelse(clinical_sample$diag_totals < 2, 1, 0)
+describe.factor(clinical_sample$noSUD)
+### Figure why these are not adding development and cross valid line up
+test_dat = data.frame(nodiag = clinical_sample$NODIAG, noSUD = clinical_sample$noSUD)
+test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
+test_dat = subset(test_dat, confirm == 0)
+dim(test_dat)
+test_dat
+
+diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
+describe.factor(diagnosis$mildSUD)
+diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
+describe.factor(diagnosis$modSUD)
+diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
+describe.factor(diagnosis$sevSUD)
+33.01+17.67+14.56+34.76
+
+#### Test cross
+describe.factor(cross_validation_sample$NODIAG)
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+
+#550 total in clinical sample
+describe.factor(cross_validation_sample$NODIAG)
+
+cross_validation_sample$noSUD = ifelse(cross_validation_sample$diag_totals < 2, 1, 0)
+describe.factor(cross_validation_sample$noSUD)
+### Figure why these are not adding development and cross valid line up
+test_dat = data.frame(nodiag = cross_validation_sample$NODIAG, noSUD = cross_validation_sample$noSUD)
+test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
+test_dat = subset(test_dat, confirm == 0)
+dim(test_dat)
+test_dat
+
+diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
+describe.factor(diagnosis$mildSUD)
+diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
+describe.factor(diagnosis$modSUD)
+diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
+describe.factor(diagnosis$sevSUD)
+
+### Make sure development is correct is correct
+
+describe.factor(development_sample$NODIAG)
+development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
+
+#550 total in clinical sample
+describe.factor(development_sample$NODIAG)
+
+development_sample$noSUD = ifelse(development_sample$diag_totals < 2, 1, 0)
+describe.factor(development_sample$noSUD)
+### Figure why these are not adding development and cross valid line up
+test_dat = data.frame(nodiag = development_sample$NODIAG, noSUD = development_sample$noSUD)
+test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
+test_dat = subset(test_dat, confirm == 0)
+dim(test_dat)
+test_dat
+
+diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
+describe.factor(diagnosis$mildSUD)
+diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
+describe.factor(diagnosis$modSUD)
+diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
+describe.factor(diagnosis$sevSUD)
+```
+
+
 Review for errors and descriptives
 ```{r}
 dim(clinical_sample)
@@ -28,28 +102,27 @@ dim(development_sample)
 dim(normative_sample)
 dim(stability_sample)
 
-#describe(clinical_sample)
-## Do this to get counts if you are having trouble
-
-
-#describe(development_sample)
-#describe(cross_validation_sample)
-#describe(normative_sample)
-
 ### NODIAG  currently 1 means NODIAG, but need 1 to mean DIAG 
-### NODIAG change to 1 = DIAG; 0 = DIAG; 
+### NODIAG is wrong need to do it by totals
+clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+
+development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
 ### Change SASSDR  2 low prob = 0, 1 high prob = 1 
-clinical_sample$NODIAG = ifelse(clinical_sample$NODIAG == 1,0,1)
+clinical_sample$NODIAG = ifelse(clinical_sample$diag_totals < 2,0,1)
 clinical_sample$SASSDR = ifelse(clinical_sample$SASSDR == 2,0,1)
-
-cross_validation_sample$NODIAG = ifelse(cross_validation_sample$NODIAG == 1,0,1)
+clinical_sample$diag_totals = NULL
+cross_validation_sample$NODIAG = ifelse(cross_validation_sample$diag_totals <2,0,1)
 cross_validation_sample$SASSDR = ifelse(cross_validation_sample$SASSDR == 2,0,1)
-
-development_sample$NODIAG = ifelse(development_sample$NODIAG == 1,0,1)
+cross_validation_sample$diag_totals = NULL
+development_sample$NODIAG = ifelse(development_sample$diag_totals < 2,0,1)
 development_sample$SASSDR = ifelse(development_sample$SASSDR == 2,0,1)
-
+development_sample$diag_totals = NULL
 normative_sample$SASSDR = ifelse(normative_sample$SASSDR == 2,0,1) 
 stability_sample$SASSDR = ifelse(stability_sample$SASSDR == 2,0,1)
+
+
 
 ```
 
@@ -1790,7 +1863,7 @@ For diagnosis limit to those who do not have the diagnosis and those who have a 
 ### Create variables in cross validation sample
 table_3_paper_dat = cross_validation_sample
 ### Diagnosis no, mild, mod, severe
-table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
+table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
 library(prettyR)
 describe.factor(table_3_paper_dat$NODIAG)
 
