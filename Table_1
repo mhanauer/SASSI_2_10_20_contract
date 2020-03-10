@@ -276,7 +276,7 @@ describe.factor(stability_sample$TN_WORK_R)
 
 #Race/ethnicity; 1=American Indian/Alaskan Native, 2=Asian, 3=Black/African american, 4=White, 5=Hispanic (per email), 6=Native Hawaiian/Pacific Islander, 7=Multiracial, 8=Other
 describe.factor(stability_sample$TN_RACEETH_R)
-
+## No living situation in stability sample
 #Living situation; 9=parents, 10=Other relatives, 11=friends, 12=group home, 13=residential, 14=other
 #no data
 
