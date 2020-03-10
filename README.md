@@ -23,10 +23,8 @@ stability_sample = read.csv("stability_sample.csv", header = TRUE, na.strings = 
 Confirm problems with NODIAG in clincial and cross validation
 ```{r}
 describe.factor(clinical_sample$NODIAG)
-clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+clinical_sample$diag_totals = clinical_sample$ALCTOT + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
 
-#550 total in clinical sample
-describe.factor(clinical_sample$NODIAG)
 
 clinical_sample$noSUD = ifelse(clinical_sample$diag_totals < 2, 1, 0)
 describe.factor(clinical_sample$noSUD)
@@ -36,7 +34,11 @@ test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
 test_dat = subset(test_dat, confirm == 0)
 dim(test_dat)
 test_dat
-
+### Figure why these are not adding development and cross valid line up
+test_dat = clinical_sample[c("ALCTOT", "POTTOT", "HALLUCTOT", "INHALTOT", "OPIOIDTOT", "SEDTOT", "STIMTOT","OTHRDRUGTOT", "NODIAG", "noSUD")]
+test_dat$match = ifelse(test_dat$noSUD == test_dat$NODIAG,1,0)
+test_dat = subset(test_dat, match == 0)
+test_dat
 diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
 describe.factor(diagnosis$mildSUD)
 diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
@@ -47,50 +49,23 @@ describe.factor(diagnosis$sevSUD)
 
 #### Test cross
 describe.factor(cross_validation_sample$NODIAG)
-cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTOT + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
 
-#550 total in clinical sample
 describe.factor(cross_validation_sample$NODIAG)
 
 cross_validation_sample$noSUD = ifelse(cross_validation_sample$diag_totals < 2, 1, 0)
 describe.factor(cross_validation_sample$noSUD)
-### Figure why these are not adding development and cross valid line up
-test_dat = data.frame(nodiag = cross_validation_sample$NODIAG, noSUD = cross_validation_sample$noSUD)
-test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
-test_dat = subset(test_dat, confirm == 0)
-dim(test_dat)
-test_dat
 
-diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
-describe.factor(diagnosis$mildSUD)
-diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
-describe.factor(diagnosis$modSUD)
-diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
-describe.factor(diagnosis$sevSUD)
 
 ### Make sure development is correct is correct
 
 describe.factor(development_sample$NODIAG)
 development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
 
-#550 total in clinical sample
-describe.factor(development_sample$NODIAG)
-
 development_sample$noSUD = ifelse(development_sample$diag_totals < 2, 1, 0)
 describe.factor(development_sample$noSUD)
-### Figure why these are not adding development and cross valid line up
-test_dat = data.frame(nodiag = development_sample$NODIAG, noSUD = development_sample$noSUD)
-test_dat$confirm = ifelse(test_dat$nodiag == test_dat$noSUD,1,0)
-test_dat = subset(test_dat, confirm == 0)
-dim(test_dat)
-test_dat
 
-diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
-describe.factor(diagnosis$mildSUD)
-diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
-describe.factor(diagnosis$modSUD)
-diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
-describe.factor(diagnosis$sevSUD)
+
 ```
 
 Run this before any code below
@@ -104,12 +79,13 @@ dim(stability_sample)
 
 ### NODIAG  currently 1 means NODIAG, but need 1 to mean DIAG 
 ### NODIAG is wrong need to do it by totals
-clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+clinical_sample$diag_totals = clinical_sample$ALCTOT + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
 
-cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTOT + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
 
-development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
+development_sample$diag_totals = development_sample$ALCTOT + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
 ### Change SASSDR  2 low prob = 0, 1 high prob = 1 
+
 clinical_sample$NODIAG = ifelse(clinical_sample$diag_totals < 2,0,1)
 clinical_sample$SASSDR = ifelse(clinical_sample$SASSDR == 2,0,1)
 clinical_sample$diag_totals = NULL
