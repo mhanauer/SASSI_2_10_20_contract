@@ -256,10 +256,6 @@ mean(clinical_sample$AGE)
 sd(clinical_sample$AGE)
 
 ```
-Test
-```{r}
-
-```
 
 
 
