@@ -1672,6 +1672,7 @@ table_38_dat_opioid_accurate =  sum(table_38_dat_opioid_results$table[1,1], tabl
 table_38_dat_opioid_totals = data.frame(test_p = sum(table_38_dat_opioid_results$table[2,]), test_n = sum(table_38_dat_opioid_results$table[1,]), criteria_p = sum(table_38_dat_opioid_results$table[,2]), criteria_n = sum(table_38_dat_opioid_results$table[,1]))
 table_38_dat_opioid_totals
 
+
 ```
 Table 38 Results
 ```{r}
@@ -1777,15 +1778,6 @@ table_38_2_totals
 ```
 
 
-
-Table 38.2 new table results
-```{r}
-table_38_2_dat_total_n
-table_38_2_dat_results
-table_38_2_dat_accurate
-table_38_2_totals
-
-```
 Paper Table 3
 length(which(diagnoses>=6))/173
 length(which(diagnoses<6&diagnoses>=4))/173
@@ -1824,6 +1816,7 @@ diagnosis_n = data.frame(n_noSUD = sum(table_3_paper_dat$noSUD), n_mildSUD = sum
 sum(diagnosis_n) == dim(table_3_paper_dat)[1]
 ### Only mild and nosud
 table_3_paper_dat_mild = subset(table_3_paper_dat, mildSUD == 1 |table_3_paper_dat$noSUD == 1)
+test_table_3_paper_dat_mild = table_3_paper_dat_mild[c("mildSUD", "noSUD")]
 
 table_3_paper_dat_mild_results = confusionMatrix(as.factor(table_3_paper_dat_mild$SASSDR), as.factor(table_3_paper_dat_mild$NODIAG), positive = "1")
 table_3_paper_dat_mild_results
@@ -1889,10 +1882,22 @@ paper_table_3_rx_dat_opioid_results=  confusionMatrix(as.factor(paper_table_3_rx
 paper_table_3_rx_dat_roc =  roc(paper_table_3_rx_dat$Rx_test, paper_table_3_rx_dat$Rx_truth, ci = TRUE)
 paper_table_3_rx_dat_roc
 
+### overall sassi
+library(pROC)
+crit_val_paper = cross_validation_sample
+sassi_results = confusionMatrix(as.factor(crit_val_paper$SASSDR), as.factor(crit_val_paper$NODIAG), positive = "1")
+
+sassi_roc =  roc(crit_val_paper$SASSDR, crit_val_paper$NODIAG, ci = TRUE)
+sassi_roc
 
 ```
 Table 3 Paper results
 ```{r}
+### Overall SASSI
+sassi_results
+sassi_roc
+
+### Diagnosis
 diagnosis_n
 
 table_3_paper_dat_mild_results
@@ -1907,6 +1912,7 @@ table_3_paper_dat_sev_roc
 ### mh n's below
 n_total_table_3_mh
 ### N for number of mental and non_suds
+dim(table_3_paper_dat_mh)[1]
 describe.factor(table_3_paper_dat_mh$co_occuring)
 table_3_paper_dat_mh
 table_3_paper_mh_results
@@ -1914,6 +1920,7 @@ table_3_paper_dat_mh_roc
 #### Rx use
 paper_table_3_rx_dat_total_n
 ### for rx use and non-sud
+dim(paper_table_3_rx_dat)[1]
 describe.factor(paper_table_3_rx_dat$Rx_truth)
 paper_table_3_rx_dat_opioid_results
 paper_table_3_rx_dat_roc
@@ -1976,24 +1983,13 @@ sam_raw
 cor_raw
 val_raw
 ```
-Criteraion validity for cross validation sample
-Need AUC 
-And analyze the cases that are wrong maybe see if they have high DEF
-```{r}
-library(pROC)
-crit_val_paper = cross_validation_sample
-sassi_roc =  roc(crit_val_paper$SASSDR, crit_val_paper$NODIAG)
-sassi_roc
-sassi_roc_95 = ci.auc(sassi_roc)
-sassi_roc_95
 
-```
 
 Omega heir paper
 ```{r}
 sassi_omega 
 
-sassi_omega_hier =  omega(clinical_sample[,15:101])
+#sassi_omega_hier =  omega(clinical_sample[,15:101])
 sassi_omega_hier
 
 ```
