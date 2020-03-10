@@ -25,27 +25,56 @@ dim(stability_sample)
 
 library(DescTools)
 library(prettyR)
+
+dim(clinical_sample)
+dim(cross_validation_sample)
+dim(development_sample)
+dim(normative_sample)
+dim(stability_sample)
+
+### NODIAG  currently 1 means NODIAG, but need 1 to mean DIAG 
+### NODIAG is wrong need to do it by totals
+clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT   + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT   + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+
+development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT   + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
+### Change SASSDR  2 low prob = 0, 1 high prob = 1 
+clinical_sample$NODIAG = ifelse(clinical_sample$diag_totals < 2,0,1)
+clinical_sample$SASSDR = ifelse(clinical_sample$SASSDR == 2,0,1)
+clinical_sample$diag_totals = NULL
+cross_validation_sample$NODIAG = ifelse(cross_validation_sample$diag_totals <2,0,1)
+cross_validation_sample$SASSDR = ifelse(cross_validation_sample$SASSDR == 2,0,1)
+cross_validation_sample$diag_totals = NULL
+development_sample$NODIAG = ifelse(development_sample$diag_totals < 2,0,1)
+development_sample$SASSDR = ifelse(development_sample$SASSDR == 2,0,1)
+development_sample$diag_totals = NULL
+normative_sample$SASSDR = ifelse(normative_sample$SASSDR == 2,0,1) 
+stability_sample$SASSDR = ifelse(stability_sample$SASSDR == 2,0,1)
+
 ```
 
 ```{r}
 #describe(development_sample)
 
 #client setting; 1=criminal setting, 2=social services program, 3=medical pain clinic, 4=medical facility (not pain), 6=substance use treatment, 7=Other
-describe.factor(development_sample$CLIENTSETTING)
-
+round(describe.factor(development_sample$CLIENTSETTING),2)
+2.33+3.89+85.99+7.78
 #clinical diagnosis
 describe.factor(development_sample$NODIAG)
-development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT + development_sample$SEDTOT + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
+development_sample$diag_totals = development_sample$ALCTO + development_sample$POTTOT + development_sample$HALLUCTOT + development_sample$INHALTOT + development_sample$OPIOIDTOT + development_sample$SEDTOT + development_sample$STIMTOT + development_sample$OTHRDRUGTOT
 
 describe.factor(development_sample$NODIAG)
 #257 total in development sample
 
 diagnoses=subset(development_sample$diag_totals,development_sample$diag_totals>=2)
-describe.factor(diagnoses)
+length(diagnoses)
+describe.factor(development_sample$NODIAG)
 length(which(diagnoses>=6))/257
 length(which(diagnoses<6&diagnoses>=4))/257
 length(which(diagnoses<4&diagnoses>=2))/257
-length(which(diagnoses<2))/257
+
+17.90+17.51+31.91+32.68
 
 #gender
 describe.factor(development_sample$SEX)
@@ -87,7 +116,7 @@ describe.factor(cross_validation_sample$CLIENTSETTING)
 
 #clinical diagnosis
 describe.factor(cross_validation_sample$NODIAG)
-cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT + cross_validation_sample$SEDTOT + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
+cross_validation_sample$diag_totals = cross_validation_sample$ALCTO + cross_validation_sample$POTTOT + cross_validation_sample$HALLUCTOT + cross_validation_sample$INHALTOT + cross_validation_sample$OPIOIDTOT + cross_validation_sample$SEDTOT + cross_validation_sample$STIMTOT + cross_validation_sample$OTHRDRUGTOT
 
 describe.factor(cross_validation_sample$NODIAG)
 #258 total in cross validation sample
@@ -98,7 +127,7 @@ length(which(diagnoses>=6))/258
 length(which(diagnoses<6&diagnoses>=4))/258
 length(which(diagnoses<4&diagnoses>=2))/258
 length(which(diagnoses<2))/258
-
+17.44+11.63+37.60+33.33
 #gender
 describe.factor(cross_validation_sample$SEX)
 
@@ -180,16 +209,20 @@ describe.factor(clinical_sample$CLIENTSETTING)
 
 #clinical diagnosis
 describe.factor(clinical_sample$NODIAG)
-clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT + clinical_sample$SEDTOT + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
+clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT  + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
 
 #550 total in clinical sample
+describe.factor(clinical_sample$NODIAG)
+clinical_sample$noSUD = ifelse(clinical_sample$diag_totals < 2, 1, 0)
+describe.factor(clinical_sample$noSUD)
+clinical_sample$mildSUD = ifelse(clinical_sample$diag_totals >=2 & clinical_sample$diag_totals < 4,1,0)
+describe.factor(clinical_sample$mildSUD)
+clinical_sample$modSUD = ifelse(clinical_sample$diag_totals >=4 & clinical_sample$diag_totals < 6,1,0)
+describe.factor(clinical_sample$modSUD)
+clinical_sample$sevSUD = ifelse(clinical_sample$diag_totals >=6, 1,0)
+describe.factor(clinical_sample$sevSUD)
 
-diagnoses=subset(clinical_sample$diag_totals,clinical_sample$diag_totals>=2)
-describe.factor(diagnoses)
-length(which(diagnoses>=6))/515
-length(which(diagnoses<6&diagnoses>=4))/515
-length(which(diagnoses<4&diagnoses>=2))/515
-length(which(diagnoses<2))/515
+17.67+14.56+34.76 + 33.01
 
 #gender
 describe.factor(clinical_sample$SEX)
@@ -221,7 +254,14 @@ sd(clinical_sample$education, na.rm=TRUE)
 describe.factor(clinical_sample$AGE)
 mean(clinical_sample$AGE)
 sd(clinical_sample$AGE)
+
 ```
+Test
+```{r}
+
+```
+
+
 
 ```{r}
 #####describe(stability_sample)
