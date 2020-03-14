@@ -42,12 +42,12 @@ test_dat = clinical_sample[c("ALCTOT", "POTTOT", "HALLUCTOT", "INHALTOT", "OPIOI
 test_dat$match = ifelse(test_dat$noSUD == test_dat$NODIAG,1,0)
 test_dat = subset(test_dat, match == 0)
 test_dat
-diagnosis$mildSUD = ifelse(diagnosis$diag_totals >=2 & diagnosis$diag_totals < 4,1,0)
-describe.factor(diagnosis$mildSUD)
-diagnosis$modSUD = ifelse(diagnosis$diag_totals >=4 & diagnosis$diag_totals < 6,1,0)
-describe.factor(diagnosis$modSUD)
-diagnosis$sevSUD = ifelse(diagnosis$diag_totals >=6, 1,0)
-describe.factor(diagnosis$sevSUD)
+clinical_sample$mildSUD = ifelse(clinical_sample$diag_totals >=2 & clinical_sample$diag_totals < 4,1,0)
+describe.factor(clinical_sample$mildSUD)
+clinical_sample$modSUD = ifelse(clinical_sample$diag_totals >=4 & clinical_sample$diag_totals < 6,1,0)
+describe.factor(clinical_sample$modSUD)
+clinical_sample$sevSUD = ifelse(clinical_sample$diag_totals >=6, 1,0)
+describe.factor(clinical_sample$sevSUD)
 33.01+17.67+14.56+34.76
 
 #### Test cross
@@ -415,7 +415,6 @@ sat_omega = ci.reliability(sat)
 sat_omega
 summary(omega(sat))
 sat_omega_complete = na.omit(sat)
-cronbach.alpha(sat_omega_complete, CI = TRUE)
 #####################
 ## Defensiveness S5,S14,S22,S24,S30  (1)   AND   S2,S4,S9,S17,S23,S68,S69 (2).
 def = data.frame(S5 = clinical_sample$S5, S14 = clinical_sample$S14_DEF, S22 = clinical_sample$S22, S24 = clinical_sample$S24, S30 = clinical_sample$S30_DEF, S2 = clinical_sample$S2_DEF, S4 = clinical_sample$S4, S9 = clinical_sample$S9, S17 = clinical_sample$S17, S23 = clinical_sample$S23, S68 = clinical_sample$S68, S69 = clinical_sample$S69_DEF)
@@ -621,7 +620,22 @@ As shown in Table 6, overall SASSI-A3 screening accuracy was XX.X% for cases whe
 ```{r}
 def_criteria =  round(mean(normative_sample$DEF)+sd(normative_sample$DEF))
 def_criteria
-### DEF 9
+### DEF 8
+clinical_sample_def_8 = subset(clinical_sample, DEF <= 8)
+dim(clinical_sample_def_8)
+SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR, clinical_sample_def_8$NODIAG, positive = "1")
+SASSDR_clinical_def_8
+
+n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_clinical_def_8$table[2,2])
+n_correct_SASSDR_clinical_def_8
+
+SASSDR_clinical_def_8_totals = data.frame(test_p = sum(SASSDR_clinical_def_8$table[2,]), test_n = sum(SASSDR_clinical_def_8$table[1,]), criteria_p = sum(SASSDR_clinical_def_8$table[,2]), criteria_n = sum(SASSDR_clinical_def_8$table[,1]))
+
+
+cramer_v_SASSDR_clinical_def_8= CramerV(SASSDR_clinical_def_8$table, conf.level = .99)
+cramer_v_SASSDR_clinical_def_8
+
+#### DEF 9
 clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
 dim(clinical_sample_def_9)
 SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR, clinical_sample_def_9$NODIAG, positive = "1")
@@ -631,26 +645,10 @@ n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_9
 
 SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[2,]), test_n = sum(SASSDR_clinical_def_9$table[1,]), criteria_p = sum(SASSDR_clinical_def_9$table[,2]), criteria_n = sum(SASSDR_clinical_def_9$table[,1]))
-
+SASSDR_clinical_def_9_totals
 
 cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_9
-
-
-#### DEF 10
-clinical_sample_def_10 = subset(clinical_sample, DEF <= 10)
-dim(clinical_sample_def_10)
-SASSDR_clinical_def_10=  confusionMatrix(clinical_sample_def_10$SASSDR, clinical_sample_def_10$NODIAG, positive = "1")
-SASSDR_clinical_def_10
-
-n_correct_SASSDR_clinical_def_10=  sum(SASSDR_clinical_def_10$table[1,1], SASSDR_clinical_def_10$table[2,2])
-n_correct_SASSDR_clinical_def_10
-
-SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[2,]), test_n = sum(SASSDR_clinical_def_10$table[,1]), criteria_p = sum(SASSDR_clinical_def_10$table[,2]), criteria_n = sum(SASSDR_clinical_def_10$table[,1]))
-SASSDR_clinical_def_10_totals
-
-cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .99)
-cramer_v_SASSDR_clinical_def_10
 
 
 ```
@@ -658,17 +656,18 @@ Table 6 and 7 results
 ```{r}
 
 ### Table 6
+SASSDR_clinical_def_8
+n_correct_SASSDR_clinical_def_8
+SASSDR_clinical_def_8_totals
+sum(SASSDR_clinical_def_8_totals[,1:2])
+cramer_v_SASSDR_clinical_def_8
+### Table 7
 SASSDR_clinical_def_9
 n_correct_SASSDR_clinical_def_9
-SASSDR_clinical_def_9_totals
 cramer_v_SASSDR_clinical_def_9
-
-### Table 7
-SASSDR_clinical_def_10
-n_correct_SASSDR_clinical_def_10
-cramer_v_SASSDR_clinical_def_10
-SASSDR_clinical_def_10_totals
-
+426/475 
+SASSDR_clinical_def_9_totals
+121+26+23+305
 
 ```
 Table 8 data prep and analysis
@@ -775,11 +774,12 @@ table_9_fva_n_correct
 table_9_fva_totals
 table_9_fva_cramer_v
 ### in text top results
-88.74-83.11
-90.17-78.03
+88.54-83.3
+90.14-78.26
 ### in text bottom
 88.74-83.11
-457-428
+456-429
+67.95-100
 ```
 
 
@@ -1209,9 +1209,6 @@ total_edu_inaccurate
 
 edu_cramersV
 
-
-
-
 ```
 Table 20 - 23
 
@@ -1304,6 +1301,7 @@ unemployed_totals
 Tables 20 - 23 results
 ```{r}
 #Table 20
+describe.factor(clinical_sample$EMP_STATUS)
 not_employed_dat_total_n
 not_employed_dat_accurate
 not_employed_dat_inaccurate
@@ -1522,7 +1520,6 @@ total_age_accurate
 total_age_inaccurate
 
 age_cramersV
-describe.factor(clinical_sample$ETHN)
 ```
 Table 28
 
@@ -1638,7 +1635,7 @@ mixed_totals
 another_race_dat_total_n
 another_race_dat_results
 another_race_dat_accurate
-nother_race_dat_inaccurate
+another_race_dat_inaccurate
 another_race_totals
 
 
@@ -1734,8 +1731,8 @@ table_38_dat_total_n
 table_38_dat_opioid_results
 table_38_dat_opioid_accurate
 table_38_dat_opioid_totals
-
-
+38/206
+197/207 
 ```
 Table 38 cut point
 ```{r}
@@ -1846,6 +1843,7 @@ table_3_paper_dat = cross_validation_sample
 ### Diagnosis no, mild, mod, severe
 table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
 library(prettyR)
+library(pROC)
 describe.factor(table_3_paper_dat$NODIAG)
 
 table_3_paper_dat$noSUD = ifelse(table_3_paper_dat$diag_totals <2, 1, 0) 
@@ -1874,20 +1872,20 @@ test_table_3_paper_dat_mild = table_3_paper_dat_mild[c("mildSUD", "noSUD")]
 
 table_3_paper_dat_mild_results = confusionMatrix(as.factor(table_3_paper_dat_mild$SASSDR), as.factor(table_3_paper_dat_mild$NODIAG), positive = "1")
 table_3_paper_dat_mild_results
-table_3_paper_dat_mild_roc =  roc(table_3_paper_dat_mild$SASSDR, table_3_paper_dat_mild$NODIAG, ci = TRUE)
+table_3_paper_dat_mild_roc =  roc(as.numeric(table_3_paper_dat_mild$SASSDR), as.numeric(table_3_paper_dat_mild$NODIAG), ci = TRUE)
 table_3_paper_dat_mild_roc
 
 
 table_3_paper_dat_mod = subset(table_3_paper_dat, modSUD == 1 |table_3_paper_dat$noSUD == 1)
 table_3_paper_dat_mod_results = confusionMatrix(as.factor(table_3_paper_dat_mod$SASSDR), as.factor(table_3_paper_dat_mod$NODIAG), positive = "1")
 table_3_paper_dat_mod_results
-table_3_paper_dat_mod_roc =  roc(table_3_paper_dat_mod$SASSDR, table_3_paper_dat_mod$NODIAG, ci = TRUE)
+table_3_paper_dat_mod_roc =  roc(as.numeric(table_3_paper_dat_mod$SASSDR), as.numeric(table_3_paper_dat_mod$NODIAG), ci = TRUE)
 table_3_paper_dat_mod_roc
 
 table_3_paper_dat_sev = subset(table_3_paper_dat, sevSUD == 1 |table_3_paper_dat$noSUD == 1)
 table_3_paper_dat_sev_results = confusionMatrix(as.factor(table_3_paper_dat_sev$SASSDR), as.factor(table_3_paper_dat_sev$NODIAG), positive = "1")
 table_3_paper_dat_sev_results
-table_3_paper_dat_sev_roc =  roc(table_3_paper_dat_sev$SASSDR, table_3_paper_dat_sev$NODIAG, ci = TRUE)
+table_3_paper_dat_sev_roc =  roc(as.numeric(table_3_paper_dat_sev$SASSDR), as.numeric(table_3_paper_dat_sev$NODIAG), ci = TRUE)
 table_3_paper_dat_sev_roc
 
 #### other mental health co_occuring numbers and just n non-co_occuring and total
@@ -1913,7 +1911,7 @@ table_3_paper_mh_results
 describe.factor(table_3_paper_dat_mh$co_occuring)
 
 
-table_3_paper_dat_mh_roc =  roc(table_3_paper_dat_mh$SASSDR, table_3_paper_dat_mh$NODIAG, ci = TRUE)
+table_3_paper_dat_mh_roc =  roc(as.numeric(table_3_paper_dat_mh$SASSDR), as.numeric(table_3_paper_dat_mh$NODIAG), ci = TRUE)
 table_3_paper_dat_mh_roc
 
 #### Rx meds
@@ -1933,7 +1931,7 @@ paper_table_3_rx_dat_total_n =  dim(paper_table_3_rx_dat)[1]
 
 paper_table_3_rx_dat_opioid_results=  confusionMatrix(as.factor(paper_table_3_rx_dat$Rx_test), as.factor(paper_table_3_rx_dat$Rx_truth), positive = "1")
 
-paper_table_3_rx_dat_roc =  roc(paper_table_3_rx_dat$Rx_test, paper_table_3_rx_dat$Rx_truth, ci = TRUE)
+paper_table_3_rx_dat_roc =  roc(as.numeric(paper_table_3_rx_dat$Rx_test), as.numeric(paper_table_3_rx_dat$Rx_truth), ci = TRUE)
 paper_table_3_rx_dat_roc
 
 ### overall sassi
@@ -1941,7 +1939,7 @@ library(pROC)
 crit_val_paper = cross_validation_sample
 sassi_results = confusionMatrix(as.factor(crit_val_paper$SASSDR), as.factor(crit_val_paper$NODIAG), positive = "1")
 
-sassi_roc =  roc(crit_val_paper$SASSDR, crit_val_paper$NODIAG, ci = TRUE)
+sassi_roc =  roc(as.numeric(crit_val_paper$SASSDR), as.numeric(crit_val_paper$NODIAG), ci = TRUE)
 sassi_roc
 
 ```
@@ -1953,7 +1951,7 @@ sassi_roc
 
 ### Diagnosis
 diagnosis_n
-
+sum(diagnosis_n)	
 table_3_paper_dat_mild_results
 table_3_paper_dat_mild_roc
 
