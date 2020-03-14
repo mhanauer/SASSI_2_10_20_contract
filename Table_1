@@ -176,9 +176,10 @@ describe.factor(normative_sample$TN_GENDER)
 describe.factor(normative_sample$TN_WORK)
 
 #Race/ethnicity; 1=American Indian/Alaskan Native, 2=Asian, 3=Black/African american, 4=White, 5=Hispanic (per email), 6=Native Hawaiian/Pacific Islander, 7=Multiracial, 8=Other
+#Add 2 and 6 for table and 8 + -1
 describe.factor(normative_sample$TN_RACEETH)
 
-#Living situation; 9=parents, 10=Other relatives, 11=friends, 12=group home, 13=residential, 14=other
+#Living situation 1,2,3, and 4 are all parents.
 describe.factor(normative_sample$Living_SIt)
 
 ##trouble with the law, 1=yes, 2=no
@@ -212,6 +213,7 @@ describe.factor(clinical_sample$NODIAG)
 clinical_sample$diag_totals = clinical_sample$ALCTO + clinical_sample$POTTOT + clinical_sample$HALLUCTOT + clinical_sample$INHALTOT + clinical_sample$OPIOIDTOT + clinical_sample$SEDTOT  + clinical_sample$STIMTOT + clinical_sample$OTHRDRUGTOT
 
 #550 total in clinical sample
+#550 total in clinical sample
 describe.factor(clinical_sample$NODIAG)
 clinical_sample$noSUD = ifelse(clinical_sample$diag_totals < 2, 1, 0)
 describe.factor(clinical_sample$noSUD)
@@ -221,8 +223,8 @@ clinical_sample$modSUD = ifelse(clinical_sample$diag_totals >=4 & clinical_sampl
 describe.factor(clinical_sample$modSUD)
 clinical_sample$sevSUD = ifelse(clinical_sample$diag_totals >=6, 1,0)
 describe.factor(clinical_sample$sevSUD)
-
-17.67+14.56+34.76 + 33.01
+17.67+14.56+34.76+33
+91+75+179+170
 
 #gender
 describe.factor(clinical_sample$SEX)
@@ -254,6 +256,7 @@ sd(clinical_sample$education, na.rm=TRUE)
 describe.factor(clinical_sample$AGE)
 mean(clinical_sample$AGE)
 sd(clinical_sample$AGE)
+
 
 ```
 
@@ -296,5 +299,6 @@ sd(stability_sample$education, na.rm=TRUE)
 
 #age
 #no data
+
 
 ```
