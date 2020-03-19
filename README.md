@@ -1352,7 +1352,8 @@ full_time_dat_results=  confusionMatrix(as.factor(full_time_dat$SASSDR), as.fact
 full_time_dat_accurate =  sum(full_time_dat_results$table[1,1], full_time_dat_results$table[2,2])
 full_time_dat_inaccurate =  sum(full_time_dat_results$table[1,2], full_time_dat_results$table[2,1])
 
-
+p_accurate_full_time_dat = round(full_time_dat_accurate/full_time_dat_total_n,2)
+p_inaccurate_full_time_dat = round(full_time_dat_inaccurate / full_time_dat_total_n,2)
 
 not_employed_dat = subset(clinical_sample,  EMP_STATUS == 24)
 
@@ -1363,6 +1364,9 @@ not_employed_dat_results=  confusionMatrix(as.factor(not_employed_dat$SASSDR), a
 not_employed_dat_accurate =  sum(not_employed_dat_results$table[1,1], not_employed_dat_results$table[2,2])
 not_employed_dat_inaccurate =  sum(not_employed_dat_results$table[1,2], not_employed_dat_results$table[2,1])
 
+p_accurate_not_employed_dat = round(not_employed_dat_accurate/not_employed_dat_total_n,2)
+p_inaccurate_not_employed_dat = round(not_employed_dat_inaccurate / not_employed_dat_total_n,2)
+
 
 part_employed_dat = subset(clinical_sample,  EMP_STATUS == 23)
 
@@ -1372,6 +1376,9 @@ part_employed_dat_results=  confusionMatrix(as.factor(part_employed_dat$SASSDR),
 
 part_employed_dat_accurate =  sum(part_employed_dat_results$table[1,1], part_employed_dat_results$table[2,2])
 part_employed_dat_inaccurate =  sum(part_employed_dat_results$table[1,2], part_employed_dat_results$table[2,1])
+p_accurate_part_employed_dat = round(part_employed_dat_accurate/part_employed_dat_total_n,2)
+p_inaccurate_part_employed_dat = round(part_employed_dat_inaccurate / part_employed_dat_total_n,2)
+
 
 
 volunteer_dat = subset(clinical_sample,  EMP_STATUS == 25)
@@ -1383,6 +1390,8 @@ volunteer_dat_results=  confusionMatrix(as.factor(volunteer_dat$SASSDR), as.fact
 volunteer_dat_accurate =  sum(volunteer_dat_results$table[1,1], volunteer_dat_results$table[2,2])
 volunteer_dat_inaccurate =  sum(volunteer_dat_results$table[1,2], volunteer_dat_results$table[2,1])
 
+p_accurate_volunteer_dat = round(volunteer_dat_accurate/volunteer_dat_total_n,2)
+p_inaccurate_volunteer_dat = round(volunteer_dat_inaccurate / volunteer_dat_total_n,2)
 
 
 
@@ -1410,6 +1419,8 @@ employed_dat_results=  confusionMatrix(as.factor(employed_dat$SASSDR), as.factor
 employed_totals = data.frame(test_p = sum(employed_dat_results$table[2,]), test_n = sum(employed_dat_results$table[1,]), criteria_p = sum(employed_dat_results$table[,2]), criteria_n = sum(employed_dat_results$table[,1]))
 employed_totals
 
+
+
 unemployed_dat = subset(clinical_sample, EMP_STATUS == 24 | EMP_STATUS == 25)
 
 unemployed_dat_total_n =  dim(unemployed_dat)[1]
@@ -1427,16 +1438,28 @@ describe.factor(clinical_sample$EMP_STATUS)
 not_employed_dat_total_n
 not_employed_dat_accurate
 not_employed_dat_inaccurate
+p_accurate_not_employed_dat
+p_inaccurate_not_employed_dat
+
 
 full_time_dat_accurate
 full_time_dat_inaccurate
+p_accurate_full_time_dat
+p_inaccurate_full_time_dat
+
 
 volunteer_dat_accurate
 volunteer_dat_inaccurate
+p_accurate_volunteer_dat
+p_inaccurate_volunteer_dat
+
 
 part_employed_dat_total_n
 part_employed_dat_accurate
 part_employed_dat_inaccurate
+p_accurate_part_employed_dat
+p_inaccurate_part_employed_dat
+
 
 total_employed_accurate
 total_employed_inaccurate
