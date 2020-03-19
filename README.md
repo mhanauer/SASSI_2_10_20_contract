@@ -15,6 +15,7 @@ library(coefficientalpha)
 library(caret)
 library(DescTools)
 library(pROC)
+library(caret)
 setwd("S:/Indiana Research & Evaluation/Matthew Hanauer/SASSI/Data/2-10-20_contract")
 #clinical_sample_dr.csv
 clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = c(98,255))
@@ -453,6 +454,9 @@ stable_norm = merge(stability_sample, normative_sample, by = "ID", all.x = TRUE)
 dim(stable_norm)
 stable_norm
 
+describe.factor(stable_norm$SASSDR.x)
+describe.factor(stable_norm$SASSDR.y)
+
 SASDR_stable = cor.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
 SASDR_stable
 
@@ -486,7 +490,7 @@ sam_stable
 cor_stable = cor.test(stable_norm$COR.x, stable_norm$COR.y)
 cor_stable
 
-rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y)
+rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y, method= "spearman")
 rx_stable
 
 ```
@@ -541,6 +545,11 @@ SASSDR_development_totals = data.frame(test_p = sum(SASSDR_development$table[2,]
 cramer_v_SASSDR_development = CramerV(SASSDR_development$table, conf.level = .99)
 cramer_v_SASSDR_development
 
+cp_percent_development =  round(c(SASSDR_development$table[4], SASSDR_development$table[3]) / SASSDR_development_totals$criteria_p,2)
+cp_percent_development
+
+cn_percent_development =  round(c(SASSDR_development$table[2], SASSDR_development$table[1]) / SASSDR_development_totals$criteria_n,2)
+cn_percent_development
 
 
 cross_validation_sample$SASSDR = as.factor(cross_validation_sample$SASSDR)
@@ -567,6 +576,7 @@ clinical_sample_totals
 
 cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .99)
 cramer_v_SASSDR_clinical
+SASSDR_development$table
 
 
 ```
@@ -599,6 +609,8 @@ SASSDR_development
 n_correct_SASSDR_development
 SASSDR_development_totals
 cramer_v_SASSDR_development
+cp_percent_development
+cn_percent_development
 ## 4
 SASSDR_cross_validation
 n_correct_SASSDR_cross_validation
@@ -674,7 +686,7 @@ Table 8 data prep and analysis
 ```{r}
 clinical_sample$DEF = as.numeric(clinical_sample$DEF)
 clinical_sample_def_0_4 = subset(clinical_sample, DEF < 5)
-dim(clinical_sample_def_0_4)
+n_clinical_sample_def_0_4 = dim(clinical_sample_def_0_4)[1]
 SASSDR_clinical_def_0_4=  confusionMatrix(clinical_sample_def_0_4$SASSDR, clinical_sample_def_0_4$NODIAG, positive = "1")
 SASSDR_clinical_def_0_4
 
@@ -682,7 +694,7 @@ n_correct_SASSDR_clinical_def_0_4=  sum(SASSDR_clinical_def_0_4$table[1,1], SASS
 n_correct_SASSDR_clinical_def_0_4
 
 clinical_sample_def_5 = subset(clinical_sample, DEF == 5)
-dim(clinical_sample_def_5)
+n_clinical_sample_def_5 = dim(clinical_sample_def_5)[1]
 SASSDR_clinical_def_5=  confusionMatrix(clinical_sample_def_5$SASSDR, clinical_sample_def_5$NODIAG, positive = "1")
 SASSDR_clinical_def_5
 
@@ -690,7 +702,7 @@ n_correct_SASSDR_clinical_def_5=  sum(SASSDR_clinical_def_5$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_5
 
 clinical_sample_def_6 = subset(clinical_sample, DEF == 6)
-dim(clinical_sample_def_6)
+n_clinical_sample_def_6 = dim(clinical_sample_def_6)[1]
 SASSDR_clinical_def_6=  confusionMatrix(clinical_sample_def_6$SASSDR, clinical_sample_def_6$NODIAG, positive = "1")
 SASSDR_clinical_def_6
 
@@ -699,7 +711,7 @@ n_correct_SASSDR_clinical_def_6
 
 
 clinical_sample_def_7 = subset(clinical_sample, DEF == 7)
-dim(clinical_sample_def_7)
+n_clinical_sample_def_7 = dim(clinical_sample_def_7)[1]
 SASSDR_clinical_def_7=  confusionMatrix(clinical_sample_def_7$SASSDR, clinical_sample_def_7$NODIAG, positive = "1")
 SASSDR_clinical_def_7
 
@@ -707,7 +719,7 @@ n_correct_SASSDR_clinical_def_7=  sum(SASSDR_clinical_def_7$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_7
 
 clinical_sample_def_8 = subset(clinical_sample, DEF == 8)
-dim(clinical_sample_def_8)
+n_clinical_sample_def_8= dim(clinical_sample_def_8)[1]
 SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR, clinical_sample_def_8$NODIAG, positive = "1")
 SASSDR_clinical_def_8
 
@@ -715,39 +727,48 @@ n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_8
 
 clinical_sample_def_9 = subset(clinical_sample, DEF == 9)
-dim(clinical_sample_def_9)
+n_clinical_sample_def_9 =  dim(clinical_sample_def_9)[1]
 SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR, clinical_sample_def_9$NODIAG, positive = "1")
 SASSDR_clinical_def_9
 
 n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_clinical_def_9$table[2,2])
 n_correct_SASSDR_clinical_def_9
 
-clinical_sample_def_10_11 = subset(clinical_sample, DEF == 10 | DEF == 11)
-dim(clinical_sample_def_10_11)
+clinical_sample_def_10_12 = subset(clinical_sample, DEF == 10 | DEF == 11 | DEF == 12)
+n_clinical_sample_def_10_12 = dim(clinical_sample_def_10_12)[1]
 
-SASSDR_clinical_def_10_11=  confusionMatrix(clinical_sample_def_10_11$SASSDR, clinical_sample_def_10_11$NODIAG, positive = "1")
-SASSDR_clinical_def_10_11
+SASSDR_clinical_def_10_12=  confusionMatrix(clinical_sample_def_10_12$SASSDR, clinical_sample_def_10_12$NODIAG, positive = "1")
+SASSDR_clinical_def_10_12
 
-n_correct_SASSDR_clinical_def_10_11=  sum(SASSDR_clinical_def_10_11$table[1,1], SASSDR_clinical_def_10_11$table[2,2])
-n_correct_SASSDR_clinical_def_10_11
+n_correct_SASSDR_clinical_def_10_12=  sum(SASSDR_clinical_def_10_12$table[1,1], SASSDR_clinical_def_10_12$table[2,2])
+n_correct_SASSDR_clinical_def_10_12
 
 ```
 Table 8 results 
 ```{r}
 SASSDR_clinical_def_0_4
-n_correct_SASSDR_clinical_def_0_4
+n_clinical_sample_def_0_4
+
 SASSDR_clinical_def_5
-n_correct_SASSDR_clinical_def_5
+n_clinical_sample_def_5
+
 SASSDR_clinical_def_6
-n_correct_SASSDR_clinical_def_6
+n_clinical_sample_def_6
+
 SASSDR_clinical_def_7
-n_correct_SASSDR_clinical_def_7
+n_clinical_sample_def_7
+
 SASSDR_clinical_def_8
-n_correct_SASSDR_clinical_def_8
+n_clinical_sample_def_8
+
 SASSDR_clinical_def_9
-n_correct_SASSDR_clinical_def_9
-SASSDR_clinical_def_10_11
-n_correct_SASSDR_clinical_def_10_11
+n_clinical_sample_def_9
+
+SASSDR_clinical_def_10_12
+n_clinical_sample_def_10_12
+
+n_clinical_sample_def_0_4+n_clinical_sample_def_5+n_clinical_sample_def_6+n_clinical_sample_def_7+n_clinical_sample_def_8+n_clinical_sample_def_9+n_clinical_sample_def_10_12
+
 ```
 Table 9 data analysis
 ```{r}
