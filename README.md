@@ -564,6 +564,12 @@ cross_validation_sample_totals
 cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .99)
 cramer_v_SASSDR_cross_validation
 
+cp_percent_cross_validation =  round(c(SASSDR_cross_validation$table[4], SASSDR_cross_validation$table[3]) / cross_validation_sample_totals$criteria_p,2)
+cp_percent_cross_validation
+
+cn_percent_cross_validation =  round(c(SASSDR_cross_validation$table[2], SASSDR_cross_validation$table[1]) / cross_validation_sample_totals$criteria_n,2)
+cn_percent_cross_validation
+
 clinical_sample$SASSDR = as.factor(clinical_sample$SASSDR)
 clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
 SASSDR_clinical=  confusionMatrix(clinical_sample$SASSDR, clinical_sample$NODIAG, positive = "1")
@@ -578,6 +584,11 @@ cramer_v_SASSDR_clinical= CramerV(SASSDR_clinical$table, conf.level = .99)
 cramer_v_SASSDR_clinical
 SASSDR_development$table
 
+cp_percent_clinical =  round(c(SASSDR_clinical$table[4], SASSDR_clinical$table[3]) / clinical_sample_totals$criteria_p,2)
+cp_percent_clinical
+
+cn_percent_clinical =  round(c(SASSDR_clinical$table[2], SASSDR_clinical$table[1]) / clinical_sample_totals$criteria_n,2)
+cn_percent_clinical
 
 ```
 Table 3 Discrimint analysis
@@ -616,11 +627,16 @@ SASSDR_cross_validation
 n_correct_SASSDR_cross_validation
 cross_validation_sample_totals
 cramer_v_SASSDR_cross_validation
+cp_percent_cross_validation
+cn_percent_cross_validation
 ## 5
 SASSDR_clinical
 n_correct_SASSDR_clinical
 clinical_sample_totals
 cramer_v_SASSDR_clinical
+cp_percent_clinical
+cn_percent_clinical
+
 0.8266-0.9767
 0.8571-0.8488
 0.8366-0.9341
@@ -647,6 +663,13 @@ SASSDR_clinical_def_8_totals = data.frame(test_p = sum(SASSDR_clinical_def_8$tab
 cramer_v_SASSDR_clinical_def_8= CramerV(SASSDR_clinical_def_8$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_8
 
+
+cp_percent_SASSDR_clinical_def_8 =  round(c(SASSDR_clinical_def_8$table[4], SASSDR_clinical_def_8$table[3]) / SASSDR_clinical_def_8_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_def_8
+
+cn_percent_SASSDR_clinical_def_8 =  round(c(SASSDR_clinical_def_8$table[2], SASSDR_clinical_def_8$table[1]) / SASSDR_clinical_def_8_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_def_8
+
 #### DEF 9
 clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
 dim(clinical_sample_def_9)
@@ -662,6 +685,11 @@ SASSDR_clinical_def_9_totals
 cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_9
 
+cp_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3]) / SASSDR_clinical_def_8_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_def_9
+
+cn_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[2], SASSDR_clinical_def_9$table[1]) / SASSDR_clinical_def_9_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_def_9
 
 ```
 Table 6 and 7 results
@@ -673,12 +701,18 @@ n_correct_SASSDR_clinical_def_8
 SASSDR_clinical_def_8_totals
 sum(SASSDR_clinical_def_8_totals[,1:2])
 cramer_v_SASSDR_clinical_def_8
+cp_percent_SASSDR_clinical_def_8
+cn_percent_SASSDR_clinical_def_8
+
+
 ### Table 7
 SASSDR_clinical_def_9
 n_correct_SASSDR_clinical_def_9
 cramer_v_SASSDR_clinical_def_9
 426/475 
 SASSDR_clinical_def_9_totals
+cp_percent_SASSDR_clinical_def_9
+cn_percent_SASSDR_clinical_def_9
 121+26+23+305
 
 ```
@@ -787,6 +821,12 @@ table_9_fva_totals
 
 table_9_fva_cramer_v= CramerV(table_9_fva_results$table, conf.level = .99)
 table_9_fva_cramer_v
+
+cp_percent_table_9_fva_results =  round(c(table_9_fva_results$table[4], table_9_fva_results$table[3]) / table_9_fva_totals$criteria_p,2)
+cp_percent_table_9_fva_results
+
+cn_percent_table_9_fva_results =  round(c(table_9_fva_results$table[2], table_9_fva_results$table[1]) / table_9_fva_totals$criteria_n,2)
+cn_percent_table_9_fva_results
 ```
 Table 9 Results
 ```{r}
@@ -794,6 +834,9 @@ table_9_fva_results
 table_9_fva_n_correct
 table_9_fva_totals
 table_9_fva_cramer_v
+cp_percent_table_9_fva_results
+cn_percent_table_9_fva_results
+
 ### in text top results
 88.54-83.3
 90.14-78.26
@@ -1018,7 +1061,11 @@ n_correct_SASSDR_clinical_crime
 SASSDR_clinical_crime_totals = data.frame(test_p = sum(SASSDR_clinical_crime$table[2,]), test_n = sum(SASSDR_clinical_crime$table[1,]), criteria_p = sum(SASSDR_clinical_crime$table[,2]), criteria_n = sum(SASSDR_clinical_crime$table[,1]))
 SASSDR_clinical_crime_totals
 
+cp_percent_SASSDR_clinical_crime =  round(c(SASSDR_clinical_crime$table[4], SASSDR_clinical_crime$table[3]) / SASSDR_clinical_crime_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_crime
 
+cn_percent_SASSDR_clinical_crime =  round(c(SASSDR_clinical_crime$table[2], SASSDR_clinical_crime$table[1]) / SASSDR_clinical_crime_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_crime
 
 #### Social services programs
 clinical_sample_social_services = subset(clinical_sample, CLIENTSETTING == 2)
@@ -1034,6 +1081,11 @@ n_correct_SASSDR_clinical_social_services
 SASSDR_clinical_social_services_totals = data.frame(test_p = sum(SASSDR_clinical_social_services$table[2,]), test_n = sum(SASSDR_clinical_social_services$table[1,]), criteria_p = sum(SASSDR_clinical_social_services$table[,2]), criteria_n = sum(SASSDR_clinical_social_services$table[,1]))
 SASSDR_clinical_social_services_totals
 
+cp_percent_SASSDR_clinical_social_services =  round(c(SASSDR_clinical_social_services$table[4], SASSDR_clinical_social_services$table[3]) / SASSDR_clinical_social_services_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_social_services
+
+cn_percent_SASSDR_clinical_social_services =  round(c(SASSDR_clinical_social_services$table[2], SASSDR_clinical_social_services$table[1]) / SASSDR_clinical_social_services_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_social_services
 
 ###
 #### medical pain clinics
@@ -1059,6 +1111,12 @@ n_correct_SASSDR_clinical_substance_use
 SASSDR_clinical_substance_use_totals = data.frame(test_p = sum(SASSDR_clinical_substance_use$table[2,]), test_n = sum(SASSDR_clinical_substance_use$table[1,]), criteria_p = sum(SASSDR_clinical_substance_use$table[,2]), criteria_n = sum(SASSDR_clinical_substance_use$table[,1]))
 SASSDR_clinical_substance_use_totals
 
+cp_percent_SASSDR_clinical_substance_use =  round(c(SASSDR_clinical_substance_use$table[4], SASSDR_clinical_substance_use$table[3]) / SASSDR_clinical_substance_use_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_substance_use
+
+cn_percent_SASSDR_clinical_substance_use =  round(c(SASSDR_clinical_substance_use$table[2], SASSDR_clinical_substance_use$table[1]) / SASSDR_clinical_substance_use_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_substance_use
+
 #### other
 clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7 | CLIENTSETTING == 5)
 clinical_sample_other_total_n =  dim(clinical_sample_other)[1]
@@ -1071,6 +1129,11 @@ n_correct_SASSDR_clinical_other
 SASSDR_clinical_other_totals = data.frame(test_p = sum(SASSDR_clinical_other$table[2,]), test_n = sum(SASSDR_clinical_other$table[1,]), criteria_p = sum(SASSDR_clinical_other$table[,2]), criteria_n = sum(SASSDR_clinical_other$table[,1]))
 SASSDR_clinical_other_totals
 
+cp_percent_SASSDR_clinical_other =  round(c(SASSDR_clinical_other$table[4], SASSDR_clinical_other$table[3]) / SASSDR_clinical_other_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_other
+
+cn_percent_SASSDR_clinical_other =  round(c(SASSDR_clinical_other$table[2], SASSDR_clinical_other$table[1]) / SASSDR_clinical_other_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_other
 
 ```
 Tables 12 through 17 results
@@ -1079,21 +1142,33 @@ SASSDR_clinical_crime
 clinical_sample_crime_total_n
 n_correct_SASSDR_clinical_crime
 SASSDR_clinical_crime_totals
+cp_percent_SASSDR_clinical_crime
+cn_percent_SASSDR_clinical_crime
+
 
 SASSDR_clinical_social_services
 clinical_sample_social_services_total_n
 n_correct_SASSDR_clinical_social_services
 SASSDR_clinical_social_services_totals
+cp_percent_SASSDR_clinical_social_services
+cn_percent_SASSDR_clinical_social_services
+
 
 SASSDR_clinical_substance_use
 clinical_sample_substance_use_total_n
 n_correct_SASSDR_clinical_substance_use
 SASSDR_clinical_substance_use_totals
+cp_percent_SASSDR_clinical_substance_use
+cn_percent_SASSDR_clinical_substance_use
+
 
 SASSDR_clinical_other
 clinical_sample_other_total_n
 n_correct_SASSDR_clinical_other
 SASSDR_clinical_other_totals
+cp_percent_SASSDR_clinical_other
+cn_percent_SASSDR_clinical_other
+
 ```
 Table 18 data cleaning
 DEPRESNONSUB
@@ -1144,7 +1219,14 @@ n_correct_table_18
 table_18_totals = data.frame(test_p = sum(table_18_results$table[2,]), test_n = sum(table_18_results$table[1,]), criteria_p = sum(table_18_results$table[,2]), criteria_n = sum(table_18_results$table[,1]))
 table_18_totals
 
-table18_dat
+
+
+cp_percent_table_18_results =  round(c(table_18_results$table[4], table_18_results$table[3]) / table_18_totals$criteria_p,2)
+cp_percent_table_18_results
+
+cn_percent_table_18_results =  round(c(table_18_results$table[2], table_18_results$table[1]) / table_18_totals$criteria_n,2)
+cn_percent_table_18_results
+
 ```
 Table 18 results
 ```{r}
@@ -1152,6 +1234,8 @@ n_total8
 table_18_results
 n_correct_table_18
 table_18_totals
+cp_percent_table_18_results
+cn_percent_table_18_results
 ```
 
 
@@ -1207,6 +1291,15 @@ edu_cramersV
 total_edu_accurate = sum(five_six_dat_accurate, seven_eight_nine_dat_accurate, ten_eleven_twelve_dat_accurate)
 
 total_edu_inaccurate = sum(five_six_dat_inaccurate, seven_eight_nine_dat_inaccurate, ten_eleven_twelve_dat_inaccurate)
+
+p_accurate_five_six = round(five_six_dat_accurate / five_six_dat_total_n,2)
+p_inaccurate_five_six = round(five_six_dat_inaccurate / five_six_dat_total_n,2)
+
+p_accurate_seven_eight_nine = round(seven_eight_nine_dat_accurate / seven_eight_nine_dat_total_n,2)
+p_inaccurate_seven_eight_nine = round(seven_eight_nine_dat_inaccurate / seven_eight_nine_dat_total_n,2)
+p_accurate_ten_eleven_twelve = round(ten_eleven_twelve_dat_accurate / ten_eleven_twelve_dat_total_n,2)
+p_inaccurate_ten_eleven_twelve = round(ten_eleven_twelve_dat_inaccurate / ten_eleven_twelve_dat_total_n,2)
+
 ```
 Table 19 results
 ```{r}
@@ -1214,16 +1307,24 @@ five_six_dat_total_n
 five_six_dat_results
 five_six_dat_accurate
 five_six_dat_inaccurate
+p_accurate_five_six
+p_inaccurate_five_six
 
 seven_eight_nine_dat_total_n
 seven_eight_nine_dat_results
 seven_eight_nine_dat_accurate
 seven_eight_nine_dat_inaccurate
+p_accurate_seven_eight_nine
+p_inaccurate_seven_eight_nine
+
 
 ten_eleven_twelve_dat_total_n
 ten_eleven_twelve_dat_results
 ten_eleven_twelve_dat_accurate
 ten_eleven_twelve_dat_inaccurate
+p_accurate_ten_eleven_twelve
+p_inaccurate_ten_eleven_twelve
+
 
 total_edu_accurate
 total_edu_inaccurate
