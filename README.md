@@ -1419,6 +1419,11 @@ employed_dat_results=  confusionMatrix(as.factor(employed_dat$SASSDR), as.factor
 employed_totals = data.frame(test_p = sum(employed_dat_results$table[2,]), test_n = sum(employed_dat_results$table[1,]), criteria_p = sum(employed_dat_results$table[,2]), criteria_n = sum(employed_dat_results$table[,1]))
 employed_totals
 
+cp_percent_employed_dat_results =  round(c(employed_dat_results$table[4], employed_dat_results$table[3]) / employed_totals$criteria_p,2)
+cp_percent_employed_dat_results
+
+cn_percent_employed_dat_results =  round(c(employed_dat_results$table[2], employed_dat_results$table[1]) / employed_totals$criteria_n,2)
+cn_percent_employed_dat_results
 
 
 unemployed_dat = subset(clinical_sample, EMP_STATUS == 24 | EMP_STATUS == 25)
@@ -1430,6 +1435,12 @@ unemployed_dat_results=  confusionMatrix(as.factor(unemployed_dat$SASSDR), as.fa
 unemployed_totals = data.frame(test_p = sum(unemployed_dat_results$table[2,]), test_n = sum(unemployed_dat_results$table[1,]), criteria_p = sum(unemployed_dat_results$table[,2]), criteria_n = sum(unemployed_dat_results$table[,1]))
 unemployed_totals
 
+cp_percent_unemployed_dat_results =  round(c(unemployed_dat_results$table[4], unemployed_dat_results$table[3]) / unemployed_totals$criteria_p,2)
+cp_percent_unemployed_dat_results
+
+cn_percent_unemployed_dat_results =  round(c(unemployed_dat_results$table[2], unemployed_dat_results$table[1]) / unemployed_totals$criteria_n,2)
+cn_percent_unemployed_dat_results
+
 ```
 Tables 20 - 23 results
 ```{r}
@@ -1438,9 +1449,6 @@ describe.factor(clinical_sample$EMP_STATUS)
 not_employed_dat_total_n
 not_employed_dat_accurate
 not_employed_dat_inaccurate
-p_accurate_not_employed_dat
-p_inaccurate_not_employed_dat
-
 
 full_time_dat_accurate
 full_time_dat_inaccurate
@@ -1450,16 +1458,10 @@ p_inaccurate_full_time_dat
 
 volunteer_dat_accurate
 volunteer_dat_inaccurate
-p_accurate_volunteer_dat
-p_inaccurate_volunteer_dat
-
 
 part_employed_dat_total_n
 part_employed_dat_accurate
 part_employed_dat_inaccurate
-p_accurate_part_employed_dat
-p_inaccurate_part_employed_dat
-
 
 total_employed_accurate
 total_employed_inaccurate
@@ -1470,12 +1472,16 @@ employed_cramersV
 employed_dat_total_n
 employed_dat_results
 employed_totals
+cp_percent_employed_dat_results
+cn_percent_employed_dat_results
+
 
 #Table 22
 unemployed_dat_total_n
 unemployed_dat_results
 unemployed_totals
-
+cp_percent_employed_dat_results
+cn_percent_unemployed_dat_results
 
 ```
 Table 24 - 26
@@ -1511,6 +1517,10 @@ male_dat_results=  confusionMatrix(as.factor(male_dat$SASSDR), as.factor(male_da
 male_totals = data.frame(test_p = sum(male_dat_results$table[2,]), test_n = sum(male_dat_results$table[1,]), criteria_p = sum(male_dat_results$table[,2]), criteria_n = sum(male_dat_results$table[,1]))
 male_totals
 
+p_accurate_male_dat = round(male_dat_accurate/male_dat_total_n,2)
+p_inaccurate_male_dat = round(male_dat_inaccurate / male_dat_total_n,2)
+
+
 female_dat = subset(clinical_sample, SEX == 2)
 
 female_dat_total_n =  dim(female_dat)[1]
@@ -1520,10 +1530,16 @@ female_dat_results=  confusionMatrix(as.factor(female_dat$SASSDR), as.factor(fem
 female_totals = data.frame(test_p = sum(female_dat_results$table[2,]), test_n = sum(female_dat_results$table[1,]), criteria_p = sum(female_dat_results$table[,2]), criteria_n = sum(female_dat_results$table[,1]))
 female_totals
 
+p_accurate_female_dat = round(female_dat_accurate/female_dat_total_n,2)
+p_inaccurate_female_dat = round(female_dat_inaccurate / female_dat_total_n,2)
+
 
 total_gender_n = sum(male_dat_total_n, female_dat_total_n)
 total_gender_accurate = sum(male_dat_accurate, female_dat_accurate)
 total_gender_inaccurate = sum(male_dat_inaccurate, female_dat_inaccurate)
+
+
+
 
 ```
 Tables 24 through 26
@@ -1533,10 +1549,15 @@ Tables 24 through 26
 male_dat_total_n
 male_dat_accurate
 male_dat_inaccurate
+p_accurate_male_dat
+p_inaccurate_male_dat
 
 female_dat_total_n
 female_dat_accurate
 female_dat_inaccurate
+p_accurate_female_dat
+p_inaccurate_female_dat
+
 
 total_gender_n
 total_gender_accurate
