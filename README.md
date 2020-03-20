@@ -1538,7 +1538,17 @@ total_gender_n = sum(male_dat_total_n, female_dat_total_n)
 total_gender_accurate = sum(male_dat_accurate, female_dat_accurate)
 total_gender_inaccurate = sum(male_dat_inaccurate, female_dat_inaccurate)
 
+cp_percent_male_dat_results =  round(c(male_dat_results$table[4], male_dat_results$table[3]) / male_totals$criteria_p,2)
+cp_percent_male_dat_results
 
+cn_percent_male_dat_results =  round(c(male_dat_results$table[2], male_dat_results$table[1]) / male_totals$criteria_n,2)
+cn_percent_male_dat_results
+
+cp_percent_female_dat_results =  round(c(female_dat_results$table[4], female_dat_results$table[3]) / female_totals$criteria_p,2)
+cp_percent_female_dat_results
+
+cn_percent_female_dat_results =  round(c(female_dat_results$table[2], female_dat_results$table[1]) / female_totals$criteria_n,2)
+cn_percent_female_dat_results
 
 
 ```
@@ -1566,17 +1576,25 @@ total_gender_inaccurate
 ## Table 25
 male_dat_results
 male_totals
+cp_percent_male_dat_results
+cn_percent_male_dat_results
+
 
 
 ### Table 26
 female_dat_results
 female_totals
+cp_percent_female_dat_results
+cn_percent_female_dat_results
+
 
 gender_dat_cramer = clinical_sample
 gender_dat_cramer$accurate = ifelse(clinical_sample$SASSDR == gender_dat_cramer$NODIAG,1,0)
 
 gender_cramersV = CramerV(gender_dat_cramer$SEX, gender_dat_cramer$accurate, conf.level = .99)
 gender_cramersV
+
+
 ```
 Table 27 
 Ages 13,14,15,16,17,18
@@ -1590,6 +1608,8 @@ thirteen_dat_results=  confusionMatrix(as.factor(thirteen_dat$SASSDR), as.factor
 thirteen_dat_accurate =  sum(thirteen_dat_results$table[1,1], thirteen_dat_results$table[2,2])
 thirteen_dat_inaccurate =  sum(thirteen_dat_results$table[1,2], thirteen_dat_results$table[2,1])
 
+p_accurate_thirteen_dat = round(thirteen_dat_accurate/thirteen_dat_total_n,2)
+p_inaccurate_thirteen_dat = round(thirteen_dat_inaccurate / thirteen_dat_total_n,2)
 
 fourteen_dat = subset(clinical_sample,  AGE == 14)
 
@@ -1600,6 +1620,8 @@ fourteen_dat_results=  confusionMatrix(as.factor(fourteen_dat$SASSDR), as.factor
 fourteen_dat_accurate =  sum(fourteen_dat_results$table[1,1], fourteen_dat_results$table[2,2])
 fourteen_dat_inaccurate =  sum(fourteen_dat_results$table[1,2], fourteen_dat_results$table[2,1])
 
+p_accurate_fourteen_dat = round(fourteen_dat_accurate/fourteen_dat_total_n,2)
+p_inaccurate_fourteen_dat = round(fourteen_dat_inaccurate / fourteen_dat_total_n,2)
 
 fifteen_dat = subset(clinical_sample,  AGE == 15)
 
@@ -1610,6 +1632,10 @@ fifteen_dat_results=  confusionMatrix(as.factor(fifteen_dat$SASSDR), as.factor(f
 fifteen_dat_accurate =  sum(fifteen_dat_results$table[1,1], fifteen_dat_results$table[2,2])
 fifteen_dat_inaccurate =  sum(fifteen_dat_results$table[1,2], fifteen_dat_results$table[2,1])
 
+p_accurate_fifteen_dat = round(fifteen_dat_accurate/fifteen_dat_total_n,2)
+p_inaccurate_fifteen_dat = round(fifteen_dat_inaccurate / fifteen_dat_total_n,2)
+
+
 sixteen_dat = subset(clinical_sample,  AGE == 16)
 
 sixteen_dat_total_n =  dim(sixteen_dat)[1]
@@ -1618,6 +1644,9 @@ sixteen_dat_results=  confusionMatrix(as.factor(sixteen_dat$SASSDR), as.factor(s
 
 sixteen_dat_accurate =  sum(sixteen_dat_results$table[1,1], sixteen_dat_results$table[2,2])
 sixteen_dat_inaccurate =  sum(sixteen_dat_results$table[1,2], sixteen_dat_results$table[2,1])
+
+p_accurate_sixteen_dat = round(sixteen_dat_accurate/sixteen_dat_total_n,2)
+p_inaccurate_sixteen_dat = round(sixteen_dat_inaccurate / sixteen_dat_total_n,2)
 
 seventeen_dat = subset(clinical_sample,  AGE == 17)
 
@@ -1628,6 +1657,10 @@ seventeen_dat_results=  confusionMatrix(as.factor(seventeen_dat$SASSDR), as.fact
 seventeen_dat_accurate =  sum(seventeen_dat_results$table[1,1], seventeen_dat_results$table[2,2])
 seventeen_dat_inaccurate =  sum(seventeen_dat_results$table[1,2], seventeen_dat_results$table[2,1])
 
+p_accurate_seventeen_dat = round(seventeen_dat_accurate/seventeen_dat_total_n,2)
+p_inaccurate_seventeen_dat = round(seventeen_dat_inaccurate / seventeen_dat_total_n,2)
+
+
 eighteen_dat = subset(clinical_sample,  AGE == 18)
 
 eighteen_dat_total_n =  dim(eighteen_dat)[1]
@@ -1637,6 +1670,8 @@ eighteen_dat_results=  confusionMatrix(as.factor(eighteen_dat$SASSDR), as.factor
 eighteen_dat_accurate =  sum(eighteen_dat_results$table[1,1], eighteen_dat_results$table[2,2])
 eighteen_dat_inaccurate =  sum(eighteen_dat_results$table[1,2], eighteen_dat_results$table[2,1])
 
+p_accurate_eighteen_dat = round(eighteen_dat_accurate/eighteen_dat_total_n,2)
+p_inaccurate_eighteen_dat = round(eighteen_dat_inaccurate / eighteen_dat_total_n,2)
 
 total_age_accurate = sum(thirteen_dat_accurate, fourteen_dat_accurate, fifteen_dat_accurate, sixteen_dat_accurate, seventeen_dat_accurate, eighteen_dat_accurate)
 
@@ -1656,31 +1691,49 @@ thirteen_dat_total_n
 thirteen_dat_results
 thirteen_dat_accurate
 thirteen_dat_inaccurate
+p_accurate_thirteen_dat
+p_inaccurate_thirteen_dat
+
 
 fourteen_dat_total_n
 fourteen_dat_results
 fourteen_dat_accurate
 fourteen_dat_inaccurate
+p_accurate_fourteen_dat
+p_inaccurate_fourteen_dat
+
 
 fifteen_dat_total_n
 fifteen_dat_results
 fifteen_dat_accurate
 fifteen_dat_inaccurate
+p_accurate_fifteen_dat
+p_inaccurate_fifteen_dat
+
 
 sixteen_dat_total_n
 sixteen_dat_results
 sixteen_dat_accurate
 sixteen_dat_inaccurate
+p_accurate_sixteen_dat
+p_inaccurate_sixteen_dat
+
 
 seventeen_dat_total_n
 seventeen_dat_results
 seventeen_dat_accurate
 seventeen_dat_inaccurate
+p_accurate_seventeen_dat
+p_inaccurate_seventeen_dat
+
 
 eighteen_dat_total_n
 eighteen_dat_results
 eighteen_dat_accurate
 eighteen_dat_inaccurate
+p_accurate_eighteen_dat
+p_inaccurate_eighteen_dat
+
 
 total_age_accurate
 total_age_inaccurate
@@ -1711,6 +1764,15 @@ white_dat_inaccurate =  sum(white_dat_results$table[1,2], white_dat_results$tabl
 white_totals = data.frame(test_p = sum(white_dat_results$table[2,]), test_n = sum(white_dat_results$table[1,]), criteria_p = sum(white_dat_results$table[,2]), criteria_n = sum(white_dat_results$table[,1]))
 white_totals
 
+p_accurate_white_dat = round(white_dat_accurate/white_dat_total_n,2)
+p_inaccurate_white_dat = round(white_dat_inaccurate / white_dat_total_n,2)
+
+
+cp_percent_white_dat_results =  round(c(white_dat_results$table[4], white_dat_results$table[3]) / white_totals$criteria_p,2)
+cp_percent_white_dat_results
+
+cn_percent_white_dat_results =  round(c(white_dat_results$table[2], white_dat_results$table[1]) / white_totals$criteria_n,2)
+cn_percent_white_dat_results
 
 hispanic_dat = subset(clinical_sample,  ETHN == 5)
 
@@ -1723,6 +1785,15 @@ hispanic_dat_inaccurate =  sum(hispanic_dat_results$table[1,2], hispanic_dat_res
 
 hispanic_totals = data.frame(test_p = sum(hispanic_dat_results$table[2,]), test_n = sum(hispanic_dat_results$table[1,]), criteria_p = sum(hispanic_dat_results$table[,2]), criteria_n = sum(hispanic_dat_results$table[,1]))
 hispanic_totals
+
+p_accurate_hispanic_dat = round(hispanic_dat_accurate/hispanic_dat_total_n,2)
+p_inaccurate_hispanic_dat = round(hispanic_dat_inaccurate / hispanic_dat_total_n,2)
+
+cp_percent_hispanic_dat_results =  round(c(hispanic_dat_results$table[4], hispanic_dat_results$table[3]) / hispanic_totals$criteria_p,2)
+cp_percent_hispanic_dat_results
+
+cn_percent_hispanic_dat_results =  round(c(hispanic_dat_results$table[2], hispanic_dat_results$table[1]) / hispanic_totals$criteria_n,2)
+cn_percent_hispanic_dat_results
 
 
 black_dat = subset(clinical_sample,  ETHN == 3)
@@ -1738,6 +1809,16 @@ black_dat_inaccurate =  sum(black_dat_results$table[1,2], black_dat_results$tabl
 black_totals = data.frame(test_p = sum(black_dat_results$table[2,]), test_n = sum(black_dat_results$table[1,]), criteria_p = sum(black_dat_results$table[,2]), criteria_n = sum(black_dat_results$table[,1]))
 black_totals
 
+p_accurate_black_dat = round(black_dat_accurate/black_dat_total_n,2)
+p_inaccurate_black_dat = round(black_dat_inaccurate / black_dat_total_n,2)
+
+
+cp_percent_black_dat_results =  round(c(black_dat_results$table[4], black_dat_results$table[3]) / black_totals$criteria_p,2)
+cp_percent_black_dat_results
+
+cn_percent_black_dat_results =  round(c(black_dat_results$table[2], black_dat_results$table[1]) / black_totals$criteria_n,2)
+cn_percent_black_dat_results
+
 mixed_dat = subset(clinical_sample,  ETHN == 8)
 
 mixed_dat_total_n =  dim(mixed_dat)[1]
@@ -1750,6 +1831,16 @@ mixed_dat_inaccurate =  sum(mixed_dat_results$table[1,2], mixed_dat_results$tabl
 
 mixed_totals = data.frame(test_p = sum(mixed_dat_results$table[2,]), test_n = sum(mixed_dat_results$table[1,]), criteria_p = sum(mixed_dat_results$table[,2]), criteria_n = sum(mixed_dat_results$table[,1]))
 mixed_totals
+
+p_accurate_mixed_dat = round(mixed_dat_accurate/mixed_dat_total_n,2)
+p_inaccurate_mixed_dat = round(mixed_dat_inaccurate / mixed_dat_total_n,2)
+
+cp_percent_mixed_dat_results =  round(c(mixed_dat_results$table[4], mixed_dat_results$table[3]) / mixed_totals$criteria_p,2)
+cp_percent_mixed_dat_results
+
+cn_percent_mixed_dat_results =  round(c(mixed_dat_results$table[2], mixed_dat_results$table[1]) / mixed_totals$criteria_n,2)
+cn_percent_mixed_dat_results
+
 
 # Another race = 2,6,1,9
 another_race_dat = subset(clinical_sample,  ETHN == 2 | ETHN == 6 | ETHN == 1 | ETHN == 9)
@@ -1765,6 +1856,17 @@ another_race_dat_inaccurate =  sum(another_race_dat_results$table[1,2], another_
 another_race_totals = data.frame(test_p = sum(another_race_dat_results$table[2,]), test_n = sum(another_race_dat_results$table[1,]), criteria_p = sum(another_race_dat_results$table[,2]), criteria_n = sum(another_race_dat_results$table[,1]))
 another_race_totals
 
+
+p_accurate_another_dat = round(another_race_dat_accurate/another_race_dat_total_n,2)
+p_inaccurate_another_dat = round(another_race_dat_inaccurate / another_race_dat_total_n,2)
+
+cp_percent_another_dat_results =  round(c(another_race_dat_results$table[4], another_race_dat_results$table[3]) / another_race_totals$criteria_p,2)
+cp_percent_another_dat_results
+
+cn_percent_another_dat_results =  round(c(another_race_dat_results$table[2], another_race_dat_results$table[1]) / another_race_totals$criteria_n,2)
+cn_percent_another_dat_results
+
+
 race_dat_cramer = clinical_sample
 race_dat_cramer$accurate = ifelse(race_dat_cramer$SASSDR == race_dat_cramer$NODIAG,1,0)
 
@@ -1778,12 +1880,23 @@ white_dat_results
 white_dat_accurate 
 white_dat_inaccurate
 white_totals
+p_accurate_white_dat
+p_inaccurate_white_dat
+cp_percent_white_dat_results
+cn_percent_white_dat_results
+
 
 hispanic_dat_total_n
 hispanic_dat_results
 hispanic_dat_accurate
 hispanic_dat_inaccurate
 hispanic_totals
+p_accurate_hispanic_dat
+p_inaccurate_hispanic_dat
+cp_percent_hispanic_dat_results
+cn_percent_hispanic_dat_results
+
+
 
 
 black_dat_total_n
@@ -1791,18 +1904,34 @@ black_dat_results
 black_dat_accurate 
 black_dat_inaccurate
 black_totals
+p_accurate_black_dat
+p_inaccurate_black_dat
+cp_percent_black_dat_results
+cn_percent_black_dat_results
+
 
 mixed_dat_total_n
 mixed_dat_results
 mixed_dat_accurate 
 mixed_dat_inaccurate
 mixed_totals
+p_accurate_mixed_dat
+p_inaccurate_mixed_dat
+cp_percent_mixed_dat_results
+cn_percent_mixed_dat_results
+
+
 
 another_race_dat_total_n
 another_race_dat_results
 another_race_dat_accurate
 another_race_dat_inaccurate
 another_race_totals
+p_accurate_another_dat
+p_inaccurate_another_dat
+cp_percent_another_dat_results
+cn_percent_another_dat_results
+
 
 
 race_dat_cramer
@@ -1821,7 +1950,11 @@ legal_dat_accurate =  sum(legal_dat_results$table[1,1], legal_dat_results$table[
 legal_totals = data.frame(test_p = sum(legal_dat_results$table[2,]), test_n = sum(legal_dat_results$table[1,]), criteria_p = sum(legal_dat_results$table[,2]), criteria_n = sum(legal_dat_results$table[,1]))
 legal_totals
 
+cp_percent_legal_dat_results =  round(c(legal_dat_results$table[4], legal_dat_results$table[3]) / legal_totals$criteria_p,2)
+cp_percent_legal_dat_results
 
+cn_percent_legal_dat_results =  round(c(legal_dat_results$table[2], legal_dat_results$table[1]) / legal_totals$criteria_n,2)
+cn_percent_legal_dat_results
 ```
 Table 36 results
 ```{r}
@@ -1832,6 +1965,8 @@ legal_dat_total_n
 legal_dat_results
 legal_dat_accurate
 legal_totals
+cp_percent_legal_dat_results
+cn_percent_legal_dat_results
 ```
 Table 37 data cleaning
 9 = Parents
@@ -1851,6 +1986,12 @@ living_sit_dat_accurate =  sum(living_sit_dat_results$table[1,1], living_sit_dat
 living_sit_totals = data.frame(test_p = sum(living_sit_dat_results$table[2,]), test_n = sum(living_sit_dat_results$table[1,]), criteria_p = sum(living_sit_dat_results$table[,2]), criteria_n = sum(living_sit_dat_results$table[,1]))
 living_sit_totals
 
+cp_percent_living_sit_dat_results =  round(c(living_sit_dat_results$table[4], living_sit_dat_results$table[3]) / living_sit_totals$criteria_p,2)
+cp_percent_living_sit_dat_results
+
+cn_percent_living_sit_dat_results =  round(c(living_sit_dat_results$table[2], living_sit_dat_results$table[1]) / living_sit_totals$criteria_n,2)
+cn_percent_living_sit_dat_results
+
 ```
 Table 37 results
 ```{r}
@@ -1860,6 +2001,8 @@ living_sit_dat_total_n
 living_sit_dat_results
 living_sit_dat_accurate
 living_sit_totals
+cp_percent_living_sit_dat_results
+cn_percent_living_sit_dat_results
 
 ```
 Table 38 data cleaning
@@ -1889,7 +2032,11 @@ table_38_dat_opioid_accurate =  sum(table_38_dat_opioid_results$table[1,1], tabl
 table_38_dat_opioid_totals = data.frame(test_p = sum(table_38_dat_opioid_results$table[2,]), test_n = sum(table_38_dat_opioid_results$table[1,]), criteria_p = sum(table_38_dat_opioid_results$table[,2]), criteria_n = sum(table_38_dat_opioid_results$table[,1]))
 table_38_dat_opioid_totals
 
+cp_percent_table_38_dat_results =  round(c(table_38_dat_opioid_results$table[4], table_38_dat_opioid_results$table[3]) / table_38_dat_opioid_totals$criteria_p,2)
+cp_percent_table_38_dat_results
 
+cn_percent_table_38_dat_results =  round(c(table_38_dat_opioid_results$table[2], table_38_dat_opioid_results$table[1]) / table_38_dat_opioid_totals$criteria_n,2)
+cn_percent_table_38_dat_results
 ```
 Table 38 Results
 ```{r}
@@ -1897,6 +2044,8 @@ table_38_dat_total_n
 table_38_dat_opioid_results
 table_38_dat_opioid_accurate
 table_38_dat_opioid_totals
+cp_percent_table_38_dat_results
+cn_percent_table_38_dat_results
 38/206
 197/207 
 ```
