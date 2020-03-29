@@ -685,7 +685,7 @@ SASSDR_clinical_def_9_totals
 cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_9
 
-cp_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3]) / SASSDR_clinical_def_8_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3]) / SASSDR_clinical_def_9_totals$criteria_p,2)
 cp_percent_SASSDR_clinical_def_9
 
 cn_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[2], SASSDR_clinical_def_9$table[1]) / SASSDR_clinical_def_9_totals$criteria_n,2)
@@ -1188,7 +1188,6 @@ true positives in the criterion negative group as individuals who have a non-SUD
 
 Do you subset out those who have an SUD only?
 Must have first or second criteria.  So make second criteria then subset
-
 
 
 
@@ -1737,7 +1736,6 @@ p_inaccurate_eighteen_dat
 
 total_age_accurate
 total_age_inaccurate
-
 age_cramersV
 ```
 Table 28
