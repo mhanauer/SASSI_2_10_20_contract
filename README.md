@@ -648,29 +648,7 @@ As shown in Table 6, overall SASSI-A3 screening accuracy was XX.X% for cases whe
 ```{r}
 def_criteria =  round(mean(normative_sample$DEF)+sd(normative_sample$DEF))
 def_criteria
-### DEF 8
-clinical_sample_def_8 = subset(clinical_sample, DEF <= 8)
-dim(clinical_sample_def_8)
-SASSDR_clinical_def_8=  confusionMatrix(clinical_sample_def_8$SASSDR, clinical_sample_def_8$NODIAG, positive = "1")
-SASSDR_clinical_def_8
-
-n_correct_SASSDR_clinical_def_8=  sum(SASSDR_clinical_def_8$table[1,1], SASSDR_clinical_def_8$table[2,2])
-n_correct_SASSDR_clinical_def_8
-
-SASSDR_clinical_def_8_totals = data.frame(test_p = sum(SASSDR_clinical_def_8$table[2,]), test_n = sum(SASSDR_clinical_def_8$table[1,]), criteria_p = sum(SASSDR_clinical_def_8$table[,2]), criteria_n = sum(SASSDR_clinical_def_8$table[,1]))
-
-
-cramer_v_SASSDR_clinical_def_8= CramerV(SASSDR_clinical_def_8$table, conf.level = .99)
-cramer_v_SASSDR_clinical_def_8
-
-
-cp_percent_SASSDR_clinical_def_8 =  round(c(SASSDR_clinical_def_8$table[4], SASSDR_clinical_def_8$table[3]) / SASSDR_clinical_def_8_totals$criteria_p,2)
-cp_percent_SASSDR_clinical_def_8
-
-cn_percent_SASSDR_clinical_def_8 =  round(c(SASSDR_clinical_def_8$table[2], SASSDR_clinical_def_8$table[1]) / SASSDR_clinical_def_8_totals$criteria_n,2)
-cn_percent_SASSDR_clinical_def_8
-
-#### DEF 9
+### DEF 9
 clinical_sample_def_9 = subset(clinical_sample, DEF <= 9)
 dim(clinical_sample_def_9)
 SASSDR_clinical_def_9=  confusionMatrix(clinical_sample_def_9$SASSDR, clinical_sample_def_9$NODIAG, positive = "1")
@@ -680,10 +658,11 @@ n_correct_SASSDR_clinical_def_9=  sum(SASSDR_clinical_def_9$table[1,1], SASSDR_c
 n_correct_SASSDR_clinical_def_9
 
 SASSDR_clinical_def_9_totals = data.frame(test_p = sum(SASSDR_clinical_def_9$table[2,]), test_n = sum(SASSDR_clinical_def_9$table[1,]), criteria_p = sum(SASSDR_clinical_def_9$table[,2]), criteria_n = sum(SASSDR_clinical_def_9$table[,1]))
-SASSDR_clinical_def_9_totals
+
 
 cramer_v_SASSDR_clinical_def_9= CramerV(SASSDR_clinical_def_9$table, conf.level = .99)
 cramer_v_SASSDR_clinical_def_9
+
 
 cp_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3]) / SASSDR_clinical_def_9_totals$criteria_p,2)
 cp_percent_SASSDR_clinical_def_9
@@ -691,28 +670,48 @@ cp_percent_SASSDR_clinical_def_9
 cn_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[2], SASSDR_clinical_def_9$table[1]) / SASSDR_clinical_def_9_totals$criteria_n,2)
 cn_percent_SASSDR_clinical_def_9
 
+#### DEF 10
+clinical_sample_def_10 = subset(clinical_sample, DEF <= 10)
+dim(clinical_sample_def_10)
+SASSDR_clinical_def_10=  confusionMatrix(clinical_sample_def_10$SASSDR, clinical_sample_def_10$NODIAG, positive = "1")
+SASSDR_clinical_def_10
+
+n_correct_SASSDR_clinical_def_10=  sum(SASSDR_clinical_def_10$table[1,1], SASSDR_clinical_def_10$table[2,2])
+n_correct_SASSDR_clinical_def_10
+
+SASSDR_clinical_def_10_totals = data.frame(test_p = sum(SASSDR_clinical_def_10$table[2,]), test_n = sum(SASSDR_clinical_def_10$table[1,]), criteria_p = sum(SASSDR_clinical_def_10$table[,2]), criteria_n = sum(SASSDR_clinical_def_10$table[,1]))
+SASSDR_clinical_def_10_totals
+
+cramer_v_SASSDR_clinical_def_10= CramerV(SASSDR_clinical_def_10$table, conf.level = .99)
+cramer_v_SASSDR_clinical_def_10
+
+cp_percent_SASSDR_clinical_def_10 =  round(c(SASSDR_clinical_def_10$table[4], SASSDR_clinical_def_10$table[3]) / SASSDR_clinical_def_10_totals$criteria_p,2)
+cp_percent_SASSDR_clinical_def_10
+
+cn_percent_SASSDR_clinical_def_10 =  round(c(SASSDR_clinical_def_10$table[2], SASSDR_clinical_def_10$table[1]) / SASSDR_clinical_def_10_totals$criteria_n,2)
+cn_percent_SASSDR_clinical_def_10
+
 ```
 Table 6 and 7 results
 ```{r}
 
 ### Table 6
-SASSDR_clinical_def_8
-n_correct_SASSDR_clinical_def_8
-SASSDR_clinical_def_8_totals
-sum(SASSDR_clinical_def_8_totals[,1:2])
-cramer_v_SASSDR_clinical_def_8
-cp_percent_SASSDR_clinical_def_8
-cn_percent_SASSDR_clinical_def_8
-
-
-### Table 7
 SASSDR_clinical_def_9
 n_correct_SASSDR_clinical_def_9
-cramer_v_SASSDR_clinical_def_9
-426/475 
 SASSDR_clinical_def_9_totals
+cramer_v_SASSDR_clinical_def_9
 cp_percent_SASSDR_clinical_def_9
 cn_percent_SASSDR_clinical_def_9
+426/475
+
+### Table 7
+SASSDR_clinical_def_10
+n_correct_SASSDR_clinical_def_10
+cramer_v_SASSDR_clinical_def_10
+ 
+SASSDR_clinical_def_10_totals
+cp_percent_SASSDR_clinical_def_10
+cn_percent_SASSDR_clinical_def_10
 121+26+23+305
 
 ```
@@ -1046,47 +1045,8 @@ Social services = 2
 Medical pan clinic = 3
 Medical facility other = 4
 6 = Substance use treatment
-7 = other
+7 = other, #### Criminal justice programs, #### Social services programs
 ```{r}
-
-#### Criminal justice programs
-clinical_sample_crime = subset(clinical_sample, CLIENTSETTING == 1)
-clinical_sample_crime_total_n = dim(clinical_sample_crime)[1]
-SASSDR_clinical_crime=  confusionMatrix(as.factor(clinical_sample_crime$SASSDR), as.factor(clinical_sample_crime$NODIAG), positive = "1")
-SASSDR_clinical_crime
-
-n_correct_SASSDR_clinical_crime=  sum(SASSDR_clinical_crime$table[1,1], SASSDR_clinical_crime$table[2,2])
-n_correct_SASSDR_clinical_crime
-
-SASSDR_clinical_crime_totals = data.frame(test_p = sum(SASSDR_clinical_crime$table[2,]), test_n = sum(SASSDR_clinical_crime$table[1,]), criteria_p = sum(SASSDR_clinical_crime$table[,2]), criteria_n = sum(SASSDR_clinical_crime$table[,1]))
-SASSDR_clinical_crime_totals
-
-cp_percent_SASSDR_clinical_crime =  round(c(SASSDR_clinical_crime$table[4], SASSDR_clinical_crime$table[3]) / SASSDR_clinical_crime_totals$criteria_p,2)
-cp_percent_SASSDR_clinical_crime
-
-cn_percent_SASSDR_clinical_crime =  round(c(SASSDR_clinical_crime$table[2], SASSDR_clinical_crime$table[1]) / SASSDR_clinical_crime_totals$criteria_n,2)
-cn_percent_SASSDR_clinical_crime
-
-#### Social services programs
-clinical_sample_social_services = subset(clinical_sample, CLIENTSETTING == 2)
-
-clinical_sample_social_services_total_n = dim(clinical_sample_social_services)[1]
-
-SASSDR_clinical_social_services=  confusionMatrix(as.factor(clinical_sample_social_services$SASSDR), as.factor(clinical_sample_social_services$NODIAG), positive = "1")
-SASSDR_clinical_social_services
-
-n_correct_SASSDR_clinical_social_services=  sum(SASSDR_clinical_social_services$table[1,1], SASSDR_clinical_social_services$table[2,2])
-n_correct_SASSDR_clinical_social_services
-
-SASSDR_clinical_social_services_totals = data.frame(test_p = sum(SASSDR_clinical_social_services$table[2,]), test_n = sum(SASSDR_clinical_social_services$table[1,]), criteria_p = sum(SASSDR_clinical_social_services$table[,2]), criteria_n = sum(SASSDR_clinical_social_services$table[,1]))
-SASSDR_clinical_social_services_totals
-
-cp_percent_SASSDR_clinical_social_services =  round(c(SASSDR_clinical_social_services$table[4], SASSDR_clinical_social_services$table[3]) / SASSDR_clinical_social_services_totals$criteria_p,2)
-cp_percent_SASSDR_clinical_social_services
-
-cn_percent_SASSDR_clinical_social_services =  round(c(SASSDR_clinical_social_services$table[2], SASSDR_clinical_social_services$table[1]) / SASSDR_clinical_social_services_totals$criteria_n,2)
-cn_percent_SASSDR_clinical_social_services
-
 ###
 #### medical pain clinics
 clinical_sample_pain_clinic = subset(clinical_sample, CLIENTSETTING == 3)
@@ -1118,7 +1078,7 @@ cn_percent_SASSDR_clinical_substance_use =  round(c(SASSDR_clinical_substance_us
 cn_percent_SASSDR_clinical_substance_use
 
 #### other
-clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7 | CLIENTSETTING == 5)
+clinical_sample_other = subset(clinical_sample, CLIENTSETTING == 7 | CLIENTSETTING == 5 | CLIENTSETTING == 1| CLIENTSETTING == 2)
 clinical_sample_other_total_n =  dim(clinical_sample_other)[1]
 SASSDR_clinical_other=  confusionMatrix(as.factor(clinical_sample_other$SASSDR), as.factor(clinical_sample_other$NODIAG), positive = "1")
 SASSDR_clinical_other
@@ -1138,22 +1098,6 @@ cn_percent_SASSDR_clinical_other
 ```
 Tables 12 through 17 results
 ```{r}
-SASSDR_clinical_crime
-clinical_sample_crime_total_n
-n_correct_SASSDR_clinical_crime
-SASSDR_clinical_crime_totals
-cp_percent_SASSDR_clinical_crime
-cn_percent_SASSDR_clinical_crime
-
-
-SASSDR_clinical_social_services
-clinical_sample_social_services_total_n
-n_correct_SASSDR_clinical_social_services
-SASSDR_clinical_social_services_totals
-cp_percent_SASSDR_clinical_social_services
-cn_percent_SASSDR_clinical_social_services
-
-
 SASSDR_clinical_substance_use
 clinical_sample_substance_use_total_n
 n_correct_SASSDR_clinical_substance_use
@@ -1168,7 +1112,6 @@ n_correct_SASSDR_clinical_other
 SASSDR_clinical_other_totals
 cp_percent_SASSDR_clinical_other
 cn_percent_SASSDR_clinical_other
-
 ```
 Table 18 data cleaning
 DEPRESNONSUB
