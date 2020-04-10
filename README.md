@@ -451,14 +451,8 @@ names(stability_sample)[1] = "ID"
 names(normative_sample)[1] = "ID"
 dim(stability_sample)
 stable_norm = merge(stability_sample, normative_sample, by = "ID", all.x = TRUE)
-dim(stable_norm)
-stable_norm
 
-describe.factor(stable_norm$SASSDR.x)
-describe.factor(stable_norm$SASSDR.y)
 
-SASDR_stable = cor.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
-SASDR_stable
 
 FVA_stable =  cor.test(stable_norm$FVA.x, stable_norm$FVA.y)
 FVA_stable
@@ -490,6 +484,32 @@ sam_stable
 cor_stable = cor.test(stable_norm$COR.x, stable_norm$COR.y)
 cor_stable
 
+
+
+
+
+```
+Need to use tetrachoric
+```{r}
+describe.factor(stable_norm$SASSDR.x)
+describe.factor(stable_norm$SASSDR.y)
+stable_norm_overall = stable_norm[c("SASSDR.x", "SASSDR.y")]
+stable_norm_overall
+stable_norm_overall_1 = subset(stable_norm_overall, SASSDR.x == 1 | SASSDR.y == 1)
+dim(stable_norm_overall_1)
+stable_norm_overall_1
+stable_norm_overall_1$match = ifelse(stable_norm_overall_1$SASSDR.x == stable_norm_overall_1$SASSDR.y,1,0)
+describe.factor(stable_norm_overall_1$match)
+
+cor.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
+
+data(bock)
+SASDR_stable =  tetrachoric(stable_norm_overall)
+SASDR_stable
+
+### Tet for rx with 2 or greater as criteria
+rx_stable_dat = stable_norm[c("Rx.x", "Rx.y")]
+apply(rx_stable_dat, 2, function(x){ifelse(x >= 2, 1, 0)})
 rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y, method= "spearman")
 rx_stable
 
