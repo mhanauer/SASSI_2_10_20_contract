@@ -2311,38 +2311,38 @@ no_class_sub
 
 Raw score stability (z-score)
 ```{r}
-SASDR_raw = t.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
+SASDR_raw = mcnemar.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
 
-FVA_raw =  t.test(stable_norm$FVA.x, stable_norm$FVA.y)
-
-
-FVOD_raw = t.test(stable_norm$FVOD.x, stable_norm$FVOD.y)
+FVA_raw =  t.test(stable_norm$FVA.x, stable_norm$FVA.y, paired = TRUE)
 
 
-FRISK_raw = t.test(stable_norm$frisk.x, stable_norm$frisk.y)
+FVOD_raw = t.test(stable_norm$FVOD.x, stable_norm$FVOD.y, paired = TRUE)
 
 
-att_raw = t.test(stable_norm$att.x, stable_norm$att.y)
+FRISK_raw = t.test(stable_norm$frisk.x, stable_norm$frisk.y, paired = TRUE)
 
 
-sym_raw = t.test(stable_norm$sym.x, stable_norm$sym.y)
+att_raw = t.test(stable_norm$att.x, stable_norm$att.y, paired = TRUE)
 
 
-oat_raw = t.test(stable_norm$oat.x, stable_norm$oat.y)
+sym_raw = t.test(stable_norm$sym.x, stable_norm$sym.y, paired = TRUE)
 
 
-sat_raw = t.test(stable_norm$sat.x, stable_norm$sat.y)
+oat_raw = t.test(stable_norm$oat.x, stable_norm$oat.y, paired = TRUE)
 
 
-def_raw = t.test(stable_norm$DEF.x, stable_norm$DEF.y)
+sat_raw = t.test(stable_norm$sat.x, stable_norm$sat.y, paired = TRUE)
 
 
-sam_raw = t.test(stable_norm$sam.x, stable_norm$sam.y)
+def_raw = t.test(stable_norm$DEF.x, stable_norm$DEF.y, paired = TRUE)
 
 
-cor_raw = t.test(stable_norm$COR.x, stable_norm$COR.y)
+sam_raw = t.test(stable_norm$sam.x, stable_norm$sam.y, paired = TRUE)
 
-rx_raw = t.test(stable_norm$Rx.x, stable_norm$Rx.y)
+
+cor_raw = t.test(stable_norm$COR.x, stable_norm$COR.y, paired = TRUE)
+
+rx_raw = wilcox.test(stable_norm$Rx.x, stable_norm$Rx.y, paired = TRUE)
 
 
 ```
@@ -2359,7 +2359,7 @@ sat_raw
 def_raw
 sam_raw
 cor_raw
-val_raw
+rx_raw
 ```
 
 
