@@ -313,7 +313,6 @@ cross_validation_sample$S1 = ifelse(cross_validation_sample$S1 == 2,1,2)
 development_sample$S1 = ifelse(development_sample$S1 == 2,1,2)
 normative_sample$S1 = ifelse(normative_sample$S1 == 2,1,2)
 stability_sample$S1 = ifelse(stability_sample$S1 == 2,1,2)
-
 ```
 Fisher test's for differences in development and cross validation sample
 ```{r}
@@ -453,44 +452,71 @@ dim(stability_sample)
 stable_norm = merge(stability_sample, normative_sample, by = "ID", all.x = TRUE)
 
 
-
-FVA_stable =  cor.test(stable_norm$FVA.x, stable_norm$FVA.y)
+#spearman.ci
+library(RVAideMemoire)
+FVA_stable =  spearman.ci(stable_norm$FVA.x, stable_norm$FVA.y)
 FVA_stable
-
-FVOD_stable = cor.test(stable_norm$FVOD.x, stable_norm$FVOD.y)
+hist(stable_norm$FVA.x)
+hist(stable_norm$FVA.y)
+spearman.ci
+FVOD_stable = spearman.ci(stable_norm$FVOD.x, stable_norm$FVOD.y)
 FVOD_stable
+hist(stable_norm$FVOD.x)
+hist(stable_norm$FVOD.y)
 
-FRISK_stable = cor.test(stable_norm$frisk.x, stable_norm$frisk.y)
+FRISK_stable = spearman.ci(stable_norm$frisk.x, stable_norm$frisk.y)
 FRISK_stable
+hist(stable_norm$frisk.x)
+hist(stable_norm$frisk.y)
 
-att_stable = cor.test(stable_norm$att.x, stable_norm$att.y)
+att_stable = spearman.ci(stable_norm$att.x, stable_norm$att.y)
 att_stable
+hist(stable_norm$frisk.x)
+hist(stable_norm$frisk.y)
 
-sym_stable = cor.test(stable_norm$sym.x, stable_norm$sym.y)
+sym_stable = spearman.ci(stable_norm$sym.x, stable_norm$sym.y)
 sym_stable
+hist(stable_norm$sym.x)
+hist(stable_norm$sym.y)
 
-oat_stable = cor.test(stable_norm$oat.x, stable_norm$oat.y)
+oat_stable = spearman.ci(stable_norm$oat.x, stable_norm$oat.y)
 oat_stable
+hist(stable_norm$oat.x)
+hist(stable_norm$oat.y)
 
-sat_stable = cor.test(stable_norm$sat.x, stable_norm$sat.y)
+sat_stable = spearman.ci(stable_norm$sat.x, stable_norm$sat.y)
 sat_stable
+hist(stable_norm$sat.x)
+hist(stable_norm$sat.y)
 
 def_stable = cor.test(stable_norm$DEF.x, stable_norm$DEF.y)
 def_stable
+hist(stable_norm$DEF.x)
+hist(stable_norm$DEF.y)
 
-sam_stable = cor.test(stable_norm$sam.x, stable_norm$sam.y)
+sam_stable = spearman.ci(stable_norm$sam.x, stable_norm$sam.y)
 sam_stable
+hist(stable_norm$sam.x)
+hist(stable_norm$sam.y)
 
-cor_stable = cor.test(stable_norm$COR.x, stable_norm$COR.y)
+cor_stable = spearman.ci(stable_norm$COR.x, stable_norm$COR.y)
 cor_stable
+hist(stable_norm$COR.x)
+hist(stable_norm$COR.x)
 
+rx_stable = spearman.ci(stable_norm$Rx.x, stable_norm$Rx.y)
+rx_stable
 
-
-
-
+oat = data.frame(S8 = clinical_sample$S8, S25 = clinical_sample$S25, S41 = clinical_sample$S41, S45 = clinical_sample$S45, S69 = clinical_sample$S69, S79 = clinical_sample$S79, S86 = clinical_sample$S86, S10 = clinical_sample$S10, S14 = clinical_sample$S14, S27 = clinical_sample$S27, S30 = clinical_sample$S30)
+oat_omega = ci.reliability(oat)
+oat_omega_test_poly = omega(oat, poly = TRUE)
+oat_omega_test = omega(oat)
+oat_omega
+oat_omega_test_poly
 ```
 Need to use tetrachoric
 ```{r}
+library(psych)
 describe.factor(stable_norm$SASSDR.x)
 describe.factor(stable_norm$SASSDR.y)
 stable_norm_overall = stable_norm[c("SASSDR.x", "SASSDR.y")]
@@ -510,9 +536,8 @@ SASDR_stable
 ### Tet for rx with 2 or greater as criteria
 rx_stable_dat = stable_norm[c("Rx.x", "Rx.y")]
 apply(rx_stable_dat, 2, function(x){ifelse(x >= 2, 1, 0)})
-rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y, method= "spearman")
+#rx_stable = cor.test(stable_norm$Rx.x, stable_norm$Rx.y, method= "spearman")
 rx_stable
-
 ```
 
 
@@ -542,7 +567,7 @@ sat_stable
 def_stable
 sam_stable
 cor_stable
-val_stable
+rx_stable
 ```
 
 
@@ -2313,34 +2338,34 @@ Raw score stability (z-score)
 ```{r}
 SASDR_raw = mcnemar.test(stable_norm$SASSDR.x, stable_norm$SASSDR.y)
 
-FVA_raw =  t.test(stable_norm$FVA.x, stable_norm$FVA.y, paired = TRUE)
+FVA_raw =  wilcox.test(stable_norm$FVA.x, stable_norm$FVA.y, paired = TRUE)
 
 
-FVOD_raw = t.test(stable_norm$FVOD.x, stable_norm$FVOD.y, paired = TRUE)
+FVOD_raw = wilcox.test(stable_norm$FVOD.x, stable_norm$FVOD.y, paired = TRUE)
 
 
-FRISK_raw = t.test(stable_norm$frisk.x, stable_norm$frisk.y, paired = TRUE)
+FRISK_raw = wilcox.test(stable_norm$frisk.x, stable_norm$frisk.y, paired = TRUE)
 
 
-att_raw = t.test(stable_norm$att.x, stable_norm$att.y, paired = TRUE)
+att_raw = wilcox.test(stable_norm$att.x, stable_norm$att.y, paired = TRUE)
 
 
-sym_raw = t.test(stable_norm$sym.x, stable_norm$sym.y, paired = TRUE)
+sym_raw = wilcox.test(stable_norm$sym.x, stable_norm$sym.y, paired = TRUE)
 
 
-oat_raw = t.test(stable_norm$oat.x, stable_norm$oat.y, paired = TRUE)
+oat_raw = wilcox.test(stable_norm$oat.x, stable_norm$oat.y, paired = TRUE)
 
 
-sat_raw = t.test(stable_norm$sat.x, stable_norm$sat.y, paired = TRUE)
+sat_raw = wilcox.test(stable_norm$sat.x, stable_norm$sat.y, paired = TRUE)
 
 
-def_raw = t.test(stable_norm$DEF.x, stable_norm$DEF.y, paired = TRUE)
+def_raw = wilcox.test(stable_norm$DEF.x, stable_norm$DEF.y, paired = TRUE)
 
 
-sam_raw = t.test(stable_norm$sam.x, stable_norm$sam.y, paired = TRUE)
+sam_raw = wilcox.test(stable_norm$sam.x, stable_norm$sam.y, paired = TRUE)
 
 
-cor_raw = t.test(stable_norm$COR.x, stable_norm$COR.y, paired = TRUE)
+cor_raw = wilcox.test(stable_norm$COR.x, stable_norm$COR.y, paired = TRUE)
 
 rx_raw = wilcox.test(stable_norm$Rx.x, stable_norm$Rx.y, paired = TRUE)
 
@@ -2361,6 +2386,11 @@ sam_raw
 cor_raw
 rx_raw
 ```
+I don't believe there was an error in coding, but it does lead me to believe that we may need to look at possibly increasing that threshold by looking at the cases diagnosed with an Opioid or Sedative SUD and what those clients average score was. For the adult version the rule is 3 or more.
+```{r}
+normative_sample_question = subset(normative_sample$OPIOIDDIAG)
+```
+
 
 
 Omega heir paper
