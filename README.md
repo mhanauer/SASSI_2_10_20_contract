@@ -507,12 +507,6 @@ hist(stable_norm$COR.x)
 rx_stable = spearman.ci(stable_norm$Rx.x, stable_norm$Rx.y)
 rx_stable
 
-oat = data.frame(S8 = clinical_sample$S8, S25 = clinical_sample$S25, S41 = clinical_sample$S41, S45 = clinical_sample$S45, S69 = clinical_sample$S69, S79 = clinical_sample$S79, S86 = clinical_sample$S86, S10 = clinical_sample$S10, S14 = clinical_sample$S14, S27 = clinical_sample$S27, S30 = clinical_sample$S30)
-oat_omega = ci.reliability(oat)
-oat_omega_test_poly = omega(oat, poly = TRUE)
-oat_omega_test = omega(oat)
-oat_omega
-oat_omega_test_poly
 ```
 Need to use tetrachoric
 ```{r}
