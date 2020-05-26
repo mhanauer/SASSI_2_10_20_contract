@@ -15,7 +15,6 @@ library(coefficientalpha)
 library(caret)
 library(DescTools)
 library(pROC)
-library(caret)
 setwd("S:/Indiana Research & Evaluation/Matthew Hanauer/SASSI/Data/2-10-20_contract")
 #clinical_sample_dr.csv
 clinical_sample = read.csv("clinical_sample.csv", header = TRUE, na.strings = c(98,255))
