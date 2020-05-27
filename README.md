@@ -570,7 +570,6 @@ head(development_sample)
 library(caret)
 library(DescTools)
 
-
 development_sample$SASSDR = as.factor(development_sample$SASSDR)
 development_sample$NODIAG = as.factor(development_sample$NODIAG)
 SASSDR_development =  confusionMatrix(development_sample$SASSDR, development_sample$NODIAG, positive = "1")
@@ -635,12 +634,13 @@ Do this training and test set
 head(development_sample)
 development_sample[,15:101]
 dis_dat = data.frame(NODIAG =  development_sample$NODIAG, development_sample[,15:101]) 
-inTrain = createDataPartition(y = dis_dat$NODIAG, p = .75, list = FALSE)
+inTrain = createDataPartition(y = dis_dat$NODIAG, p = .50, list = FALSE)
 training = dis_dat[inTrain,]
 testing = dis_dat[-inTrain,]
+describe.factor(dis_dat$NODIAG)
 
 library(klaR)
-fit <- rda(NODIAG ~ ., data=training)
+fit <- rda(NODIAG ~ ., data=training, prior = c(.7, .3))
 predictions = predict(fit, newdata = testing)
 length(testing$NODIAG)
 length(predictions$class)
@@ -2132,8 +2132,8 @@ length(which(diagnoses<2))/173
 For diagnosis limit to those who do not have the diagnosis and those who have a mild diagnosis and so on for the rest. 
 
 ```{r}
-### Create variables in cross validation sample
-table_3_paper_dat = cross_validation_sample
+### Create variables in cross validation sample or clincial sample
+table_3_paper_dat = clinical_sample
 ### Diagnosis no, mild, mod, severe
 table_3_paper_dat$diag_totals = table_3_paper_dat$ALCTO + table_3_paper_dat$POTTOT + table_3_paper_dat$HALLUCTOT + table_3_paper_dat$INHALTOT + table_3_paper_dat$OPIOIDTOT + table_3_paper_dat$SEDTOT + table_3_paper_dat$STIMTOT + table_3_paper_dat$OTHRDRUGTOT
 library(prettyR)
@@ -2159,6 +2159,7 @@ dat_check_paper_table3
 ### results for diagnosis
 diagnosis_n = data.frame(n_noSUD = sum(table_3_paper_dat$noSUD), n_mildSUD = sum(table_3_paper_dat$mildSUD), n_modSUD = sum(table_3_paper_dat$modSUD), n_sevSUD = sum(table_3_paper_dat$sevSUD))
 ##n's
+
 sum(diagnosis_n) == dim(table_3_paper_dat)[1]
 ### Only mild and nosud
 table_3_paper_dat_mild = subset(table_3_paper_dat, mildSUD == 1 |table_3_paper_dat$noSUD == 1)
@@ -2183,7 +2184,7 @@ table_3_paper_dat_sev_roc =  roc(as.numeric(table_3_paper_dat_sev$SASSDR), as.nu
 table_3_paper_dat_sev_roc
 
 #### other mental health co_occuring numbers and just n non-co_occuring and total
-table_3_paper_dat_mh = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB, NODIAG = cross_validation_sample$NODIAG, SASSDR = cross_validation_sample$SASSDR)
+table_3_paper_dat_mh = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB, NODIAG = clinical_sample$NODIAG, SASSDR = clinical_sample$SASSDR)
 dim(table_3_paper_dat_mh)
 table_3_paper_dat_mh$co_occuring = rowSums(table_3_paper_dat_mh[,1:7])
 table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring >0,1,0)
@@ -2191,7 +2192,7 @@ table_3_paper_dat_mh$co_occuring = ifelse(table_3_paper_dat_mh$co_occuring == 1 
 
 ### Create negative criteria group only those with yes co_occuring and yes for other non-SUD and no SUD
 
-non_sud = data.frame(DEPRESNONSUB = cross_validation_sample$DEPRESNONSUB, BIPNONSUB = cross_validation_sample$BIPNONSUB, ANXNONSUB = cross_validation_sample$ANXNONSUB, PTSDNONSUB = cross_validation_sample$PTSDNONSUB, ADHDNONSUB = cross_validation_sample$ADHDNONSUB, EATINGNONSUB = cross_validation_sample$EATINGNONSUB, OTHRNONSUB = cross_validation_sample$OTHRNONSUB)
+non_sud = data.frame(DEPRESNONSUB = clinical_sample$DEPRESNONSUB, BIPNONSUB = clinical_sample$BIPNONSUB, ANXNONSUB = clinical_sample$ANXNONSUB, PTSDNONSUB = clinical_sample$PTSDNONSUB, ADHDNONSUB = clinical_sample$ADHDNONSUB, EATINGNONSUB = clinical_sample$EATINGNONSUB, OTHRNONSUB = clinical_sample$OTHRNONSUB)
 table_3_paper_dat_mh$non_sud = rowSums(non_sud[,1:7])
 table_3_paper_dat_mh
 table_3_paper_dat_mh$non_sud = ifelse(table_3_paper_dat_mh$non_sud  > 0, 1, 0)
@@ -2209,7 +2210,7 @@ table_3_paper_dat_mh_roc =  roc(as.numeric(table_3_paper_dat_mh$SASSDR), as.nume
 table_3_paper_dat_mh_roc
 
 #### Rx meds
-paper_table_3_rx_dat = cross_validation_sample
+paper_table_3_rx_dat = clinical_sample
 paper_table_3_rx_dat$Rx_test = ifelse(paper_table_3_rx_dat$Rx >=2, 1, 0)
 describe.factor(paper_table_3_rx_dat$Rx_truth)
 paper_table_3_rx_dat$Rx_truth = ifelse(paper_table_3_rx_dat$OPIOIDDIAG == 1 | paper_table_3_rx_dat$SEDDIAG == 1,1,0)
@@ -2230,7 +2231,7 @@ paper_table_3_rx_dat_roc
 
 ### overall sassi
 library(pROC)
-crit_val_paper = cross_validation_sample
+crit_val_paper = clinical_sample
 sassi_results = confusionMatrix(as.factor(crit_val_paper$SASSDR), as.factor(crit_val_paper$NODIAG), positive = "1")
 
 sassi_roc =  roc(as.numeric(crit_val_paper$SASSDR), as.numeric(crit_val_paper$NODIAG), ci = TRUE)
@@ -2242,7 +2243,6 @@ Table 3 Paper results
 ### Overall SASSI
 sassi_results
 sassi_roc
-
 ### Diagnosis
 diagnosis_n
 sum(diagnosis_n)	
@@ -2254,13 +2254,11 @@ table_3_paper_dat_mod_roc
 
 table_3_paper_dat_sev_results
 table_3_paper_dat_sev_roc
-
 ### mh n's below
 n_total_table_3_mh
 ### N for number of mental and non_suds
 dim(table_3_paper_dat_mh)[1]
 describe.factor(table_3_paper_dat_mh$co_occuring)
-table_3_paper_dat_mh
 table_3_paper_mh_results
 table_3_paper_dat_mh_roc
 #### Rx use
@@ -2270,7 +2268,6 @@ dim(paper_table_3_rx_dat)[1]
 describe.factor(paper_table_3_rx_dat$Rx_truth)
 paper_table_3_rx_dat_opioid_results
 paper_table_3_rx_dat_roc
-
 ```
 Paper participant character stats data cleaning
 ```{r}
@@ -2296,32 +2293,32 @@ Paper participant results
 co_occuring_paper
 rx_abuse_paper
 ```
-Paper DEF analysis for cross validation data cleaning
+Paper DEF analysis for clinical data cleaning
 ```{r}
-cross_validation_sample$SASSDR = as.factor(cross_validation_sample$SASSDR)
-cross_validation_sample$NODIAG = as.factor(cross_validation_sample$NODIAG)
-no_class = cross_validation_sample[c("SASSDR", "NODIAG", "DEF")]
+clinical_sample$SASSDR = as.factor(clinical_sample$SASSDR)
+clinical_sample$NODIAG = as.factor(clinical_sample$NODIAG)
+no_class = clinical_sample[c("SASSDR", "NODIAG", "DEF")]
 no_class$wrong_but_high_def = ifelse(no_class$SASSDR != no_class$NODIAG & no_class$DEF > 8,1,0)
 no_class$wrong = ifelse(no_class$SASSDR != no_class$NODIAG,1,0)
 n_wrong = sum(no_class$wrong)
 n_wrong
 no_class_sub = subset(no_class, wrong_but_high_def == 1)
 no_class_sub
-SASSDR_cross_validation =  confusionMatrix(cross_validation_sample$SASSDR, cross_validation_sample$NODIAG, positive = "1")
+SASSDR_clinical =  confusionMatrix(clinical_sample$SASSDR, clinical_sample$NODIAG, positive = "1")
 
 
-cross_validation_sample_totals = data.frame(test_p = sum(SASSDR_cross_validation$table[2,]), test_n = sum(SASSDR_cross_validation$table[1,]), criteria_p = sum(SASSDR_cross_validation$table[,2]), criteria_n = sum(SASSDR_cross_validation$table[,1]))
-cross_validation_sample_totals
+clinical_sample_totals = data.frame(test_p = sum(SASSDR_clinical$table[2,]), test_n = sum(SASSDR_clinical$table[1,]), criteria_p = sum(SASSDR_clinical$table[,2]), criteria_n = sum(SASSDR_clinical$table[,1]))
+clinical_sample_totals
 
-cramer_v_SASSDR_cross_validation = CramerV(SASSDR_cross_validation$table, conf.level = .99)
-cramer_v_SASSDR_cross_validation
+cramer_v_SASSDR_clinical = CramerV(SASSDR_clinical$table, conf.level = .99)
+cramer_v_SASSDR_clinical
 
 ```
 Paper DEF analysis for cross validation results
 ```{r}
 n_wrong
 no_class_sub
-
+15/n_wrong
 ```
 
 
