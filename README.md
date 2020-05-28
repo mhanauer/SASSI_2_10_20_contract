@@ -705,11 +705,17 @@ cramer_v_SASSDR_clinical_def_9
 cp_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3]) / SASSDR_clinical_def_9_totals$criteria_p,2)
 cp_percent_SASSDR_clinical_def_9
 
+cp_count_SASSDR_clinical_def_9 =  c(SASSDR_clinical_def_9$table[4], SASSDR_clinical_def_9$table[3])
+cp_count_SASSDR_clinical_def_9
+
 cn_percent_SASSDR_clinical_def_9 =  round(c(SASSDR_clinical_def_9$table[2], SASSDR_clinical_def_9$table[1]) / SASSDR_clinical_def_9_totals$criteria_n,2)
 cn_percent_SASSDR_clinical_def_9
 
+cn_count_SASSDR_clinical_def_9 =  c(SASSDR_clinical_def_9$table[2], SASSDR_clinical_def_9$table[1])
+cn_count_SASSDR_clinical_def_9
+
 #### DEF 10
-clinical_sample_def_10 = subset(clinical_sample, DEF <= 10)
+clinical_sample_def_10 = subset(clinical_sample, DEF >= 10)
 dim(clinical_sample_def_10)
 SASSDR_clinical_def_10=  confusionMatrix(clinical_sample_def_10$SASSDR, clinical_sample_def_10$NODIAG, positive = "1")
 SASSDR_clinical_def_10
@@ -726,8 +732,10 @@ cramer_v_SASSDR_clinical_def_10
 cp_percent_SASSDR_clinical_def_10 =  round(c(SASSDR_clinical_def_10$table[4], SASSDR_clinical_def_10$table[3]) / SASSDR_clinical_def_10_totals$criteria_p,2)
 cp_percent_SASSDR_clinical_def_10
 
-cn_percent_SASSDR_clinical_def_10 =  round(c(SASSDR_clinical_def_10$table[2], SASSDR_clinical_def_10$table[1]) / SASSDR_clinical_def_10_totals$criteria_n,2)
-cn_percent_SASSDR_clinical_def_10
+cp_count_SASSDR_clinical_def_10 =  c(SASSDR_clinical_def_10$table[4], SASSDR_clinical_def_10$table[3])
+cp_count_SASSDR_clinical_def_10
+
+cn_count_SASSDR_clinical_def_10 =  c(SASSDR_clinical_def_10$table[2], SASSDR_clinical_def_10$table[1])
 
 ```
 Table 6 and 7 results
@@ -740,19 +748,97 @@ SASSDR_clinical_def_9_totals
 cramer_v_SASSDR_clinical_def_9
 cp_percent_SASSDR_clinical_def_9
 cn_percent_SASSDR_clinical_def_9
+cp_count_SASSDR_clinical_def_9
+cn_count_SASSDR_clinical_def_9
 426/475
 
 ### Table 7
 SASSDR_clinical_def_10
 n_correct_SASSDR_clinical_def_10
 cramer_v_SASSDR_clinical_def_10
- 
+
 SASSDR_clinical_def_10_totals
 cp_percent_SASSDR_clinical_def_10
 cn_percent_SASSDR_clinical_def_10
+cp_count_SASSDR_clinical_def_10
+cn_count_SASSDR_clinical_def_10
+8+24
+```
+Table 6 and 7 paper results
+
+As shown in Table 6, overall SASSI-A3 screening accuracy was XX.X% for cases where participants’ DEF scores were one standard deviation above the normative sample DEF scale mean score or lower (i.e., DEF scale scores of 7 or less).
+```{r}
+def_criteria =  round(mean(normative_sample$DEF)+sd(normative_sample$DEF))
+def_criteria
+### DEF 9
+cross_validation_sample_def_9 = subset(cross_validation_sample, DEF <= 9)
+dim(cross_validation_sample_def_9)
+SASSDR_cross_def_9=  confusionMatrix(cross_validation_sample_def_9$SASSDR, cross_validation_sample_def_9$NODIAG, positive = "1")
+SASSDR_cross_def_9
+
+n_correct_SASSDR_cross_def_9=  sum(SASSDR_cross_def_9$table[1,1], SASSDR_cross_def_9$table[2,2])
+n_correct_SASSDR_cross_def_9
+
+SASSDR_cross_def_9_totals = data.frame(test_p = sum(SASSDR_cross_def_9$table[2,]), test_n = sum(SASSDR_cross_def_9$table[1,]), criteria_p = sum(SASSDR_cross_def_9$table[,2]), criteria_n = sum(SASSDR_cross_def_9$table[,1]))
+
+
+cramer_v_SASSDR_cross_def_9= CramerV(SASSDR_cross_def_9$table, conf.level = .99)
+cramer_v_SASSDR_cross_def_9
+
+
+cp_percent_SASSDR_cross_def_9 =  round(c(SASSDR_cross_def_9$table[4], SASSDR_cross_def_9$table[3]) / SASSDR_cross_def_9_totals$criteria_p,2)
+cp_percent_SASSDR_cross_def_9
+
+cn_percent_SASSDR_cross_def_9 =  round(c(SASSDR_cross_def_9$table[2], SASSDR_cross_def_9$table[1]) / SASSDR_cross_def_9_totals$criteria_n,2)
+cn_percent_SASSDR_cross_def_9
+
+#### DEF 10
+cross_validation_sample_def_10 = subset(cross_validation_sample, DEF >= 10)
+dim(cross_validation_sample_def_10)
+SASSDR_cross_def_10=  confusionMatrix(cross_validation_sample_def_10$SASSDR, cross_validation_sample_def_10$NODIAG, positive = "1")
+SASSDR_cross_def_10
+
+n_correct_SASSDR_cross_def_10=  sum(SASSDR_cross_def_10$table[1,1], SASSDR_cross_def_10$table[2,2])
+n_correct_SASSDR_cross_def_10
+
+SASSDR_cross_def_10_totals = data.frame(test_p = sum(SASSDR_cross_def_10$table[2,]), test_n = sum(SASSDR_cross_def_10$table[1,]), criteria_p = sum(SASSDR_cross_def_10$table[,2]), criteria_n = sum(SASSDR_cross_def_10$table[,1]))
+SASSDR_cross_def_10_totals
+
+cramer_v_SASSDR_cross_def_10= CramerV(SASSDR_cross_def_10$table, conf.level = .99)
+cramer_v_SASSDR_cross_def_10
+
+cp_percent_SASSDR_cross_def_10 =  round(c(SASSDR_cross_def_10$table[4], SASSDR_cross_def_10$table[3]) / SASSDR_cross_def_10_totals$criteria_p,2)
+cp_percent_SASSDR_cross_def_10
+
+cn_percent_SASSDR_cross_def_10 =  round(c(SASSDR_cross_def_10$table[2], SASSDR_cross_def_10$table[1]) / SASSDR_cross_def_10_totals$criteria_n,2)
+cn_percent_SASSDR_cross_def_10
+
+```
+Table 6 and 7 paper results
+```{r}
+
+### Table 6
+SASSDR_cross_def_9
+n_correct_SASSDR_cross_def_9
+SASSDR_cross_def_9_totals
+cramer_v_SASSDR_cross_def_9
+cp_percent_SASSDR_cross_def_9
+cn_percent_SASSDR_cross_def_9
+426/475
+
+### Table 7
+SASSDR_cross_def_10
+n_correct_SASSDR_cross_def_10
+cramer_v_SASSDR_cross_def_10
+
+SASSDR_cross_def_10_totals
+cp_percent_SASSDR_cross_def_10
+cn_percent_SASSDR_cross_def_10
 121+26+23+305
 
 ```
+
+
 Table 8 data prep and analysis
 ```{r}
 clinical_sample$DEF = as.numeric(clinical_sample$DEF)
@@ -841,6 +927,10 @@ n_clinical_sample_def_10_12
 n_clinical_sample_def_0_4+n_clinical_sample_def_5+n_clinical_sample_def_6+n_clinical_sample_def_7+n_clinical_sample_def_8+n_clinical_sample_def_9+n_clinical_sample_def_10_12
 
 ```
+
+
+
+
 Table 9 data analysis
 ```{r}
 table_9_fva = ifelse(clinical_sample$FVA >= 7  | clinical_sample$FVOD >= 12 | clinical_sample$frisk >= 5 | clinical_sample$sym >= 5,1,0)
@@ -916,13 +1006,13 @@ cp_percent_table_9_fva_paper_results
 cn_percent_table_9_fva_paper_results
 
 ### in text top results
-SASSDR_cross_validation$overall[1]
+SASSDR_cross_validation$overall[1]-table_9_fva_paper_results$overall[1]
+SASSDR_cross_validation$byClass[1]-table_9_fva_paper_results$byClass[1]
+SASSDR_cross_validation$byClass[4]-table_9_fva_paper_results$byClass[4]
 ### in text bottom
-88.74-83.11
-456-429
-67.95-100
+table_9_fva_paper_n_correct - n_correct_SASSDR_cross_validation
 ```
-```
+
 
 
 Try second rules
@@ -1117,6 +1207,7 @@ accurate_n_table11
 describe.factor(CLIENTSETTING_sample_table_11$CLIENTSETTING)
 cramer_v_table11
 ```
+
 Table 12 through 17 data cleaning
 Criminal justice program = 1
 Social services = 2
