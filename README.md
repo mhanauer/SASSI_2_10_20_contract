@@ -12,6 +12,8 @@ library(prettyR)
 library(MBESS)
 library(descr)
 library(coefficientalpha)
+library(installr)
+library(ggplot2)
 library(caret)
 library(DescTools)
 library(pROC)
@@ -762,7 +764,6 @@ cp_percent_SASSDR_clinical_def_10
 cn_percent_SASSDR_clinical_def_10
 cp_count_SASSDR_clinical_def_10
 cn_count_SASSDR_clinical_def_10
-8+24
 ```
 Table 6 and 7 paper results
 
@@ -820,7 +821,7 @@ Table 6 and 7 paper results
 ### Table 6
 SASSDR_cross_def_9
 n_correct_SASSDR_cross_def_9
-SASSDR_cross_def_9_totals
+sum(SASSDR_cross_def_9_totals)
 cramer_v_SASSDR_cross_def_9
 cp_percent_SASSDR_cross_def_9
 cn_percent_SASSDR_cross_def_9
@@ -831,7 +832,7 @@ SASSDR_cross_def_10
 n_correct_SASSDR_cross_def_10
 cramer_v_SASSDR_cross_def_10
 
-SASSDR_cross_def_10_totals
+sum(SASSDR_cross_def_10_totals)
 cp_percent_SASSDR_cross_def_10
 cn_percent_SASSDR_cross_def_10
 121+26+23+305
