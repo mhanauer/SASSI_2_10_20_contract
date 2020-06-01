@@ -273,7 +273,6 @@ sd(clinical_sample$AGE)
 
 #gender
 #no data
-
 #employment; 1=full-time, 2=part-time, 3=volunteer only, 4=not employed
 describe.factor(stability_sample$TN_WORK_R)
 
@@ -289,6 +288,17 @@ describe.factor(stability_sample$TN_RACEETH_R)
 #education
 describe.factor(stability_sample$YEARS_ED)
 stability_sample$education = stability_sample$TN_EDUC_R
+
+####
+# 2 6th grade
+#3 = 7th
+#4 = 8th
+# 5 = 9th
+# 6 = 10th
+# 7 = 11th
+# 8  = 12th / ged
+# 9 = some college
+describe.factor(stability_sample$TN_EDUC_R)
 stability_sample$education <- (ifelse(stability_sample$education == 28, 5, ifelse(stability_sample$education == 29, 6, ifelse(stability_sample$education == 30,7, ifelse(stability_sample$education==31, 8, ifelse(stability_sample$education == 32, 9, ifelse(stability_sample$education ==33, 10, ifelse(stability_sample$education == 34, 11, ifelse(stability_sample$education==35,12,stability_sample$education)))))))))
 stability_sample$education[stability_sample$education==36] <- NA
 
